@@ -7,7 +7,7 @@ import { ChatsComponent } from './chats/chats.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../shared/shared.module';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from './settings/register/register.component';
 import { AuthActivate } from '../shared/services/auth.activate';
 import { HeaderComponent } from './header/header.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -32,13 +32,6 @@ import { SettingsComponent } from './settings/settings.component';
             canActivate: [AuthActivate],
             data: {
               autenticationRequired: false,
-              autenticationFailureRedirectUrl: '/',
-            }
-          },
-          {path: 'register', component: RegisterComponent,
-            canActivate: [AuthActivate],
-            data: {
-              autenticationRequired: true,
               autenticationFailureRedirectUrl: '/control-panel/login',
             }
           },
@@ -48,7 +41,18 @@ import { SettingsComponent } from './settings/settings.component';
               autenticationRequired: true,
               autenticationFailureRedirectUrl: '/control-panel/login',
             }
-          }
+          },
+          {path: 'settings', component: SettingsComponent,
+            children: [
+              {path: 'register', component: RegisterComponent,
+                canActivate: [AuthActivate],
+                data: {
+                  autenticationRequired: true,
+                  autenticationFailureRedirectUrl: '/control-panel/login',
+                }
+              }
+            ]
+          },
         ]
       }
     ])

@@ -94,6 +94,13 @@ export class AuthService {
     this._firebaseAuth.authState.subscribe((user) => {
       if (user && !this.userDbSubscription) {
         this.subscribeForDbCollectionUser(user.email!);
+
+        setTimeout(() => {
+          this.user.subscribe(user => {
+            console.log(user.name);          
+          })
+        }, 1000);
+        
       } else {
         this.user.next(null!);
       }

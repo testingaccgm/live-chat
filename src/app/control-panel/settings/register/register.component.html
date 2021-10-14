@@ -1,0 +1,112 @@
+<div>
+  <div class="container">
+    <form class="sign-form" [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm)">
+      <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+      <div class="sign-form__sign-up-header">
+        <h2>Register</h2>
+      </div>
+
+      <hr class="hr-border">
+
+      <div class="sign-form__sign-element">
+        <label for="name">Name</label>
+        <div class="name">
+          <div class="name-img"></div>
+          <input type="text" name="name" formControlName="name">
+        </div>
+        <ul class="sign-error">
+          <li *ngIf="
+          !signupForm.get('name')!.valid &&
+          !signupForm.get('name')!.hasError('maxlength') &&
+          !signupForm.get('name')!.hasError('minlength') &&
+          signupForm.get('name')!.touched">
+            Please enter your name!
+          </li>
+          <li *ngIf="
+          signupForm.get('name')!.hasError('maxlength') && 
+          signupForm.get('name')!.touched">
+            The name could not be longer then 30 characters!
+          </li>
+          <li *ngIf="
+          signupForm.get('name')!.hasError('minlength') && 
+          signupForm.get('name')!.touched">
+            The name should be at least 3 characters!
+          </li>
+        </ul>
+      </div>
+
+      <div class="sign-form__sign-element">
+        <label for="email">Email</label>
+        <div class="email">
+          <div class="email-img"></div>
+          <input type="text" name="email" formControlName="email">
+        </div>
+        <ul class="sign-error">
+          <li *ngIf="
+          !signupForm.get('email')!.valid && 
+          !signupForm.get('email')!.hasError('email') && 
+          signupForm.get('email')!.touched">
+            Please enter your email!
+          </li>
+          <li *ngIf="
+          signupForm.get('email')!.hasError('email') &&
+          signupForm.get('email')!.touched">
+            Please enter a valid email!
+          </li>
+        </ul>
+      </div>
+
+      <div class="sign-form__sign-element">
+        <label for="password">Password</label>
+        <div class="password">
+          <div class="password-img"></div>
+          <input type="password" name="password" formControlName="password">
+        </div>
+        <ul class="sign-error">
+          <li *ngIf="
+          !signupForm.get('password')!.valid &&
+          !signupForm.get('password')!.hasError('maxlength') &&
+          !signupForm.get('password')!.hasError('minlength') &&
+          signupForm.get('password')!.touched">
+            Please enter a passowrd!
+          </li>
+          <li *ngIf="
+          signupForm.get('password')!.hasError('maxlength') &&
+          signupForm.get('password')!.touched">
+            The password could not be longer then 30 symbols!
+          </li>
+          <li *ngIf="
+          signupForm.get('password')!.hasError('minlength') &&
+          signupForm.get('password')!.touched">
+            The password should be at least 8 symbols!
+          </li>
+        </ul>
+      </div>
+
+      <div class="sign-form__sign-element">
+        <label for="confirmPass">Confirm Password</label>
+        <div class="password">
+          <div class="password-img"></div>
+          <input type="password" name="confirmPass" formControlName="confirmPass"
+            [ngClass]="{'invalid': !signupForm.get('confirmPass')!.valid && signupForm.get('confirmPass')!.dirty}">
+        </div>
+        <ul class="sign-error">
+          <li *ngIf="
+          !signupForm.get('confirmPass')!.valid && 
+          signupForm.get('confirmPass')!.dirty">
+            The passwords do not match!
+          </li>
+        </ul>
+      </div>
+
+      <div class="sign-form__sign-form-btn">
+        <button class="btn-default" type="submit" [disabled]="!signupForm.valid">Create registration</button>
+        <ul class="sign-error">
+          <li class="error-msg" *ngIf="errorAuthMsg">{{ errorAuthMsg }}</li>
+          <li class="error-msg" *ngIf="errorOnSetUserData">{{ errorOnSetUserData }}</li>
+        </ul>
+      </div>
+    </form>
+  </div>
+</div>
