@@ -7,12 +7,19 @@ import { ChatsComponent } from './chats/chats.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../shared/shared.module';
+import { RegisterComponent } from './register/register.component';
+import { AuthActivate } from '../shared/services/auth.activate';
+import { HeaderComponent } from './header/header.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
     ControlPanelComponent,
     LoginComponent,
-    ChatsComponent
+    ChatsComponent,
+    RegisterComponent,
+    HeaderComponent,
+    SettingsComponent
   ],
   imports: [
     CommonModule,
@@ -21,8 +28,27 @@ import { SharedModule } from '../shared/shared.module';
     RouterModule.forChild([
       {path: '', component: ControlPanelComponent,
         children: [
-          {path: 'login', component: LoginComponent},
-          {path: 'chats', component: ChatsComponent}
+          {path: 'login', component: LoginComponent,
+            canActivate: [AuthActivate],
+            data: {
+              autenticationRequired: false,
+              autenticationFailureRedirectUrl: '/',
+            }
+          },
+          {path: 'register', component: RegisterComponent,
+            canActivate: [AuthActivate],
+            data: {
+              autenticationRequired: true,
+              autenticationFailureRedirectUrl: '/control-panel/login',
+            }
+          },
+          {path: 'chats', component: ChatsComponent,
+            canActivate: [AuthActivate],
+            data: {
+              autenticationRequired: true,
+              autenticationFailureRedirectUrl: '/control-panel/login',
+            }
+          }
         ]
       }
     ])

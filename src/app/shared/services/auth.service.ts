@@ -17,6 +17,7 @@ export class AuthService {
 
   userLocation = new LoginHistory ('', '' , '', '', '', null!);
   private _userLocationSubscription!: Subscription;
+  setIP: boolean = false;
 
   errorAuthMsg: string = '';
   errorAuthMsgSubject = new BehaviorSubject<string>(this.errorAuthMsg);
@@ -45,9 +46,8 @@ export class AuthService {
       newUser.uid = user.user!.uid;
       this._firestoreCollections.setUserData(newUser)
       .then(() => {
+          this.setIP = true;
           this.subscribeForDbCollectionUser(newUser.email);
-          this._router.navigate(['/home']);
-          this.setUserIP();
           this.errorOnSetUserData = '';
           this.errorOnSetUserDataSubject.next(this.errorOnSetUserData);
         }, (error) => {
@@ -68,9 +68,8 @@ export class AuthService {
     this.enableLoadingSpinner();
     this._firebaseAuth.signInWithEmailAndPassword(email, password)
     .then(() => {
-        this.subscribeForDbCollectionUser(email);
-        this._router.navigate(['/home']);
-        this.setUserIP();
+        this.setIP = true;
+        this.subscribeForDbCollectionUser(email);        
         this.errorAuthMsg = '';
         this.errorAuthMsgSubject.next(this.errorAuthMsg);
         this.disableLoadingSpinner();
@@ -87,7 +86,7 @@ export class AuthService {
     .then(() => {
       this.userDbSubscription.unsubscribe();
       this.user.next(null!);
-      this._router.navigate(['/signin']);
+      this._router.navigate(['/control-panel/login']);
     });
   };
 
@@ -112,6 +111,13 @@ export class AuthService {
         });
         this.user.next(userInfo[0]);
         this.userLocation.uid = userInfo[0].uid!;
+
+        if (this.setIP) {
+          this.setIP = false;
+          this.setUserIP();
+          this._router.navigate(['/control-panel/chats']);
+        }
+
         this.errorOnGetuserData = '';
         this.errorOnGetuserDataSubject.next(this.errorOnGetuserData);
       }, (error) => {
@@ -123,25 +129,20 @@ export class AuthService {
 
 
   setUserIP() {
-    const promise = new Promise<void>((resolve, reject) => {
-      this._userLocationSubscription = this._http.get("https://api.geoapify.com/v1/ipinfo?apiKey=" + environment.geoLocationAPIKey)
-      .subscribe((res: any) => {
-        if(res && this.userDbSubscription) {
-          this.userLocation.country = res.country.name,
-          this.userLocation.city = res.city.name,
-          this.userLocation.ip = res.ip,
-          this.userLocation.id = this._generateIdService.generateId(),
-          this.userLocation.date = firebase.default.firestore.Timestamp.now();
-          resolve();
-        }
-      });
-    }).then(() => {      
+    this._userLocationSubscription = this._http.get("https://api.geoapify.com/v1/ipinfo?apiKey=" + environment.geoLocationAPIKey)
+    .subscribe((res: any) => {
+      this.userLocation.country = res.country.name,
+      this.userLocation.city = res.city.name,
+      this.userLocation.ip = res.ip,
+      this.userLocation.id = this._generateIdService.generateId(),
+      this.userLocation.date = firebase.default.firestore.Timestamp.now();
+
       this._firestoreCollections.setUserIPAddress(this.userLocation).then(() => {
         this._userLocationSubscription.unsubscribe();
       }, (error) => {
 
       })
-    })
+    });
   }
 
   errorAuthHandler(error: any) {

@@ -4,7 +4,7 @@
       <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
       <div class="sign-form__sign-up-header">
-        <h2>Sign in</h2>
+        <h2>Login</h2>
       </div>
 
       <hr class="hr-border">
@@ -58,7 +58,7 @@
       </div>
 
       <div>
-        <button class="btn-default" type="submit" [disabled]="!signinForm.valid">Sign in</button>
+        <button class="btn-default" type="submit" [disabled]="!signinForm.valid">Login</button>
         <ul class="sign-error">
           <li class="error-msg" *ngIf="errorAuthMsg">{{ errorAuthMsg }}</li>
           <li class="error-msg" *ngIf="errorOnGetuserData">{{ errorOnGetuserData }}</li>

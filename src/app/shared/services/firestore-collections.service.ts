@@ -18,9 +18,6 @@ export class FirestoreCollectionsService {
     return this._firestore.collection('users').doc(newUser.uid).set({
       name: newUser.name,
       email: newUser.email,
-      phoneCode: newUser.phoneCode,
-      phone: newUser.phone,
-      userImgUrl: newUser.userImgUrl,
       uid: newUser.uid
     });
   };
