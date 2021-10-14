@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import * as admin from 'firebase-admin';
 
 import { environment } from 'src/environments/environment';
 import { LoginHistory, User } from '../models/user.model';
@@ -42,35 +41,27 @@ export class AuthService {
 
   signUp(newUser: User) {
     this.enableLoadingSpinner();
-
-    // const createUser = {email: newUser.email, password: newUser.password}
-
-    // admin.auth().createUser(createUser).then(user => {
-    //   console.log(user);
-      
-    // })
-
-    // this._firebaseAuth.createUserWithEmailAndPassword(newUser.email, newUser.password!)
-    // .then((user) => {
-    //   newUser.uid = user.user!.uid;
-    //   this._firestoreCollections.setUserData(newUser)
-    //   .then(() => {
-    //       this.setIP = true;
-    //       this.subscribeForDbCollectionUser(newUser.email);
-    //       this.errorOnSetUserData = '';
-    //       this.errorOnSetUserDataSubject.next(this.errorOnSetUserData);
-    //     }, (error) => {
-    //       this.errorOnSetUserData = error.message;
-    //       this.errorOnSetUserDataSubject.next(this.errorOnSetUserData);
-    //     }
-    //   );
-    //   this.errorAuthMsg = '';
-    //   this.errorAuthMsgSubject.next(this.errorAuthMsg);
-    //   this.disableLoadingSpinner();
-    // }, (error) => {
-    //   this.errorAuthHandler(error);
-    //   this.disableLoadingSpinner();
-    // });
+    this._firebaseAuth.createUserWithEmailAndPassword(newUser.email, newUser.password!)
+    .then((user) => {
+      newUser.uid = user.user!.uid;
+      this._firestoreCollections.setUserData(newUser)
+      .then(() => {
+          this.setIP = true;
+          this.subscribeForDbCollectionUser(newUser.email);
+          this.errorOnSetUserData = '';
+          this.errorOnSetUserDataSubject.next(this.errorOnSetUserData);
+        }, (error) => {
+          this.errorOnSetUserData = error.message;
+          this.errorOnSetUserDataSubject.next(this.errorOnSetUserData);
+        }
+      );
+      this.errorAuthMsg = '';
+      this.errorAuthMsgSubject.next(this.errorAuthMsg);
+      this.disableLoadingSpinner();
+    }, (error) => {
+      this.errorAuthHandler(error);
+      this.disableLoadingSpinner();
+    });
   }
 
   signIn(email: string, password: string) {
