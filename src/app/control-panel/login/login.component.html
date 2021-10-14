@@ -1,0 +1,69 @@
+<div>
+  <div class="container">
+    <form class="sign-form" [formGroup]="signinForm" (ngSubmit)="onSubmit(signinForm)">
+      <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+      <div class="sign-form__sign-up-header">
+        <h2>Sign in</h2>
+      </div>
+
+      <hr class="hr-border">
+
+      <div class="sign-form__sign-element">
+        <label for="email">Email</label>
+        <div class="email">
+          <div class="email-img"></div>
+          <input type="text" name="email" formControlName="email">
+        </div>
+        <ul class="sign-error">
+          <li *ngIf="
+          !signinForm.get('email')!.valid && 
+          !signinForm.get('email')!.hasError('email') && 
+          signinForm.get('email')!.touched">
+            Please enter your email!
+          </li>
+          <li *ngIf="
+          signinForm.get('email')!.hasError('email') &&
+          signinForm.get('email')!.touched">
+            Please enter a valid email!
+          </li>
+        </ul>
+      </div>
+
+      <div class="sign-form__sign-element">
+        <label for="password">Password</label>
+        <div class="password">
+          <div class="password-img"></div>
+          <input type="password" name="password" formControlName="password">
+        </div>
+        <ul class="sign-error">
+          <li *ngIf="
+          !signinForm.get('password')!.valid &&
+          !signinForm.get('password')!.hasError('maxlength') &&
+          !signinForm.get('password')!.hasError('minlength') &&
+          signinForm.get('password')!.touched">
+            Please enter a passowrd!
+          </li>
+          <li *ngIf="
+          signinForm.get('password')!.hasError('maxlength') &&
+          signinForm.get('password')!.touched">
+            The password could not be longer then 30 symbols!
+          </li>
+          <li *ngIf="
+          signinForm.get('password')!.hasError('minlength') &&
+          signinForm.get('password')!.touched">
+            The password should be at least 8 symbols!
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <button class="btn-default" type="submit" [disabled]="!signinForm.valid">Sign in</button>
+        <ul class="sign-error">
+          <li class="error-msg" *ngIf="errorAuthMsg">{{ errorAuthMsg }}</li>
+          <li class="error-msg" *ngIf="errorOnGetuserData">{{ errorOnGetuserData }}</li>
+        </ul>
+      </div>
+    </form>
+  </div>
+</div>

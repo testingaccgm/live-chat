@@ -7,5 +7,6 @@ export const environment = {
     storageBucket: "live-chat-dcb29.appspot.com",
     messagingSenderId: "30670541766",
     appId: "1:30670541766:web:2e599941fa52d3985358c7"
-  }
+  },
+  geoLocationAPIKey: 'a77ee739ab87419193811644c63fda5a'
 };

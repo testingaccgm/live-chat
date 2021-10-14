@@ -1,0 +1,71 @@
+$white: #fff;
+$black: #000;
+$gray: #999;
+$red: #b53636;
+
+$color1-light: #fcfcfc;
+$color1-dark: #18191a;
+
+$color2-light: #fff;
+$color2-dark: #242526;
+
+$color3-light: #fff;
+$color3-dark: #999;
+
+$color4-light: #f1f0ec;
+$color4-dark: #303031;
+
+$color5-light: #f1f0ec;
+$color5-dark: #999;
+
+$color6-light: #000;
+$color6-dark: #999;
+
+$color7-light: #000;
+$color7-dark: #fff;
+
+$color8-light: #e4e4e2;
+$color8-dark: #999;
+
+$color9-light: #e4e4e2;
+$color9-dark: #18191a;
+
+$color10-light: #fff;
+$color10-dark: #b53636;
+
+$color11-light: #999;
+$color11-dark: #7a2626;
+
+$color12-light: #f9f9f7; 
+$color12-dark: #444546;
+
+$color13-light: rgba(#fff, 0.50);
+$color13-dark: rgba(#000, 0.50);
+
+$color14-light: #444546;
+$color14-dark: #7a2626;
+
+$color16-light: lighten($color14-light, 10%);
+$color16-dark: lighten($color14-dark, 10%);
+
+$color15-light: #999;
+$color15-dark: #444546;
+
+$colors: (
+  --color1: ($color1-light, $color1-dark),
+  --color2: ($color2-light, $color2-dark),
+  --color3: ($color3-light, $color3-dark),
+  --color4: ($color4-light, $color4-dark),
+  --color5: ($color5-light, $color5-dark),
+  --color6: ($color6-light, $color6-dark),
+  --color7: ($color7-light, $color7-dark),
+  --color8: ($color8-light, $color8-dark),
+  --color9: ($color9-light, $color9-dark),
+  --color10: ($color10-light, $color10-dark),
+  --color11: ($color11-light, $color11-dark),
+  --color12: ($color12-light, $color12-dark),
+  --color13: ($color13-light, $color13-dark),
+  --color14: ($color14-light, $color14-dark),
+  --color15: ($color15-light, $color15-dark),
+  --color16: ($color16-light, $color16-dark)
+);

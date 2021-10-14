@@ -1,0 +1,21 @@
+@mixin hover ($hover) {
+  @if $hover == normal {
+    @media not all and (pointer: coarse) {
+      &:hover { @content; }    
+    }
+  } @else if $hover == after {
+    @media not all and (pointer: coarse) {
+      &:hover::after { @content; }    
+    }
+  } @else if $hover == before {
+    @media not all and (pointer: coarse) {
+      &:hover::before { @content; }    
+    }
+  }
+}
+
+@mixin hoverStyleCustom ($customEl) {
+  @media not all and (pointer: coarse) {
+    &:hover #{$customEl} { @content; }    
+  }
+}
