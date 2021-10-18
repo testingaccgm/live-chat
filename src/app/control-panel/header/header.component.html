@@ -1,1 +1,5 @@
-<p>header works!</p>
+<ul>
+  <li [routerLink]="['chats']" routerLinkActive="router-link-active" >Chats</li>
+  <li [routerLink]="['settings']" routerLinkActive="router-link-active" >Settings</li>
+</ul>
+<button (click)="logout()">Logout</button>

@@ -55,7 +55,7 @@ export class RegisterComponent implements OnInit {
     this._isLoadingSubscription = this._authService.isLoadingSubject
     .subscribe((boolean) => {
       this.isLoading = boolean;
-    })
+    });    
   }
 
   ngOnDestroy(): void {

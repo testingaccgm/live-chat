@@ -31,6 +31,8 @@ export class AuthService {
   isLoading: boolean = false;
   isLoadingSubject = new BehaviorSubject<boolean>(this.isLoading);
 
+  secondaryApp = firebase.default.initializeApp(environment.firebaseConfig, 'Secondary');
+
   constructor(
     private _router: Router,
     private _firebaseAuth: AngularFireAuth,
@@ -41,13 +43,12 @@ export class AuthService {
 
   signUp(newUser: User) {
     this.enableLoadingSpinner();
-    this._firebaseAuth.createUserWithEmailAndPassword(newUser.email, newUser.password!)
+    this.secondaryApp.auth().createUserWithEmailAndPassword(newUser.email, newUser.password!)
     .then((user) => {
       newUser.uid = user.user!.uid;
       this._firestoreCollections.setUserData(newUser)
       .then(() => {
-          this.setIP = true;
-          this.subscribeForDbCollectionUser(newUser.email);
+          this.secondaryApp.auth().signOut();
           this.errorOnSetUserData = '';
           this.errorOnSetUserDataSubject.next(this.errorOnSetUserData);
         }, (error) => {
@@ -93,14 +94,7 @@ export class AuthService {
   autoLogin() {
     this._firebaseAuth.authState.subscribe((user) => {
       if (user && !this.userDbSubscription) {
-        this.subscribeForDbCollectionUser(user.email!);
-
-        setTimeout(() => {
-          this.user.subscribe(user => {
-            console.log(user.name);          
-          })
-        }, 1000);
-        
+        this.subscribeForDbCollectionUser(user.email!);        
       } else {
         this.user.next(null!);
       }
@@ -133,7 +127,6 @@ export class AuthService {
       }
     );
   };
-
 
   setUserIP() {
     this._userLocationSubscription = this._http.get("https://api.geoapify.com/v1/ipinfo?apiKey=" + environment.geoLocationAPIKey)
