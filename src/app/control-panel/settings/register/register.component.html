@@ -103,8 +103,13 @@
       <div class="sign-form__sign-element">
         <div>
           <label *ngFor="let role of roles">           
-            <input type="checkbox" [value]="role.value" (change)="onRoleChange($event)">
-            {{ role.name }}        
+            <input 
+              type="checkbox" 
+              [value]="role.value" 
+              [attr.checked]="role.checked ? 'checked' : null"
+              [attr.name]="role.name"
+              (change)="onRoleChange($event)">
+            {{ role.name }}
           </label>    
         </div>
       </div>

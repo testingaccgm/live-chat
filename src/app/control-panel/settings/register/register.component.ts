@@ -24,13 +24,14 @@ export class RegisterComponent implements OnInit {
   isLoading!: boolean;
   private _isLoadingSubscription!: Subscription;
 
-  roles: Array<{name: string, value: string}> = [
-    {name: 'Users', value: 'users'},
-    {name: 'Register', value: 'register'},
-    {name: 'Blocked Clients', value: 'blockedClients'},
-    {name: 'Account Settings', value: 'accountSettings'},
-    {name: 'Allowed Domains', value: 'allowedDomains'}
+  roles: Array<{name: string, value: string, checked: boolean}> = [
+    {name: 'Users', value: 'users', checked: false},
+    {name: 'Register', value: 'register', checked: false},
+    {name: 'Blocked Clients', value: 'blockedClients', checked: true},
+    {name: 'Account Settings', value: 'accountSettings', checked: true},
+    {name: 'Allowed Domains', value: 'allowedDomains', checked: false}
   ];
+  rolesArray!: FormArray;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -50,6 +51,8 @@ export class RegisterComponent implements OnInit {
         validator: this.confirmPasswordMatcher('password', 'confirmPass'),
       }
     );
+
+    this.rolesArray = this.signupForm.get('roles') as FormArray;
 
     this._errorAuthMsgSubscription =
       this._authService.errorAuthMsgSubject.subscribe((error) => {
@@ -89,15 +92,13 @@ export class RegisterComponent implements OnInit {
   };
 
   onRoleChange(event: any) {
-    const roles: FormArray = this.signupForm.get('roles') as FormArray;
-
     if(event.target.checked) {
-      roles.push(new FormControl(event.target.value));
+      this.rolesArray.push(new FormControl({name: event.target.name, value: event.target.value}));
     } else {
       let index: number = 0;
-      roles.controls.forEach(item => {
+      this.rolesArray.controls.forEach(item => {
         if (item.value == event.target.value) {
-          roles.removeAt(index);
+          this.rolesArray.removeAt(index);
           return;
         }
         index++;
@@ -108,7 +109,13 @@ export class RegisterComponent implements OnInit {
   onSubmit(signupForm: FormGroup) {
     if (signupForm.invalid) {
       return;
-    }
+    };
+
+    for (const role of this.roles) {
+      if(role.checked) {
+        this.rolesArray.push(new FormControl({name: role.name, value: role.value}));
+      }
+    };
 
     const name = signupForm.value.name;
     const email = signupForm.value.email;
@@ -121,7 +128,9 @@ export class RegisterComponent implements OnInit {
       password,
       roles
     };
+    
+    console.log(newUser);
 
-    this._authService.signUp(newUser);
+    // this._authService.signUp(newUser);
   }
 }

@@ -62,8 +62,8 @@ export class AuthService {
     }, (error) => {
       this.errorAuthHandler(error);
       this.disableLoadingSpinner();
-    });
-  }
+    })
+  };
 
   signIn(email: string, password: string) {
     this.enableLoadingSpinner();
@@ -79,8 +79,8 @@ export class AuthService {
         this.errorAuthHandler(error);
         this.disableLoadingSpinner();
       }
-    );
-  }
+    )
+  };
 
   logout() {
     this._firebaseAuth.signOut()
@@ -88,7 +88,7 @@ export class AuthService {
       this.userDbSubscription.unsubscribe();
       this.user.next(null!);
       this._router.navigate(['/control-panel/login']);
-    });
+    })
   };
 
   autoLogin() {
@@ -98,7 +98,7 @@ export class AuthService {
       } else {
         this.user.next(null!);
       }
-    });
+    })
   };
   
   subscribeForDbCollectionUser(userEmail: string) {
@@ -125,7 +125,7 @@ export class AuthService {
         this.errorOnGetuserData = error.message;
         this.errorOnGetuserDataSubject.next(this.errorOnGetuserData);
       }
-    );
+    )
   };
 
   setUserIP() {
@@ -142,7 +142,7 @@ export class AuthService {
       }, (error) => {
 
       })
-    });
+    })
   };
 
   errorAuthHandler(error: any) {

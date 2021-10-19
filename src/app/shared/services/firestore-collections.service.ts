@@ -18,6 +18,7 @@ export class FirestoreCollectionsService {
     return this._firestore.collection('users').doc(newUser.uid).set({
       name: newUser.name,
       email: newUser.email,
+      roles: newUser.roles,
       uid: newUser.uid
     });
   };

@@ -22,10 +22,7 @@ export class LoginHistory {
 
 export class Roles {
   constructor(
-    public users: boolean,
-    public register: boolean,
-    public blockedClients: boolean,
-    public accountSettings: boolean,
-    public allowedDomains: boolean,
+    public name: string,
+    public value: string
   ) {}
 };
