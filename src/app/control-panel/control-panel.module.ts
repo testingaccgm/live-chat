@@ -11,6 +11,10 @@ import { RegisterComponent } from './settings/register/register.component';
 import { AuthActivate } from '../shared/services/auth.activate';
 import { HeaderComponent } from './header/header.component';
 import { SettingsComponent } from './settings/settings.component';
+import { UsersComponent } from './settings/users/users.component';
+import { BlockedClientsComponent } from './settings/blocked-clients/blocked-clients.component';
+import { AccountSettingsComponent } from './settings/account-settings/account-settings.component';
+import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-domains.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +23,11 @@ import { SettingsComponent } from './settings/settings.component';
     ChatsComponent,
     RegisterComponent,
     HeaderComponent,
-    SettingsComponent
+    SettingsComponent,
+    UsersComponent,
+    BlockedClientsComponent,
+    AccountSettingsComponent,
+    AllowedDomainsComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +40,7 @@ import { SettingsComponent } from './settings/settings.component';
             canActivate: [AuthActivate],
             data: {
               autenticationRequired: false,
-              autenticationFailureRedirectUrl: '/control-panel/login',
+              autenticationFailureRedirectUrl: '/control-panel/settings',
             }
           },
           {path: 'chats', component: ChatsComponent,
@@ -44,7 +52,35 @@ import { SettingsComponent } from './settings/settings.component';
           },
           {path: 'settings', component: SettingsComponent,
             children: [
+              {path: 'users', component: UsersComponent,
+                canActivate: [AuthActivate],
+                data: {
+                  autenticationRequired: true,
+                  autenticationFailureRedirectUrl: '/control-panel/login',
+                }
+              },
               {path: 'register', component: RegisterComponent,
+                canActivate: [AuthActivate],
+                data: {
+                  autenticationRequired: true,
+                  autenticationFailureRedirectUrl: '/control-panel/login',
+                }
+              },
+              {path: 'blocked-clients', component: BlockedClientsComponent,
+                canActivate: [AuthActivate],
+                data: {
+                  autenticationRequired: true,
+                  autenticationFailureRedirectUrl: '/control-panel/login',
+                }
+              },
+              {path: 'account-settings', component: AccountSettingsComponent,
+                canActivate: [AuthActivate],
+                data: {
+                  autenticationRequired: true,
+                  autenticationFailureRedirectUrl: '/control-panel/login',
+                }
+              },
+              {path: 'allowed-domains', component: AllowedDomainsComponent,
                 canActivate: [AuthActivate],
                 data: {
                   autenticationRequired: true,
@@ -53,6 +89,7 @@ import { SettingsComponent } from './settings/settings.component';
               }
             ]
           },
+          {path: '**', redirectTo: 'settings'}
         ]
       }
     ])

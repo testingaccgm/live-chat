@@ -28,6 +28,11 @@ export class FirestoreCollectionsService {
     .snapshotChanges();
   };
 
+  getUsers() {
+    return this._firestore
+    .collection('users').snapshotChanges();
+  };
+
   setUserIPAddress(userLocation: LoginHistory) {
     return this._firestore
     .collection('users').doc(userLocation.uid).update({
