@@ -1,0 +1,14 @@
+.settings {
+  display: flex;
+  align-items: flex-start;
+  &__nav {
+    width: 10%;
+    ul li {
+      list-style: none;
+      cursor: pointer;
+    }
+  }
+  &__options {
+    width: 90%;
+  }
+}

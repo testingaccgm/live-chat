@@ -143,7 +143,7 @@ export class AuthService {
 
       })
     });
-  }
+  };
 
   errorAuthHandler(error: any) {
     switch (error.code) {
@@ -173,10 +173,10 @@ export class AuthService {
   enableLoadingSpinner() {
     this.isLoading = true;
     this.isLoadingSubject.next(this.isLoading);
-  }
+  };
 
   disableLoadingSpinner() {
     this.isLoading = false;
     this.isLoadingSubject.next(this.isLoading);
-  }
+  };
 }

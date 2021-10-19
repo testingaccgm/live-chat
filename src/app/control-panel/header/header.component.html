@@ -1,5 +1,9 @@
-<ul>
-  <li [routerLink]="['chats']" routerLinkActive="router-link-active" >Chats</li>
-  <li [routerLink]="['settings']" routerLinkActive="router-link-active" >Settings</li>
-</ul>
-<button (click)="logout()">Logout</button>
+<div class="container">
+  <div class="header-nav">
+    <ul class="header-nav__links">
+      <li [routerLink]="['chats']" routerLinkActive="router-link-active" >Chats</li>
+      <li [routerLink]="['settings']" routerLinkActive="router-link-active" >Settings</li>
+    </ul>
+    <button class="header-nav__logout-btn" (click)="logout()">Logout</button>
+  </div>
+</div>

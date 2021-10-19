@@ -45,4 +45,11 @@ export class FirestoreCollectionsService {
       })
     })
   };
+
+  updateUserDisplayName(newInfo: {userId: string, displayName: string}) {
+    return this._firestore
+    .collection('users').doc(newInfo.userId).update({
+      name: newInfo.displayName
+    })
+  }
 }

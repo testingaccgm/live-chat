@@ -1,8 +1,16 @@
-<ul>
-  <li [routerLink]="['users']" routerLinkActive="router-link-active" >Users</li>
-  <li [routerLink]="['register']" routerLinkActive="router-link-active" >Register</li>
-  <li [routerLink]="['blocked-clients']" routerLinkActive="router-link-active" >Blocked Clients</li>
-  <li [routerLink]="['account-settings']" routerLinkActive="router-link-active" >Account Settings</li>
-  <li [routerLink]="['allowed-domains']" routerLinkActive="router-link-active" >Allowed Domains</li>
-</ul>
-<router-outlet></router-outlet>
+<div class="container">
+  <div class="settings">
+    <div class="settings__nav">
+      <ul>
+        <li [routerLink]="['users']" routerLinkActive="settings-link-active" >Users</li>
+        <li [routerLink]="['register']" routerLinkActive="settings-link-active" >Register</li>
+        <li [routerLink]="['blocked-clients']" routerLinkActive="settings-link-active" >Blocked Clients</li>
+        <li [routerLink]="['account-settings']" routerLinkActive="settings-link-active" >Account Settings</li>
+        <li [routerLink]="['allowed-domains']" routerLinkActive="settings-link-active" >Allowed Domains</li>
+      </ul>    
+    </div>
+    <div class="settings__options">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

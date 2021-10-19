@@ -4,7 +4,7 @@ import { ControlPanelComponent } from './control-panel.component';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { ChatsComponent } from './chats/chats.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '../shared/shared.module';
 import { RegisterComponent } from './settings/register/register.component';
@@ -27,12 +27,13 @@ import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-doma
     UsersComponent,
     BlockedClientsComponent,
     AccountSettingsComponent,
-    AllowedDomainsComponent
+    AllowedDomainsComponent    
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     SharedModule,
+    FormsModule,
     RouterModule.forChild([
       {path: '', component: ControlPanelComponent,
         children: [
