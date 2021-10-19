@@ -102,26 +102,10 @@
 
       <div class="sign-form__sign-element">
         <div>
-          <label>
-            Users
-            <input type="checkbox" value="users">            
-          </label>
-          <label>
-            Register
-            <input type="checkbox" value="register">
-          </label>
-          <label>
-            Blocked Clients
-            <input type="checkbox" value="blockedClients">
-          </label>
-          <label>
-            Account Settings
-            <input type="checkbox" value="accountSettings">
-          </label>
-          <label>
-            Allowed Domains
-            <input type="checkbox" value="allowedDomains">
-          </label>          
+          <label *ngFor="let role of roles">           
+            <input type="checkbox" [value]="role.value" (change)="onRoleChange($event)">
+            {{ role.name }}        
+          </label>    
         </div>
       </div>
 

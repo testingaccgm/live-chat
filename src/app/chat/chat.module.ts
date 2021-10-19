@@ -10,7 +10,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     RouterModule.forChild([
-      {path: '', component: ChatComponent}
+      {path: '', component: ChatComponent},
+      {path: '**', redirectTo: ''}
     ])
   ],
   exports: [

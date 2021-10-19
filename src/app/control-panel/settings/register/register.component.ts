@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { User } from 'src/app/shared/models/user.model';
@@ -24,6 +24,14 @@ export class RegisterComponent implements OnInit {
   isLoading!: boolean;
   private _isLoadingSubscription!: Subscription;
 
+  roles: Array<{name: string, value: string}> = [
+    {name: 'Users', value: 'users'},
+    {name: 'Register', value: 'register'},
+    {name: 'Blocked Clients', value: 'blockedClients'},
+    {name: 'Account Settings', value: 'accountSettings'},
+    {name: 'Allowed Domains', value: 'allowedDomains'}
+  ];
+
   constructor(
     private _formBuilder: FormBuilder,
     private _authService: AuthService,
@@ -36,6 +44,7 @@ export class RegisterComponent implements OnInit {
         email: [null, [Validators.required, Validators.email]],
         password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
         confirmPass: [null, [Validators.required]],
+        roles: this._formBuilder.array([])
       },
       {
         validator: this.confirmPasswordMatcher('password', 'confirmPass'),
@@ -77,7 +86,24 @@ export class RegisterComponent implements OnInit {
         matchingControl.setErrors(null);
       }
     };
-  }
+  };
+
+  onRoleChange(event: any) {
+    const roles: FormArray = this.signupForm.get('roles') as FormArray;
+
+    if(event.target.checked) {
+      roles.push(new FormControl(event.target.value));
+    } else {
+      let index: number = 0;
+      roles.controls.forEach(item => {
+        if (item.value == event.target.value) {
+          roles.removeAt(index);
+          return;
+        }
+        index++;
+      })
+    }
+  };
 
   onSubmit(signupForm: FormGroup) {
     if (signupForm.invalid) {
@@ -87,11 +113,13 @@ export class RegisterComponent implements OnInit {
     const name = signupForm.value.name;
     const email = signupForm.value.email;
     const password = signupForm.value.password;
+    const roles = signupForm.value.roles;
 
     const newUser: User = {
       name,
       email,
-      password
+      password,
+      roles
     };
 
     this._authService.signUp(newUser);

@@ -2,7 +2,7 @@ export class User {
   constructor(
     public name: string,
     public email: string,
-    public roles?: Roles,
+    public roles?: Roles[],
     public uid?: string,
     public password?: string,
     public loginHistory?: LoginHistory []

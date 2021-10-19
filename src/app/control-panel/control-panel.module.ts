@@ -90,7 +90,7 @@ import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-doma
               }
             ]
           },
-          {path: '**', redirectTo: 'settings'}
+          {path: '**', redirectTo: 'chats'}
         ]
       }
     ])
