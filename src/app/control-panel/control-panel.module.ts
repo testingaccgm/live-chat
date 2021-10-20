@@ -15,6 +15,9 @@ import { UsersComponent } from './settings/users/users.component';
 import { BlockedClientsComponent } from './settings/blocked-clients/blocked-clients.component';
 import { AccountSettingsComponent } from './settings/account-settings/account-settings.component';
 import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-domains.component';
+import { ActiveAcountsComponent } from './settings/users/active-acounts/active-acounts.component';
+import { InactiveAcountsComponent } from './settings/users/inactive-acounts/inactive-acounts.component';
+import { UsersTemplateComponent } from './settings/users/users-template/users-template.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-doma
     UsersComponent,
     BlockedClientsComponent,
     AccountSettingsComponent,
-    AllowedDomainsComponent    
+    AllowedDomainsComponent,
+    ActiveAcountsComponent,
+    InactiveAcountsComponent,
+    UsersTemplateComponent    
   ],
   imports: [
     CommonModule,
@@ -54,6 +60,11 @@ import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-doma
           {path: 'settings', component: SettingsComponent,
             children: [
               {path: 'users', component: UsersComponent,
+                children: [
+                  {path: 'active', component: ActiveAcountsComponent},
+                  {path: 'inactive', component: InactiveAcountsComponent},
+                  {path: '', redirectTo: 'active', pathMatch: 'full'}
+                ],
                 canActivate: [AuthActivate],
                 data: {
                   autenticationRequired: true,

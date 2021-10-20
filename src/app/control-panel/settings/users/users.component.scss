@@ -1,0 +1,9 @@
+.users-nav {
+  display: flex;
+  align-items: center;
+  li {
+    list-style: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+}

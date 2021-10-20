@@ -102,7 +102,7 @@ export class AuthService {
   };
   
   subscribeForDbCollectionUser(userEmail: string) {
-    this.userDbSubscription = this._firestoreCollections.getUserData(userEmail).subscribe(
+    this.userDbSubscription = this._firestoreCollections.getUserData('email', userEmail).subscribe(
       (data) => {
         const userInfo = data.map((e) => {
           return {
@@ -112,6 +112,10 @@ export class AuthService {
         });
         this.user.next(userInfo[0]);
         this.userLocation.uid = userInfo[0].uid!;
+
+        if (!userInfo[0].active) {
+          this.logout();
+        }
 
         if (this.setIP) {
           this.setIP = false;

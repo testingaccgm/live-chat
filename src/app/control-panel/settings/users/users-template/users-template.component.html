@@ -1,0 +1,63 @@
+<div>
+  <!-- loading spinner -->
+  <div>
+    <input type="text" [(ngModel)]="searchParams" placeholder="Search by email or display name...">
+    <table>
+      <tr>
+        <th>Display Name</th>
+        <th>Email Address</th>
+        <th>Reset Password</th>
+        <th>Roles</th>
+        <th>Activity</th>
+      </tr>
+      <tr *ngFor="let user of users | searchPipe: searchParams">
+        <td>
+          <div>
+            {{ user.name }}
+            <button 
+              (click)="enableEditDisplayNameMode(user)" 
+              type="button">
+                Edit
+            </button>
+          </div>
+          <div *ngIf="editDIsplayNameMode && userEmail == user.email">
+            <form [formGroup]="ChangeDisplayName" (ngSubmit)="editDisplayName(ChangeDisplayName)">
+              <div>
+                <input type="name" formControlName="name" placeholder="Enter display name...">
+              </div>
+              <div>
+                <button type="submit">Submit</button>
+                <button type="button" (click)="resetDisplayNameForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </td>
+        <td>
+          {{ user.email }}
+        </td>
+        <td>
+          <button 
+            type="button"
+            [disabled]="disabledResetPasswordButton && userEmail == user.email" 
+            (click)="resetPassword(user.email)">
+              Reset Password
+          </button>
+        </td>
+        <td>
+          checkboxes...
+        </td>
+        <td>
+          <button *ngIf="!user.active" (click)="changeAccountActivity(user.uid, true)">Activate</button>
+          <button *ngIf="user.active" (click)="changeAccountActivity(user.uid, false)">Deactivate</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div *ngIf="resetPasswordPopUp">
+    <p>
+      Reset password email was successfully sent to {{userEmail}}!
+    </p>
+    <button type="button" (click)="closeResetPasswordPopUp()">Close</button>
+  </div>
+</div>

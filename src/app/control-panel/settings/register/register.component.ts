@@ -121,16 +121,16 @@ export class RegisterComponent implements OnInit {
     const email = signupForm.value.email;
     const password = signupForm.value.password;
     const roles = signupForm.value.roles;
+    const active = true;
 
     const newUser: User = {
       name,
       email,
       password,
-      roles
+      roles,
+      active
     };
     
-    console.log(newUser);
-
-    // this._authService.signUp(newUser);
+    this._authService.signUp(newUser);
   }
 }

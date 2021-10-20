@@ -18,14 +18,15 @@ export class FirestoreCollectionsService {
     return this._firestore.collection('users').doc(newUser.uid).set({
       name: newUser.name,
       email: newUser.email,
+      active: newUser.active,
       roles: newUser.roles,
       uid: newUser.uid
     });
   };
 
-  getUserData(userEmail: string) {
+  getUserData(criteria : string, parameter: any) {
     return this._firestore
-    .collection('users', (data) => data.where('email', '==', userEmail))
+    .collection('users', (data) => data.where(criteria, '==', parameter))
     .snapshotChanges();
   };
 
@@ -52,5 +53,12 @@ export class FirestoreCollectionsService {
     .collection('users').doc(newInfo.userId).update({
       name: newInfo.displayName
     })
-  }
+  };
+
+  updateUserParameter(newInfo: {userId: string, parameter: any}) {
+    return this._firestore
+    .collection('users').doc(newInfo.userId).update({
+      active: newInfo.parameter
+    })
+  };
 }

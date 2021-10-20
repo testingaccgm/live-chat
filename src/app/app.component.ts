@@ -15,8 +15,6 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this._authservice.logout();
-
     this._authservice.autoLogin();
     this._themeService.getCurrentTheme();
 
