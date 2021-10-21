@@ -20,13 +20,10 @@ export class AuthActivate implements CanActivate {
 
     return new Promise((resolve, reject) => {
       this.userSubscription = this._firebaseAuth.authState.subscribe((user) => {
-        console.log('11');
           if (autenticationRequired && user || !autenticationRequired && !user) {
-            console.log('22');
             this.userSubscription.unsubscribe();
             return resolve(true);
           }
-          console.log('33');
           this.userSubscription.unsubscribe();
           return this._router.navigate([autenticationFailureRedirectUrl]);
         }
