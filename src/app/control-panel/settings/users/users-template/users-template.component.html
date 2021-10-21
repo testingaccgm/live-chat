@@ -9,6 +9,7 @@
         <th>Reset Password</th>
         <th>Roles</th>
         <th>Activity</th>
+        <th>Login History</th>
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams">
         <td>
@@ -49,6 +50,9 @@
         <td>
           <button *ngIf="!user.active" (click)="changeAccountActivity(user.uid, true)">Activate</button>
           <button *ngIf="user.active" (click)="changeAccountActivity(user.uid, false)">Deactivate</button>
+        </td>
+        <td>
+          <button>Check the last 10 logins</button>
         </td>
       </tr>
     </table>

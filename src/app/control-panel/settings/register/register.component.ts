@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 
 import { User } from 'src/app/shared/models/user.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
 
 @Component({
   selector: 'app-register',
@@ -24,19 +23,18 @@ export class RegisterComponent implements OnInit {
   isLoading!: boolean;
   private _isLoadingSubscription!: Subscription;
 
-  roles: Array<{name: string, value: string, checked: boolean}> = [
-    {name: 'Users', value: 'users', checked: false},
-    {name: 'Register', value: 'register', checked: false},
-    {name: 'Blocked Clients', value: 'blockedClients', checked: true},
-    {name: 'Account Settings', value: 'accountSettings', checked: true},
-    {name: 'Allowed Domains', value: 'allowedDomains', checked: false}
+  roles: Array<{name: string, value: string, route: string, checked: boolean}> = [
+    {name: 'Users', value: 'users', route: 'users', checked: false},
+    {name: 'Register', value: 'register', route: 'register', checked: false},
+    {name: 'Blocked Clients', value: 'blockedClients', route: 'blocked-clients', checked: true},
+    {name: 'Account Settings', value: 'accountSettings', route: 'account-settings', checked: true},
+    {name: 'Allowed Domains', value: 'allowedDomains', route: 'allowed-domains', checked: false}
   ];
   rolesArray!: FormArray;
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _authService: AuthService,
-    private _firestoreCollections: FirestoreCollectionsService
+    private _authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +51,18 @@ export class RegisterComponent implements OnInit {
     );
 
     this.rolesArray = this.signupForm.get('roles') as FormArray;
+
+    for (const role of this.roles) {
+      if(role.checked) {
+        this.rolesArray.push(new FormControl(
+          {
+            name: role.name,
+            value: role.value,
+            route: role.route
+          }
+        ));
+      }
+    };
 
     this._errorAuthMsgSubscription =
       this._authService.errorAuthMsgSubject.subscribe((error) => {
@@ -93,28 +103,28 @@ export class RegisterComponent implements OnInit {
 
   onRoleChange(event: any) {
     if(event.target.checked) {
-      this.rolesArray.push(new FormControl({name: event.target.name, value: event.target.value}));
+      this.rolesArray.push(new FormControl(
+        {
+          name: event.target.name,
+          value: event.target.value,
+          route: event.target.dataset.route
+        }
+      ));
     } else {
       let index: number = 0;
       this.rolesArray.controls.forEach(item => {
-        if (item.value == event.target.value) {
+        if (item.value.value == event.target.value) { 
           this.rolesArray.removeAt(index);
           return;
         }
         index++;
       })
-    }
+    } 
   };
 
   onSubmit(signupForm: FormGroup) {
     if (signupForm.invalid) {
       return;
-    };
-
-    for (const role of this.roles) {
-      if(role.checked) {
-        this.rolesArray.push(new FormControl({name: role.name, value: role.value}));
-      }
     };
 
     const name = signupForm.value.name;

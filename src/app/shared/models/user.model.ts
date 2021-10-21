@@ -24,6 +24,7 @@ export class LoginHistory {
 export class Roles {
   constructor(
     public name: string,
-    public value: string
+    public value: string,
+    public route: string
   ) {}
 };

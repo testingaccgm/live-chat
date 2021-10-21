@@ -108,6 +108,8 @@
               [value]="role.value" 
               [attr.checked]="role.checked ? 'checked' : null"
               [attr.name]="role.name"
+              [attr.name]="role.name"
+              [attr.data-route]="role.route"
               (change)="onRoleChange($event)">
             {{ role.name }}
           </label>    

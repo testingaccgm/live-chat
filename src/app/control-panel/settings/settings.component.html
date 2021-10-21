@@ -2,11 +2,12 @@
   <div class="settings">
     <div class="settings__nav">
       <ul>
-        <li [routerLink]="['users']" routerLinkActive="settings-link-active" >Users</li>
-        <li [routerLink]="['register']" routerLinkActive="settings-link-active" >Register</li>
-        <li [routerLink]="['blocked-clients']" routerLinkActive="settings-link-active" >Blocked Clients</li>
-        <li [routerLink]="['account-settings']" routerLinkActive="settings-link-active" >Account Settings</li>
-        <li [routerLink]="['allowed-domains']" routerLinkActive="settings-link-active" >Allowed Domains</li>
+        <li 
+          *ngFor="let role of user?.roles" 
+          [routerLink]="[role.route]" 
+          routerLinkActive="settings-link-active" >
+            {{role.name}}
+        </li>
       </ul>    
     </div>
     <div class="settings__options">

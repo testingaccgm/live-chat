@@ -18,6 +18,7 @@ import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-doma
 import { ActiveAcountsComponent } from './settings/users/active-acounts/active-acounts.component';
 import { InactiveAcountsComponent } from './settings/users/inactive-acounts/inactive-acounts.component';
 import { UsersTemplateComponent } from './settings/users/users-template/users-template.component';
+import { RoleActive } from '../shared/services/role.activate';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,7 @@ import { UsersTemplateComponent } from './settings/users/users-template/users-te
             canActivate: [AuthActivate],
             data: {
               autenticationRequired: false,
-              autenticationFailureRedirectUrl: '/control-panel/settings',
+              autenticationFailureRedirectUrl: '/control-panel/chats',
             }
           },
           {path: 'chats', component: ChatsComponent,
@@ -65,41 +66,46 @@ import { UsersTemplateComponent } from './settings/users/users-template/users-te
                   {path: 'inactive', component: InactiveAcountsComponent},
                   {path: '', redirectTo: 'active', pathMatch: 'full'}
                 ],
-                canActivate: [AuthActivate],
+                canActivate: [RoleActive],
                 data: {
-                  autenticationRequired: true,
-                  autenticationFailureRedirectUrl: '/control-panel/login',
+                  role: 'users',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               },
               {path: 'register', component: RegisterComponent,
-                canActivate: [AuthActivate],
+                canActivate: [RoleActive],
                 data: {
-                  autenticationRequired: true,
-                  autenticationFailureRedirectUrl: '/control-panel/login',
+                  role: 'register',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               },
               {path: 'blocked-clients', component: BlockedClientsComponent,
-                canActivate: [AuthActivate],
+                canActivate: [RoleActive],
                 data: {
-                  autenticationRequired: true,
-                  autenticationFailureRedirectUrl: '/control-panel/login',
+                  role: 'blockedClients',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               },
               {path: 'account-settings', component: AccountSettingsComponent,
-                canActivate: [AuthActivate],
+                canActivate: [RoleActive],
                 data: {
-                  autenticationRequired: true,
-                  autenticationFailureRedirectUrl: '/control-panel/login',
+                  role: 'accountSettings',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               },
               {path: 'allowed-domains', component: AllowedDomainsComponent,
-                canActivate: [AuthActivate],
+                canActivate: [RoleActive],
                 data: {
-                  autenticationRequired: true,
-                  autenticationFailureRedirectUrl: '/control-panel/login',
+                  role: 'allowedDomains',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               }
-            ]
+            ],
+            canActivate: [AuthActivate],
+            data: {
+              autenticationRequired: true,
+              autenticationFailureRedirectUrl: '/control-panel/login',
+            }
           },
           {path: '**', redirectTo: 'chats'}
         ]
