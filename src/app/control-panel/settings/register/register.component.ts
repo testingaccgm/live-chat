@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { User } from 'src/app/shared/models/user.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { RolesService } from '../roles.service';
 
 @Component({
   selector: 'app-register',
@@ -23,18 +24,13 @@ export class RegisterComponent implements OnInit {
   isLoading!: boolean;
   private _isLoadingSubscription!: Subscription;
 
-  roles: Array<{name: string, value: string, route: string, checked: boolean}> = [
-    {name: 'Users', value: 'users', route: 'users', checked: false},
-    {name: 'Register', value: 'register', route: 'register', checked: false},
-    {name: 'Blocked Clients', value: 'blockedClients', route: 'blocked-clients', checked: true},
-    {name: 'Account Settings', value: 'accountSettings', route: 'account-settings', checked: true},
-    {name: 'Allowed Domains', value: 'allowedDomains', route: 'allowed-domains', checked: false}
-  ];
+  roles = this._roleService.roles;
   rolesArray!: FormArray;
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _roleService: RolesService
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +45,7 @@ export class RegisterComponent implements OnInit {
         validator: this.confirmPasswordMatcher('password', 'confirmPass'),
       }
     );
-
+    
     this.rolesArray = this.signupForm.get('roles') as FormArray;
 
     for (const role of this.roles) {

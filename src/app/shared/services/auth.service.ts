@@ -92,7 +92,7 @@ export class AuthService {
   };
 
   autoLogin() {
-    this._firebaseAuth.authState.subscribe((user) => {
+    this._firebaseAuth.authState.subscribe((user) => {    
       if (user && !this.userDbSubscription) {
         this.subscribeForDbCollectionUser(user.email!);        
       } else {

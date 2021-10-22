@@ -14,14 +14,14 @@
       <tr *ngFor="let user of users | searchPipe: searchParams">
         <td>
           <div>
-            {{ user.name }}
+            <p>{{ user.name }}</p>
             <button 
               (click)="enableEditDisplayNameMode(user)" 
               type="button">
                 Edit
             </button>
           </div>
-          <div *ngIf="editDIsplayNameMode && userEmail == user.email">
+          <div *ngIf="editDIsplayNameMode && currentUser.email == user.email">
             <form [formGroup]="ChangeDisplayName" (ngSubmit)="editDisplayName(ChangeDisplayName)">
               <div>
                 <input type="name" formControlName="name" placeholder="Enter display name...">
@@ -39,20 +39,52 @@
         <td>
           <button 
             type="button"
-            [disabled]="disabledResetPasswordButton && userEmail == user.email" 
-            (click)="resetPassword(user.email)">
+            [disabled]="disabledResetPasswordButton && currentUser.email == user.email" 
+            (click)="resetPassword(user)">
               Reset Password
           </button>
         </td>
         <td>
-          checkboxes...
+          <div>
+            <div>
+              <label *ngFor="let role of user.roles">           
+                <input 
+                  type="checkbox" disabled checked>
+                  {{ role.name }}
+              </label>    
+            </div>
+            <div>
+              <button type="button" (click)="enableChangeRolesMode()">Edit</button>
+            </div>
+          </div>
+          <div *ngIf="changeRolesMode">
+            <form [formGroup]="changeRolesForm" (ngSubmit)="changeRolesSubmit(changeRolesForm, user)">
+              <div>
+                
+              </div>
+              <div>
+                <button type="submit">Submit</button>
+                <button type="button">Cancel</button>
+              </div>
+            </form>
+          </div>
         </td>
         <td>
-          <button *ngIf="!user.active" (click)="changeAccountActivity(user.uid, true)">Activate</button>
-          <button *ngIf="user.active" (click)="changeAccountActivity(user.uid, false)">Deactivate</button>
+          <button 
+            type="button" 
+            *ngIf="!user.active" 
+            (click)="changeAccountActivity(user.uid, true)">
+              Activate
+          </button>
+          <button 
+            type="button" 
+            *ngIf="user.active" 
+            (click)="changeAccountActivity(user.uid, false)">
+              Deactivate
+          </button>
         </td>
         <td>
-          <button>Check the last 10 logins</button>
+          <button type="button">Last 10 logins</button>
         </td>
       </tr>
     </table>
@@ -60,7 +92,7 @@
 
   <div *ngIf="resetPasswordPopUp">
     <p>
-      Reset password email was successfully sent to {{userEmail}}!
+      Reset password email was successfully sent to {{currentUser.email}}!
     </p>
     <button type="button" (click)="closeResetPasswordPopUp()">Close</button>
   </div>

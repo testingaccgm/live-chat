@@ -1,1 +1,19 @@
-<p>account-settings works!</p>
+<div class="container">
+  <div>
+    <ul>
+      <li 
+        [routerLink]="['change-password']" 
+        routerLinkActive="account-settings-link-active" >
+          Change Password
+      </li>
+      <li 
+        [routerLink]="['change-theme']" 
+        routerLinkActive="account-settings-link-active" >
+          Change Theme
+      </li>
+    </ul>
+  </div>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

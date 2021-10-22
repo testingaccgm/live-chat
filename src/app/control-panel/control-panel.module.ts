@@ -19,6 +19,8 @@ import { ActiveAcountsComponent } from './settings/users/active-acounts/active-a
 import { InactiveAcountsComponent } from './settings/users/inactive-acounts/inactive-acounts.component';
 import { UsersTemplateComponent } from './settings/users/users-template/users-template.component';
 import { RoleActive } from '../shared/services/role.activate';
+import { ChangePasswordComponent } from './settings/account-settings/change-password/change-password.component';
+import { ChangeThemeComponent } from './settings/account-settings/change-theme/change-theme.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { RoleActive } from '../shared/services/role.activate';
     AllowedDomainsComponent,
     ActiveAcountsComponent,
     InactiveAcountsComponent,
-    UsersTemplateComponent    
+    UsersTemplateComponent,
+    ChangePasswordComponent,
+    ChangeThemeComponent    
   ],
   imports: [
     CommonModule,
@@ -87,6 +91,11 @@ import { RoleActive } from '../shared/services/role.activate';
                 }
               },
               {path: 'account-settings', component: AccountSettingsComponent,
+                children: [
+                  {path: 'change-password', component: ChangePasswordComponent},
+                  {path: 'change-theme', component: ChangeThemeComponent},
+                  {path: '', redirectTo: 'change-password', pathMatch: 'full'}
+                ],
                 canActivate: [RoleActive],
                 data: {
                   role: 'accountSettings',

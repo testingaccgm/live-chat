@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
+import { RolesService } from '../../roles.service';
 
 @Component({
   selector: 'app-users-template',
@@ -19,31 +20,37 @@ export class UsersTemplateComponent implements OnInit {
   resetPasswordPopUp: boolean = false;
   disabledResetPasswordButton: boolean = false;
   
-  userEmail!: string;
+  currentUser!: User;
 
   ChangeDisplayName!: FormGroup;
   editDIsplayNameMode: boolean = false;
-  currentUser!: User;
+
   searchParams!: string;
+
+  changeRolesForm!: FormGroup;
+  changeRolesMode: boolean = false;
+
+  roles = this._roleService.roles;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
     private _firebaseAuth: AngularFireAuth,
-    private _fb: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _roleService: RolesService
   ) { }
 
   ngOnInit(): void {
-    this.ChangeDisplayName = this._fb.group({
+    this.ChangeDisplayName = this._formBuilder.group({
       name: [null, [Validators.required]]
     });
   }
 
-  resetPassword(email: string) {
+  resetPassword(user: User) {
     //loading spinner  
     this.disabledResetPasswordButton = true;
-    this.userEmail = email;
+    this.currentUser = user;
 
-    this._firebaseAuth.sendPasswordResetEmail(email).then(() => {         
+    this._firebaseAuth.sendPasswordResetEmail(user.email).then(() => {         
       this.resetPasswordPopUp = true;      
       this.errorMsgOnResetPassword = '';
       // remove loading spinner
@@ -57,13 +64,12 @@ export class UsersTemplateComponent implements OnInit {
   closeResetPasswordPopUp() {
     this.resetPasswordPopUp = false;
     this.disabledResetPasswordButton = false;
-    this.userEmail = '';
+    this.currentUser = undefined!;
   };
 
   enableEditDisplayNameMode(user: User) {
     this.editDIsplayNameMode = true;
     this.currentUser = user;
-    this.userEmail = user.email;
   }
 
   editDisplayName(formResult: FormGroup) {
@@ -82,7 +88,7 @@ export class UsersTemplateComponent implements OnInit {
   resetDisplayNameForm() {
     this.ChangeDisplayName.reset();
     this.currentUser = null!;
-    this.userEmail = '';
+    this.currentUser = undefined!;
     this.editDIsplayNameMode = false;
   };
 
@@ -98,4 +104,19 @@ export class UsersTemplateComponent implements OnInit {
       // display error
     })
   };
+
+  changeRoles() {
+
+  };
+
+  changeRolesSubmit(changeRolesForm: FormGroup, user: User) {
+    console.log(changeRolesForm);
+  };
+
+  enableChangeRolesMode() {
+    this.changeRolesMode = true;
+    this.changeRolesForm = this._formBuilder.group({
+      
+    });
+  }
 }

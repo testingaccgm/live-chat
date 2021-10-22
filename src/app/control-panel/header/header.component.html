@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="header-nav">
+  <div *ngIf="user != undefined && user != null" class="header-nav">
     <ul class="header-nav__links">
       <li [routerLink]="['chats']" routerLinkActive="router-link-active" >Chats</li>
       <li [routerLink]="['settings']" routerLinkActive="router-link-active" >Settings</li>
