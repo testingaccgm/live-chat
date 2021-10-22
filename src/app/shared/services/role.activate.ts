@@ -18,7 +18,7 @@ export class RoleActive implements CanActivate {
 
     return new Promise((resolve, reject) => {
       this.userSubscription = this._authService.user.subscribe(user => {
-        if (user !== undefined && user !== null) {          
+        if (user !== undefined && user !== null) {
           for (let allowedRole of user.roles!) {
             if(role == allowedRole.value) {
               if (this.userSubscription !== undefined) {
@@ -30,7 +30,8 @@ export class RoleActive implements CanActivate {
           this.userSubscription.unsubscribe();
           return this._router.navigate([autenticationFailureRedirectUrl]);
         };
-        if (user == null) {
+
+        if (user == null && this.userSubscription) {
           this.userSubscription.unsubscribe();
         }
       });
