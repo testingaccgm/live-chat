@@ -13,7 +13,7 @@
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams">
         <td>
-          <div>
+          <div *ngIf="currentDisplayNameId !== user.uid">
             <p>{{ user.name }}</p>
             <button 
               (click)="enableEditDisplayNameMode(user)" 
@@ -21,14 +21,18 @@
                 Edit
             </button>
           </div>
-          <div *ngIf="editDIsplayNameMode && currentUser.email == user.email">
-            <form [formGroup]="ChangeDisplayName" (ngSubmit)="editDisplayName(ChangeDisplayName)">
+          <div *ngIf="editDIsplayNameMode && currentDisplayNameId == user.uid">
+            <form [formGroup]="ChangeDisplayNameForm" (ngSubmit)="editDisplayName(ChangeDisplayNameForm)">
               <div>
                 <input type="name" formControlName="name" placeholder="Enter display name...">
               </div>
               <div>
-                <button type="submit">Submit</button>
-                <button type="button" (click)="resetDisplayNameForm()">Cancel</button>
+                <button 
+                  [disabled]="ChangeDisplayNameForm.invalid"
+                  type="submit">
+                    Submit
+                </button>
+                <button type="button" (click)="resetDisplayNameFormFun()">Cancel</button>
               </div>
             </form>
           </div>
@@ -39,34 +43,43 @@
         <td>
           <button 
             type="button"
-            [disabled]="disabledResetPasswordButton && currentUser.email == user.email" 
-            (click)="resetPassword(user)">
+            [disabled]="disabledResetPasswordButton && currentResetEmail == user.email" 
+            (click)="resetPassword(user.email)">
               Reset Password
           </button>
         </td>
         <td>
           <div>
             <div>
-              <label *ngFor="let role of user.roles">           
+              <label *ngFor="let role of roles">           
                 <input 
-                  type="checkbox" disabled checked>
-                  {{ role.name }}
-              </label>    
+                  type="checkbox" 
+                  [value]="role.value" 
+                  [attr.checked]="role.checked ? 'checked' : null"
+                  [attr.name]="role.name"
+                  [attr.name]="role.name"
+                  [attr.data-route]="role.route">
+                {{ role.name }}
+              </label>     
             </div>
             <div>
-              <button type="button" (click)="enableChangeRolesMode()">Edit</button>
+              <button 
+                type="button" 
+                (click)="enableChangeRolesMode(user)">
+                  Edit
+              </button>
+              <button 
+                *ngIf="!changeRolesMode && currentRolesId == user.id" 
+                type="button">
+                  Submit
+              </button>
+              <button 
+                *ngIf="!changeRolesMode && currentRolesId == user.uid" 
+                type="button"
+                (click)="disableChangeRolesMode()">
+                  Cancel
+              </button>
             </div>
-          </div>
-          <div *ngIf="changeRolesMode">
-            <form [formGroup]="changeRolesForm" (ngSubmit)="changeRolesSubmit(changeRolesForm, user)">
-              <div>
-                
-              </div>
-              <div>
-                <button type="submit">Submit</button>
-                <button type="button">Cancel</button>
-              </div>
-            </form>
           </div>
         </td>
         <td>
@@ -92,7 +105,7 @@
 
   <div *ngIf="resetPasswordPopUp">
     <p>
-      Reset password email was successfully sent to {{currentUser.email}}!
+      Reset password email was successfully sent to {{currentResetEmail}}!
     </p>
     <button type="button" (click)="closeResetPasswordPopUp()">Close</button>
   </div>

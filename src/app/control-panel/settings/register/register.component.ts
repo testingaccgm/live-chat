@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
   isLoading!: boolean;
   private _isLoadingSubscription!: Subscription;
 
-  roles = this._roleService.roles;
+  roles = this._roleService.defaultRoles;
   rolesArray!: FormArray;
 
   constructor(

@@ -20,17 +20,17 @@ export class UsersTemplateComponent implements OnInit {
   resetPasswordPopUp: boolean = false;
   disabledResetPasswordButton: boolean = false;
   
-  currentUser!: User;
-
-  ChangeDisplayName!: FormGroup;
+  ChangeDisplayNameForm!: FormGroup;
   editDIsplayNameMode: boolean = false;
+  currentDisplayNameId!: string;
+
+  currentResetEmail!: string;
+
+  currentRolesId!: string;
+  changeRolesMode: boolean = true;
+  roles = this._roleService.defaultRoles;
 
   searchParams!: string;
-
-  changeRolesForm!: FormGroup;
-  changeRolesMode: boolean = false;
-
-  roles = this._roleService.roles;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
@@ -40,17 +40,17 @@ export class UsersTemplateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ChangeDisplayName = this._formBuilder.group({
+    this.ChangeDisplayNameForm = this._formBuilder.group({
       name: [null, [Validators.required]]
     });
   }
 
-  resetPassword(user: User) {
+  resetPassword(email: string) {
     //loading spinner  
     this.disabledResetPasswordButton = true;
-    this.currentUser = user;
+    this.currentResetEmail = email;
 
-    this._firebaseAuth.sendPasswordResetEmail(user.email).then(() => {         
+    this._firebaseAuth.sendPasswordResetEmail(this.currentResetEmail).then(() => {         
       this.resetPasswordPopUp = true;      
       this.errorMsgOnResetPassword = '';
       // remove loading spinner
@@ -64,32 +64,36 @@ export class UsersTemplateComponent implements OnInit {
   closeResetPasswordPopUp() {
     this.resetPasswordPopUp = false;
     this.disabledResetPasswordButton = false;
-    this.currentUser = undefined!;
+    this.currentResetEmail = '';
   };
 
   enableEditDisplayNameMode(user: User) {
     this.editDIsplayNameMode = true;
-    this.currentUser = user;
+    this.currentDisplayNameId = user.uid!;
+    this.ChangeDisplayNameForm.controls['name'].setValue(user.name);
   }
 
   editDisplayName(formResult: FormGroup) {
-    const userId = this.currentUser.uid!;
+    if (formResult.invalid) {
+      return;
+    }
+
+    const userId = this.currentDisplayNameId;
     const displayName = formResult.value.name!;
     const newInfo = {userId, displayName};
 
     this._firestoreCollections.updateUserDisplayName(newInfo).then(() => {
-      this.resetDisplayNameForm();
+      this.resetDisplayNameFormFun();
       // no error
     }, error => {
       // display error
     })
   };
 
-  resetDisplayNameForm() {
-    this.ChangeDisplayName.reset();
-    this.currentUser = null!;
-    this.currentUser = undefined!;
+  resetDisplayNameFormFun() {
     this.editDIsplayNameMode = false;
+    this.ChangeDisplayNameForm.reset();
+    this.currentDisplayNameId = '';
   };
 
   changeAccountActivity(uid: string, param: boolean) {
@@ -105,18 +109,17 @@ export class UsersTemplateComponent implements OnInit {
     })
   };
 
-  changeRoles() {
-
-  };
-
   changeRolesSubmit(changeRolesForm: FormGroup, user: User) {
     console.log(changeRolesForm);
   };
 
-  enableChangeRolesMode() {
+  enableChangeRolesMode(user: User) {
+    this.changeRolesMode = false;
+    this.currentRolesId = user.uid!;
+  }
+
+  disableChangeRolesMode() {
     this.changeRolesMode = true;
-    this.changeRolesForm = this._formBuilder.group({
-      
-    });
+    this.currentRolesId = '';
   }
 }
