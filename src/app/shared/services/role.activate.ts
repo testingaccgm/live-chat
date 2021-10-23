@@ -20,7 +20,7 @@ export class RoleActive implements CanActivate {
       this.userSubscription = this._authService.user.subscribe(user => {
         if (user !== undefined && user !== null) {
           for (let allowedRole of user.roles!) {
-            if(role == allowedRole.value) {
+            if(role == allowedRole.value && allowedRole.checked) {
               if (this.userSubscription !== undefined) {
                 this.userSubscription.unsubscribe();
               }

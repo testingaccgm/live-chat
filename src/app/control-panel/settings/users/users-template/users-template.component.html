@@ -11,7 +11,7 @@
         <th>Activity</th>
         <th>Login History</th>
       </tr>
-      <tr *ngFor="let user of users | searchPipe: searchParams">
+      <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
         <td>
           <div *ngIf="currentDisplayNameId !== user.uid">
             <p>{{ user.name }}</p>
@@ -51,16 +51,18 @@
         <td>
           <div>
             <div>
-              <label *ngFor="let role of roles">           
+              <label *ngFor="let role of user.roles; let i = index">           
                 <input 
+                  [disabled]="currentRolesId !== user.uid"
                   type="checkbox" 
                   [value]="role.value" 
                   [attr.checked]="role.checked ? 'checked' : null"
                   [attr.name]="role.name"
-                  [attr.name]="role.name"
-                  [attr.data-route]="role.route">
+                  [attr.data-route]="role.route"              
+                  [attr.data-checked]="role.checked"
+                  (change)="onRoleChange($event, i, ui)">
                 {{ role.name }}
-              </label>     
+              </label>    
             </div>
             <div>
               <button 
@@ -69,14 +71,15 @@
                   Edit
               </button>
               <button 
-                *ngIf="!changeRolesMode && currentRolesId == user.id" 
-                type="button">
+                *ngIf="!changeRolesMode && currentRolesId == user.id"
+                type="button"
+                (click)="submitRoles()">
                   Submit
               </button>
               <button 
-                *ngIf="!changeRolesMode && currentRolesId == user.uid" 
+                *ngIf="!changeRolesMode && currentRolesId == user.uid"
                 type="button"
-                (click)="disableChangeRolesMode()">
+                (click)="cancelChangeRolesMode(ui)">
                   Cancel
               </button>
             </div>

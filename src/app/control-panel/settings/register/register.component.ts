@@ -46,19 +46,18 @@ export class RegisterComponent implements OnInit {
       }
     );
     
-    this.rolesArray = this.signupForm.get('roles') as FormArray;
+    this.rolesArray = <FormArray> this.signupForm.get('roles');
 
     for (const role of this.roles) {
-      if(role.checked) {
-        this.rolesArray.push(new FormControl(
-          {
-            name: role.name,
-            value: role.value,
-            route: role.route
-          }
-        ));
-      }
-    };
+      this.rolesArray.push(new FormControl(
+        {
+          name: role.name,
+          value: role.value,
+          route: role.route,
+          checked: role.checked
+        }
+      ));
+    };    
 
     this._errorAuthMsgSubscription =
       this._authService.errorAuthMsgSubject.subscribe((error) => {
@@ -97,25 +96,12 @@ export class RegisterComponent implements OnInit {
     };
   };
 
-  onRoleChange(event: any) {
-    if(event.target.checked) {
-      this.rolesArray.push(new FormControl(
-        {
-          name: event.target.name,
-          value: event.target.value,
-          route: event.target.dataset.route
-        }
-      ));
+  onRoleChange(event: any, index: number) {
+    if (event.target.checked) {
+      this.rolesArray.value[index].checked = true;
     } else {
-      let index: number = 0;
-      this.rolesArray.controls.forEach(item => {
-        if (item.value.value == event.target.value) { 
-          this.rolesArray.removeAt(index);
-          return;
-        }
-        index++;
-      })
-    } 
+      this.rolesArray.value[index].checked = false;
+    };
   };
 
   onSubmit(signupForm: FormGroup) {
@@ -136,7 +122,7 @@ export class RegisterComponent implements OnInit {
       roles,
       active
     };
-    
+
     this._authService.signUp(newUser);
   }
 }

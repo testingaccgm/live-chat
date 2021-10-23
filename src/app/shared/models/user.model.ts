@@ -25,6 +25,7 @@ export class Roles {
   constructor(
     public name: string,
     public value: string,
-    public route: string
+    public route: string,
+    public checked: boolean
   ) {}
 };

@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase/app';
 
-import { LoginHistory, User } from '../models/user.model';
+import { LoginHistory, Roles, User } from '../models/user.model';
 
 
 @Injectable({ providedIn: 'root' })
 export class FirestoreCollectionsService {
 
   constructor(
-    private _firestore: AngularFirestore,
-    private _storage: AngularFireStorage
+    private _firestore: AngularFirestore
   ) {}
 
   setUserData(newUser: User) {
@@ -55,10 +53,22 @@ export class FirestoreCollectionsService {
     })
   };
 
-  updateUserParameter(newInfo: {userId: string, parameter: any}) {
+  updateUserActivity(newInfo: {userId: string, parameter: any}) {
     return this._firestore
     .collection('users').doc(newInfo.userId).update({
       active: newInfo.parameter
+    })
+  };
+
+  updateUserRoles(roles: Roles, uid: string) {
+    return this._firestore
+    .collection('users').doc(uid).update({
+      roles: firebase.default.firestore.FieldValue.arrayUnion({
+        checked: roles.checked,
+        name: roles.name,
+        route: roles.route,
+        value: roles.value
+      })
     })
   };
 }

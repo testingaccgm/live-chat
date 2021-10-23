@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
-import { RolesService } from '../../roles.service';
 
 @Component({
   selector: 'app-users-template',
@@ -26,17 +25,17 @@ export class UsersTemplateComponent implements OnInit {
 
   currentResetEmail!: string;
 
+  // currentRoles!: Array<{name: string, value: string, route: string, checked: boolean}>;
+  currentRolesUser!: User;
   currentRolesId!: string;
   changeRolesMode: boolean = true;
-  roles = this._roleService.defaultRoles;
 
   searchParams!: string;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
     private _firebaseAuth: AngularFireAuth,
-    private _formBuilder: FormBuilder,
-    private _roleService: RolesService
+    private _formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -101,7 +100,7 @@ export class UsersTemplateComponent implements OnInit {
     const parameter = param;
     const newInfo = {userId, parameter};
 
-    this._firestoreCollections.updateUserParameter(newInfo).then(() => {
+    this._firestoreCollections.updateUserActivity(newInfo).then(() => {
 
       // no error
     }, error => {
@@ -109,17 +108,37 @@ export class UsersTemplateComponent implements OnInit {
     })
   };
 
-  changeRolesSubmit(changeRolesForm: FormGroup, user: User) {
-    console.log(changeRolesForm);
-  };
-
   enableChangeRolesMode(user: User) {
     this.changeRolesMode = false;
+    this.currentRolesUser = user;
+    // this.currentRolesUser = user;
     this.currentRolesId = user.uid!;
-  }
+    // console.log(this.currentRoles);
+  };
 
-  disableChangeRolesMode() {
-    this.changeRolesMode = true;
-    this.currentRolesId = '';
-  }
+  cancelChangeRolesMode(userIndex: number) {
+    // this.changeRolesMode = true;
+    // this.users[userIndex].roles = this.currentRoles;
+    // this.currentRolesId = '';
+    // console.log(this.currentRoles);
+    // this.currentRoles = [];
+  };
+
+  onRoleChange(event: any, roleIndex: number, userIndex: number) {
+    if (event.target.checked) {
+      this.users[userIndex].roles![roleIndex].checked = true;
+    } else {
+      this.users[userIndex].roles![roleIndex].checked = false;
+    };    
+  };
+
+  submitRoles() {
+    for (const role of this.currentRolesUser.roles!) {
+      this._firestoreCollections.updateUserRoles(role , this.currentRolesId).then(() => {
+
+      }, error => {
+  
+      })
+    }
+  };
 }

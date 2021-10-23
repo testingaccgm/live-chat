@@ -5,8 +5,10 @@
         <li 
           *ngFor="let role of user?.roles" 
           [routerLink]="[role.route]" 
-          routerLinkActive="settings-link-active" >
-            {{role.name}}
+          routerLinkActive="settings-link-active">
+            <p *ngIf="role.checked">
+              {{role.name}}
+            </p>
         </li>
       </ul>    
     </div>
