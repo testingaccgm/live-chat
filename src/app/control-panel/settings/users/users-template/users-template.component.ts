@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+import { Domain } from 'src/app/shared/models/domains.model';
 import { LoginHistory, User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
 
@@ -11,7 +12,7 @@ import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-c
   templateUrl: './users-template.component.html',
   styleUrls: ['./users-template.component.scss']
 })
-export class UsersTemplateComponent implements OnInit {
+export class UsersTemplateComponent implements OnInit, OnDestroy {
   @Input() users!: User[];
 
   errorMsgOnGetUsers!: string;
@@ -32,7 +33,12 @@ export class UsersTemplateComponent implements OnInit {
   searchParams!: string;
 
   loginHistory!: any;
-  loginHistorySubscription!: Subscription;
+  private _loginHistorySubscription!: Subscription;
+
+  domains!: Domain[];
+  private _domainsSubscription!: Subscription;
+  errorOnGetDomains!: string;
+  private _errorOnGetDomainsSubscription!: Subscription;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
@@ -44,6 +50,49 @@ export class UsersTemplateComponent implements OnInit {
     this.changeDisplayNameForm = this._formBuilder.group({
       name: [null, [Validators.required]]
     });
+
+    this._firestoreCollections.getDomains();
+    this._domainsSubscription = this._firestoreCollections.domainsSubject.subscribe(domains => {
+      this.domains = domains;
+    });
+
+    this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
+      this.errorOnGetDomains = error;
+    });
+
+    // setTimeout(() => {
+    //   const test = [];
+    //   for (let i = 0; i < this.users.length; i++) {
+    //     for(let j = 0; j < this.users[i].domains!.length; j++) {
+    //       for (let k = 0; k < this.domains.length; k++) {
+    //         if (this.users[i].domains![j].key == this.domains[k].key ) {
+    //           test.push({
+    //             key: this.domains[k].key,
+    //             domain: this.domains[k].domain,
+    //             description: this.domains[k].description,
+    //             checked: true
+    //           })
+    //         } else {
+    //           test.push({
+    //             key: this.domains[k].key,
+    //             domain: this.domains[k].domain,
+    //             description: this.domains[k].description,
+    //             checked: false
+    //           })
+    //         }
+    //       }
+    //     }
+    //   }
+
+    //   console.log(test);
+      
+    // }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    this._domainsSubscription.unsubscribe();
+    this._errorOnGetDomainsSubscription.unsubscribe();
+    this._firestoreCollections.domainsUnsubscribe();
   }
 
   resetPassword(email: string) {
@@ -134,7 +183,7 @@ export class UsersTemplateComponent implements OnInit {
   };
 
   getUserLogins(userId: string) {
-    this.loginHistorySubscription = this._firestoreCollections.getUserLogins(userId).subscribe(logins => {
+    this._loginHistorySubscription = this._firestoreCollections.getUserLogins(userId).subscribe(logins => {
       this.loginHistory = logins.map(e => {
         return {
           id: e.payload.doc.id,
@@ -146,6 +195,6 @@ export class UsersTemplateComponent implements OnInit {
 
   closeLogins() {
     this.loginHistory = undefined!;
-    this.loginHistorySubscription.unsubscribe();
+    this._loginHistorySubscription.unsubscribe();
   }
 }

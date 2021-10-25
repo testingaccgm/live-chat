@@ -11,7 +11,7 @@ import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-c
 })
 export class ActiveAcountsComponent implements OnInit, OnDestroy {
   activeUsers!: User[];
-  activeUsersSubscription!: Subscription;
+  private _activeUsersSubscription!: Subscription;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService
@@ -19,7 +19,7 @@ export class ActiveAcountsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this._authService.enableLoadingSpinner();
-    this.activeUsersSubscription = this._firestoreCollections.getUserData('active', true).subscribe(users => {
+    this._activeUsersSubscription = this._firestoreCollections.getUserData('active', true).subscribe(users => {
       this.activeUsers = users.map(e => {
         return {
           id: e.payload.doc.id,
@@ -38,6 +38,6 @@ export class ActiveAcountsComponent implements OnInit, OnDestroy {
   };
 
   ngOnDestroy(): void {
-    this.activeUsersSubscription.unsubscribe();
+    this._activeUsersSubscription.unsubscribe();
   }
 }

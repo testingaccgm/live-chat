@@ -4,14 +4,18 @@
     <input type="text" [(ngModel)]="searchParams" placeholder="Search by email or display name...">
     <table>
       <tr>
-        <th>Display Name</th>
         <th>Email Address</th>
+        <th>Display Name</th>
         <th>Reset Password</th>
         <th>Roles</th>
+        <th>Domains</th>
         <th>Activity</th>
         <th>Login History</th>
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
+        <td>
+          {{ user.email }}
+        </td>
         <td>
           <div *ngIf="currentDisplayNameId !== user.uid">
             <p>{{ user.name }}</p>
@@ -36,9 +40,6 @@
               </div>
             </form>
           </div>
-        </td>
-        <td>
-          {{ user.email }}
         </td>
         <td>
           <button 
@@ -78,6 +79,14 @@
               </button>
             </div>
           </div>
+        </td>
+        <td>
+          <label *ngFor="let domain of domains; let i = index">           
+            <input
+              type="checkbox"
+              [value]="domain.key">
+            {{ domain.description }}
+          </label>
         </td>
         <td>
           <button 

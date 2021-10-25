@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { Domain } from '../models/domains.model';
 
-import { LoginHistory, Roles, User } from '../models/user.model';
-
+import { LoginHistory, User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class FirestoreCollectionsService {
+  domains!: Domain[];
+  domainsSubject = new BehaviorSubject<Domain[]>(undefined!);
+  errorOnGetDomainsSubject = new BehaviorSubject<string>('');
+  private _domainsSubscription!: Subscription;
 
   constructor(
     private _firestore: AngularFirestore
@@ -19,6 +24,7 @@ export class FirestoreCollectionsService {
       email: newUser.email,
       active: newUser.active,
       roles: newUser.roles,
+      domains: newUser.domains,
       uid: newUser.uid
     }).then(() => {
       return usersCollection.collection('loginHistory').doc(newUser.uid).set({
@@ -74,5 +80,29 @@ export class FirestoreCollectionsService {
   getUserLogins(userId: string) {
     return this._firestore.collection('users').doc(userId)
     .collection('loginHistory').snapshotChanges();
+  };
+
+  addDomain(domain: Domain) {
+    return this._firestore.collection('domains').add(domain);
+  };
+
+  getDomains() {
+    this._domainsSubscription = this._firestore.collection('domains')
+    .snapshotChanges().subscribe(domains => {      
+      this.domains = domains.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ... e.payload.doc.data() as Domain
+        }
+      });
+      this.domainsSubject.next(this.domains);
+      this.errorOnGetDomainsSubject.next('');
+    }, error => {
+      this.errorOnGetDomainsSubject.next(error.message);
+    });
+  };
+
+  domainsUnsubscribe() {
+    this._domainsSubscription.unsubscribe();
   };
 }

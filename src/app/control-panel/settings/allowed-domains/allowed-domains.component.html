@@ -1,1 +1,33 @@
-<p>allowed-domains works!</p>
+<div>
+  <div>Strict Mode</div>
+
+  <div>
+    <button>Add domain</button>
+
+    <form [formGroup]="addDomainForm" (ngSubmit)="submitDomainForm(addDomainForm)">
+      <div>
+        <input type="text" formControlName="domain" placeholder="Domain...">
+        <input type="text" formControlName="key" placeholder="Key...">
+        <input type="text" formControlName="description" placeholder="Description...">
+      </div>
+      <div>
+        <button type="submit" [disabled]="addDomainForm.invalid">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <table>
+      <tr>
+        <th>Domain</th>
+        <th>Key</th>
+        <th>Description</th>
+      </tr>
+      <tr *ngFor="let domain of domains">
+        <td>{{ domain.domain }}</td>
+        <td>{{ domain.key }}</td>
+        <td>{{ domain.description }}</td>
+      </tr>
+    </table>
+  </div>
+</div>

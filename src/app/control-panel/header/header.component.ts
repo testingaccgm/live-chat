@@ -11,20 +11,20 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   user!: User;
-  userSubscription!: Subscription;
+  private _userSubscription!: Subscription;
 
   constructor(
     private _authService: AuthService,
   ) { }
 
   ngOnInit(): void {
-    this.userSubscription = this._authService.user.subscribe(user => {
+    this._userSubscription = this._authService.user.subscribe(user => {
       this.user = user
     });    
   }
   
   ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
+    this._userSubscription.unsubscribe();
   }
 
   logout() {
