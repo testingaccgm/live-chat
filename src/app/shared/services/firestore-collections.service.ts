@@ -12,11 +12,12 @@ export class FirestoreCollectionsService {
     private _firestore: AngularFirestore
   ) {}
 
-  setUserData(newUser: User) {
+  setUserData(newUser: User, createReg: boolean) {
     return this._firestore.collection('users').doc(newUser.uid).set({
       name: newUser.name,
       email: newUser.email,
       active: newUser.active,
+      loginHistory: createReg ? [] : newUser.loginHistory,
       roles: newUser.roles,
       uid: newUser.uid
     });
@@ -57,18 +58,6 @@ export class FirestoreCollectionsService {
     return this._firestore
     .collection('users').doc(newInfo.userId).update({
       active: newInfo.parameter
-    })
-  };
-
-  updateUserRoles(roles: Roles, uid: string) {
-    return this._firestore
-    .collection('users').doc(uid).update({
-      roles: firebase.default.firestore.FieldValue.arrayUnion({
-        checked: roles.checked,
-        name: roles.name,
-        route: roles.route,
-        value: roles.value
-      })
     })
   };
 }

@@ -22,13 +22,13 @@
             </button>
           </div>
           <div *ngIf="editDIsplayNameMode && currentDisplayNameId == user.uid">
-            <form [formGroup]="ChangeDisplayNameForm" (ngSubmit)="editDisplayName(ChangeDisplayNameForm)">
+            <form [formGroup]="changeDisplayNameForm" (ngSubmit)="editDisplayName(changeDisplayNameForm)">
               <div>
                 <input type="name" formControlName="name" placeholder="Enter display name...">
               </div>
               <div>
                 <button 
-                  [disabled]="ChangeDisplayNameForm.invalid"
+                  [disabled]="changeDisplayNameForm.invalid"
                   type="submit">
                     Submit
                 </button>
@@ -53,14 +53,14 @@
             <div>
               <label *ngFor="let role of user.roles; let i = index">           
                 <input 
-                  [disabled]="currentRolesId !== user.uid"
+                  [disabled]="currentRolesUser?.uid !== user.uid"
                   type="checkbox" 
                   [value]="role.value" 
                   [attr.checked]="role.checked ? 'checked' : null"
                   [attr.name]="role.name"
                   [attr.data-route]="role.route"              
                   [attr.data-checked]="role.checked"
-                  (change)="onRoleChange($event, i, ui)">
+                  (change)="onRoleChange($event, i)">
                 {{ role.name }}
               </label>    
             </div>
@@ -71,16 +71,10 @@
                   Edit
               </button>
               <button 
-                *ngIf="!changeRolesMode && currentRolesId == user.id"
+                *ngIf="!changeRolesMode && currentRolesUser?.uid == user.id"
                 type="button"
                 (click)="submitRoles()">
                   Submit
-              </button>
-              <button 
-                *ngIf="!changeRolesMode && currentRolesId == user.uid"
-                type="button"
-                (click)="cancelChangeRolesMode(ui)">
-                  Cancel
               </button>
             </div>
           </div>

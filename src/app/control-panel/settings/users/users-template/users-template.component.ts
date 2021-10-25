@@ -19,7 +19,7 @@ export class UsersTemplateComponent implements OnInit {
   resetPasswordPopUp: boolean = false;
   disabledResetPasswordButton: boolean = false;
   
-  ChangeDisplayNameForm!: FormGroup;
+  changeDisplayNameForm!: FormGroup;
   editDIsplayNameMode: boolean = false;
   currentDisplayNameId!: string;
 
@@ -27,7 +27,6 @@ export class UsersTemplateComponent implements OnInit {
 
   // currentRoles!: Array<{name: string, value: string, route: string, checked: boolean}>;
   currentRolesUser!: User;
-  currentRolesId!: string;
   changeRolesMode: boolean = true;
 
   searchParams!: string;
@@ -39,7 +38,7 @@ export class UsersTemplateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ChangeDisplayNameForm = this._formBuilder.group({
+    this.changeDisplayNameForm = this._formBuilder.group({
       name: [null, [Validators.required]]
     });
   }
@@ -69,7 +68,7 @@ export class UsersTemplateComponent implements OnInit {
   enableEditDisplayNameMode(user: User) {
     this.editDIsplayNameMode = true;
     this.currentDisplayNameId = user.uid!;
-    this.ChangeDisplayNameForm.controls['name'].setValue(user.name);
+    this.changeDisplayNameForm.controls['name'].setValue(user.name);
   }
 
   editDisplayName(formResult: FormGroup) {
@@ -91,7 +90,7 @@ export class UsersTemplateComponent implements OnInit {
 
   resetDisplayNameFormFun() {
     this.editDIsplayNameMode = false;
-    this.ChangeDisplayNameForm.reset();
+    this.changeDisplayNameForm.reset();
     this.currentDisplayNameId = '';
   };
 
@@ -111,34 +110,23 @@ export class UsersTemplateComponent implements OnInit {
   enableChangeRolesMode(user: User) {
     this.changeRolesMode = false;
     this.currentRolesUser = user;
-    // this.currentRolesUser = user;
-    this.currentRolesId = user.uid!;
-    // console.log(this.currentRoles);
   };
 
-  cancelChangeRolesMode(userIndex: number) {
-    // this.changeRolesMode = true;
-    // this.users[userIndex].roles = this.currentRoles;
-    // this.currentRolesId = '';
-    // console.log(this.currentRoles);
-    // this.currentRoles = [];
-  };
-
-  onRoleChange(event: any, roleIndex: number, userIndex: number) {
+  onRoleChange(event: any, roleIndex: number) {
     if (event.target.checked) {
-      this.users[userIndex].roles![roleIndex].checked = true;
+      this.currentRolesUser.roles![roleIndex].checked = true;
     } else {
-      this.users[userIndex].roles![roleIndex].checked = false;
+      this.currentRolesUser.roles![roleIndex].checked = false;
     };    
   };
 
   submitRoles() {
-    for (const role of this.currentRolesUser.roles!) {
-      this._firestoreCollections.updateUserRoles(role , this.currentRolesId).then(() => {
-
-      }, error => {
-  
-      })
-    }
+    this._firestoreCollections.setUserData(this.currentRolesUser, false).then(() => {
+      this.currentRolesUser = undefined!;
+      this.changeRolesMode = true;
+      // no error
+    }, error => {
+      // error
+    })
   };
 }
