@@ -15,7 +15,7 @@ export class AuthService {
   user = new BehaviorSubject<User>(undefined!);
   userDbSubscription!: Subscription;
 
-  userLocation = new LoginHistory ('', '' , '', '', '', null!);
+  userLocation = new LoginHistory ('', '', '', '', null!);
   private _userLocationSubscription!: Subscription;
   setIP: boolean = false;
 
@@ -46,7 +46,7 @@ export class AuthService {
     this.secondaryApp.auth().createUserWithEmailAndPassword(newUser.email, newUser.password!)
     .then((user) => {
       newUser.uid = user.user!.uid;
-      this._firestoreCollections.setUserData(newUser, true)
+      this._firestoreCollections.setUserData(newUser)
       .then(() => {
           this.secondaryApp.auth().signOut();
           this.errorOnSetUserData = '';
@@ -138,13 +138,13 @@ export class AuthService {
       this.userLocation.country = res.country.name,
       this.userLocation.city = res.city.name,
       this.userLocation.ip = res.ip,
-      this.userLocation.id = this._generateIdService.generateId(),
       this.userLocation.date = firebase.default.firestore.Timestamp.now();
 
-      this._firestoreCollections.setUserIPAddress(this.userLocation).then(() => {
+      this._firestoreCollections.setUserIPAddress(this.userLocation).then(() => {        
         this._userLocationSubscription.unsubscribe();
       }, (error) => {
-
+        // error
+        this._userLocationSubscription.unsubscribe();
       })
     })
   };

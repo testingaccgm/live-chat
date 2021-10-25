@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
-import { User } from 'src/app/shared/models/user.model';
+import { LoginHistory, User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
 
 @Component({
@@ -25,11 +26,13 @@ export class UsersTemplateComponent implements OnInit {
 
   currentResetEmail!: string;
 
-  // currentRoles!: Array<{name: string, value: string, route: string, checked: boolean}>;
   currentRolesUser!: User;
   changeRolesMode: boolean = true;
 
   searchParams!: string;
+
+  loginHistory!: any;
+  loginHistorySubscription!: Subscription;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
@@ -121,7 +124,7 @@ export class UsersTemplateComponent implements OnInit {
   };
 
   submitRoles() {
-    this._firestoreCollections.setUserData(this.currentRolesUser, false).then(() => {
+    this._firestoreCollections.setUserRoles(this.currentRolesUser).then(() => {
       this.currentRolesUser = undefined!;
       this.changeRolesMode = true;
       // no error
@@ -129,4 +132,20 @@ export class UsersTemplateComponent implements OnInit {
       // error
     })
   };
+
+  getUserLogins(userId: string) {
+    this.loginHistorySubscription = this._firestoreCollections.getUserLogins(userId).subscribe(logins => {
+      this.loginHistory = logins.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data() as LoginHistory
+        }
+      })      
+    })
+  };
+
+  closeLogins() {
+    this.loginHistory = undefined!;
+    this.loginHistorySubscription.unsubscribe();
+  }
 }

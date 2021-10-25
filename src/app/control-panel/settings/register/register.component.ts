@@ -112,7 +112,6 @@ export class RegisterComponent implements OnInit {
     const name = signupForm.value.name;
     const email = signupForm.value.email;
     const password = signupForm.value.password;
-    // const loginHistory: any = [];
     const roles = signupForm.value.roles;
     const active = true;
 
@@ -120,7 +119,6 @@ export class RegisterComponent implements OnInit {
       name,
       email,
       password,
-      // loginHistory,
       roles,
       active
     };

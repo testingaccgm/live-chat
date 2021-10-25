@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
@@ -8,15 +9,17 @@ import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-c
   templateUrl: './inactive-acounts.component.html',
   styleUrls: ['./inactive-acounts.component.scss']
 })
-export class InactiveAcountsComponent implements OnInit {
+export class InactiveAcountsComponent implements OnInit, OnDestroy {
   inactiveUsers!: User[];
+  inactiveUsersSubscription!: Subscription;
+
   constructor(
     private _firestoreCollections: FirestoreCollectionsService
   ) { }
 
   ngOnInit(): void {
     // this._authService.enableLoadingSpinner();
-    this._firestoreCollections.getUserData('active', false).subscribe(users => {            
+    this.inactiveUsersSubscription = this._firestoreCollections.getUserData('active', false).subscribe(users => {            
       this.inactiveUsers = users.map(e => {
         return {
           id: e.payload.doc.id,
@@ -32,5 +35,9 @@ export class InactiveAcountsComponent implements OnInit {
       // error
       // this.errorMsgOnGetUsers = error.message;
     });
-  };
+  }
+
+  ngOnDestroy(): void {
+    this.inactiveUsersSubscription.unsubscribe();
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-change-password',
@@ -10,10 +11,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ChangePasswordComponent implements OnInit {
   changePasswordFrom!: FormGroup;
   changePasswordPopUp: boolean = false;
+  changePasswordLogoutPopUp: boolean = false;
+  changePasswordMsg!: string;
 
   constructor(
     private _fb: FormBuilder,
-    private _firebaseAuth: AngularFireAuth
+    private _firebaseAuth: AngularFireAuth,
+    private _authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -51,6 +55,9 @@ export class ChangePasswordComponent implements OnInit {
         changePasswordFrom.reset();
         //no error
       }, error => {
+        this.changePasswordLogoutPopUp = true;
+        this.changePasswordMsg = error.message;
+        
         //error
       });
     });
@@ -59,4 +66,13 @@ export class ChangePasswordComponent implements OnInit {
   closePasswordChangePopUp() {
     this.changePasswordPopUp = false;
   };
+
+  logout() {
+    this._authService.logout();
+  }
+
+  stayLogged() {
+    this.changePasswordLogoutPopUp = false;
+    this.changePasswordMsg = '';
+  }
 }

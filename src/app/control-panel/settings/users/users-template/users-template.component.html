@@ -94,7 +94,7 @@
           </button>
         </td>
         <td>
-          <button type="button">Last 10 logins</button>
+          <button type="button" (click)="getUserLogins(user.uid)">Login History</button>
         </td>
       </tr>
     </table>
@@ -106,4 +106,25 @@
     </p>
     <button type="button" (click)="closeResetPasswordPopUp()">Close</button>
   </div>
+
+  <div *ngIf="loginHistory">
+    <button (click)="closeLogins()">Close</button>
+    <table>
+      <tr>
+        <th>Time</th>
+        <th>IP</th>
+        <th>Country</th>
+        <th>City</th>
+      </tr>
+      <tr *ngFor="let login of loginHistory[0].loginHistory">
+        <td>{{ login.date.toDate() | date:'dd.MM.yyyy' }} at {{ login.date.toDate() | date:'HH:mm' }}</td>
+        <td>{{ login.ip }}</td>
+        <td>{{ login.country }}</td>
+        <td>{{ login.city }}</td>
+      </tr>
+    </table>
+  </div>
 </div>
+
+
+<!-- <script>(function(){var pp=document.createElement('script'), ppr=document.getElementsByTagName('script')[0]; stid='dGdWRW1odUwyekJ1dkI0ZEUxOUJsUT09';pp.type='text/javascript'; pp.async=true; pp.src=('https:' == document.location.protocol ? 'https://' : 'http://') + 's01.live2support.com/dashboardv2/chatwindow/'; ppr.parentNode.insertBefore(pp, ppr);})();</script> -->

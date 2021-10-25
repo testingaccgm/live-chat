@@ -5,15 +5,13 @@ export class User {
     public active: boolean,
     public roles?: Roles[],
     public uid?: string,
-    public password?: string,
-    public loginHistory?: LoginHistory []
+    public password?: string
   ) {}
 };
 
 export class LoginHistory {
   constructor(
     public ip: string,
-    public id: string,
     public country: string,
     public city: string,
     public uid: string,

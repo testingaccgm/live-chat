@@ -12,12 +12,26 @@ export class FirestoreCollectionsService {
     private _firestore: AngularFirestore
   ) {}
 
-  setUserData(newUser: User, createReg: boolean) {
+  setUserData(newUser: User) {
+    const usersCollection = this._firestore.collection('users').doc(newUser.uid);
+    return usersCollection.set({
+      name: newUser.name,
+      email: newUser.email,
+      active: newUser.active,
+      roles: newUser.roles,
+      uid: newUser.uid
+    }).then(() => {
+      return usersCollection.collection('loginHistory').doc(newUser.uid).set({
+        loginHistory: []
+      });
+    });
+  };
+
+  setUserRoles(newUser: User) {
     return this._firestore.collection('users').doc(newUser.uid).set({
       name: newUser.name,
       email: newUser.email,
       active: newUser.active,
-      loginHistory: createReg ? [] : newUser.loginHistory,
       roles: newUser.roles,
       uid: newUser.uid
     });
@@ -29,18 +43,14 @@ export class FirestoreCollectionsService {
     .snapshotChanges();
   };
 
-  getUsers() {
-    return this._firestore
-    .collection('users').snapshotChanges();
-  };
-
   setUserIPAddress(userLocation: LoginHistory) {
     return this._firestore
-    .collection('users').doc(userLocation.uid).update({
+    .collection('users').doc(userLocation.uid)
+    .collection('loginHistory').doc(userLocation.uid)
+    .update({
       loginHistory: firebase.default.firestore.FieldValue.arrayUnion({
         date: userLocation.date,
         ip: userLocation.ip,
-        id: userLocation.id,
         country: userLocation.country,
         city: userLocation.city
       })
@@ -59,5 +69,10 @@ export class FirestoreCollectionsService {
     .collection('users').doc(newInfo.userId).update({
       active: newInfo.parameter
     })
+  };
+
+  getUserLogins(userId: string) {
+    return this._firestore.collection('users').doc(userId)
+    .collection('loginHistory').snapshotChanges();
   };
 }
