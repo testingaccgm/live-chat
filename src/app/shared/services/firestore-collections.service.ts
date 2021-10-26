@@ -50,6 +50,11 @@ export class FirestoreCollectionsService {
     .snapshotChanges();
   };
 
+  getUsers() {
+    return this._firestore
+    .collection('users').snapshotChanges();
+  };
+
   setUserIPAddress(userLocation: LoginHistory) {
     return this._firestore
     .collection('users').doc(userLocation.uid)
@@ -81,6 +86,29 @@ export class FirestoreCollectionsService {
   getUserLogins(userId: string) {
     return this._firestore.collection('users').doc(userId)
     .collection('loginHistory').snapshotChanges();
+  };
+
+  setDomain(userId: string, role: Domain) {
+    return this._firestore.collection('users').doc(userId).update({
+      domains: firebase.default.firestore.FieldValue.arrayUnion({
+        domain: role.domain,        
+        key: role.key,
+        description: role.description,
+        checked: role.checked
+      })
+    })
+  };
+
+  deleteDomain(domainId: string) {
+    return this._firestore.collection('domains').doc(domainId).delete();
+  };
+
+  deleteDomainItem(userID: string, domainObj: Domain) {
+    return this._firestore
+    .collection('users').doc(userID)
+    .update({
+      domains: firebase.default.firestore.FieldValue.arrayRemove(domainObj)
+    })
   };
 
   addDomain(domain: Domain) {

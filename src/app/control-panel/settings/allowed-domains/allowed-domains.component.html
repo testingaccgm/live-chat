@@ -22,12 +22,24 @@
         <th>Domain</th>
         <th>Key</th>
         <th>Description</th>
+        <th>Delete</th>
       </tr>
       <tr *ngFor="let domain of domains">
         <td>{{ domain.domain }}</td>
         <td>{{ domain.key }}</td>
         <td>{{ domain.description }}</td>
+        <td>
+          <button (click)="deleteDomainPopUpFun(domain)">Delete</button>
+        </td>
       </tr>
     </table>
+  </div>
+
+  <div *ngIf="deleteDomainPopUp">
+    <p>Аre you sure you want to delete domain {{ currentDomain.description }}?</p>
+    <div>
+      <button (click)="deleteDomain()">Yes</button>
+      <button (click)="cancelPopUpFun()">No</button>
+    </div>
   </div>
 </div>

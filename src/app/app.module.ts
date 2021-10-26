@@ -11,6 +11,7 @@ import { environment } from '../environments/environment'
 import { ChatModule } from './chat/chat.module';
 import { ControlPanelModule } from './control-panel/control-panel.module';
 import { ErrorModule } from './error/error.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ErrorModule } from './error/error.module';
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

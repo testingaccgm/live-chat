@@ -83,7 +83,8 @@
         <td>
           <label *ngFor="let userDomain of user.domains">
             <input
-              type="checkbox"
+            type="checkbox"
+              [checked]="userDomain.checked ? 'checked' : null"
               checked
               [value]="userDomain.key">
             {{ userDomain.description }}

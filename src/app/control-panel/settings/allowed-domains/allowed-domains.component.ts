@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { Domain } from 'src/app/shared/models/domains.model';
+import { User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
 
 @Component({
@@ -17,6 +18,12 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
   private _domainsSubscription!: Subscription;
   errorOnGetDomains!: string;
   private _errorOnGetDomainsSubscription!: Subscription;
+
+  users!: User[];
+  private _usersSubscription!: Subscription;
+
+  deleteDomainPopUp: boolean = false;
+  currentDomain!: Domain;
 
   constructor(
     private _fb: FormBuilder,
@@ -38,12 +45,26 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
     this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
       this.errorOnGetDomains = error;
     });
+
+    this._usersSubscription = this._firestoreCollections.getUsers().subscribe(users => {
+      this.users = users.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ... e.payload.doc.data() as User
+        }
+      });
+
+      // no error
+    }, error => {
+      // error
+    });
   }
 
   ngOnDestroy(): void {
    this._domainsSubscription.unsubscribe();
    this._errorOnGetDomainsSubscription.unsubscribe();
    this._firestoreCollections.domainsUnsubscribe();
+   this._usersSubscription.unsubscribe();
   }
 
   submitDomainForm(addDomainForm: FormGroup) {
@@ -54,13 +75,46 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
     const domain = addDomainForm.value.domain
     const key = addDomainForm.value.key
     const description = addDomainForm.value.description
-    const domainObj = { domain, key, description }
+    const checked = false;
+    const domainObj = { domain, key, description, checked }
 
     this._firestoreCollections.addDomain(domainObj).then(() => {
-      
+      for (const user of this.users) {
+        this._firestoreCollections.setDomain(user.uid!, domainObj).then(() => {
+          
+        }, error => {
+
+        });
+      }
       // no error
     }, error => {
       // error
     })
-  }
+  };
+
+  deleteDomain() {
+    this._firestoreCollections.deleteDomain(this.currentDomain.id!).then(() => {
+      for (const user of this.users) {
+        this._firestoreCollections.deleteDomainItem(user.uid!, this.currentDomain).then(() => {
+          console.log(this.currentDomain);          
+        }, error => {
+          console.log(error.message);         
+        });
+      }
+      this.cancelPopUpFun();
+      // no error
+    }, error => {
+      // error
+    })
+  };
+
+  deleteDomainPopUpFun(domain: Domain) {
+    this.deleteDomainPopUp = true;
+    this.currentDomain = domain;
+  };
+
+  cancelPopUpFun() {
+    this.deleteDomainPopUp = false;
+    this.currentDomain = undefined!;
+  };
 }
