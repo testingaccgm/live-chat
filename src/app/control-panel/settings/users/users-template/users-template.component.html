@@ -81,11 +81,12 @@
           </div>
         </td>
         <td>
-          <label *ngFor="let domain of domains; let i = index">           
+          <label *ngFor="let userDomain of user.domains">
             <input
               type="checkbox"
-              [value]="domain.key">
-            {{ domain.description }}
+              checked
+              [value]="userDomain.key">
+            {{ userDomain.description }}
           </label>
         </td>
         <td>

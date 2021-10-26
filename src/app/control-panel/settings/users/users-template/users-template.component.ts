@@ -59,34 +59,6 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
     this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
       this.errorOnGetDomains = error;
     });
-
-    // setTimeout(() => {
-    //   const test = [];
-    //   for (let i = 0; i < this.users.length; i++) {
-    //     for(let j = 0; j < this.users[i].domains!.length; j++) {
-    //       for (let k = 0; k < this.domains.length; k++) {
-    //         if (this.users[i].domains![j].key == this.domains[k].key ) {
-    //           test.push({
-    //             key: this.domains[k].key,
-    //             domain: this.domains[k].domain,
-    //             description: this.domains[k].description,
-    //             checked: true
-    //           })
-    //         } else {
-    //           test.push({
-    //             key: this.domains[k].key,
-    //             domain: this.domains[k].domain,
-    //             description: this.domains[k].description,
-    //             checked: false
-    //           })
-    //         }
-    //       }
-    //     }
-    //   }
-
-    //   console.log(test);
-      
-    // }, 1000);
   }
 
   ngOnDestroy(): void {
@@ -121,7 +93,7 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
     this.editDIsplayNameMode = true;
     this.currentDisplayNameId = user.uid!;
     this.changeDisplayNameForm.controls['name'].setValue(user.name);
-  }
+  };
 
   editDisplayName(formResult: FormGroup) {
     if (formResult.invalid) {

@@ -39,6 +39,7 @@ export class FirestoreCollectionsService {
       email: newUser.email,
       active: newUser.active,
       roles: newUser.roles,
+      domains: newUser.domains,
       uid: newUser.uid
     });
   };
