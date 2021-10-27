@@ -85,7 +85,8 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
         }, error => {
 
         });
-      }
+      };
+      addDomainForm.reset();
       // no error
     }, error => {
       // error
@@ -94,13 +95,20 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
 
   deleteDomain() {
     this._firestoreCollections.deleteDomain(this.currentDomain.id!).then(() => {
+    const description = this.currentDomain.description;
+    const domain = this.currentDomain.domain;
+    const key = this.currentDomain.key;    
+
       for (const user of this.users) {
-        this._firestoreCollections.deleteDomainItem(user.uid!, this.currentDomain).then(() => {
-          console.log(this.currentDomain);          
-        }, error => {
-          console.log(error.message);         
-        });
-      }
+        const domainObj = {checked: true, description, domain, key};
+        this.deleteDomainItem(user.uid!, domainObj);
+      };
+
+      for (const user of this.users) {
+        const domainObj = {checked: false, description, domain, key};
+        this.deleteDomainItem(user.uid!, domainObj);
+      };
+
       this.cancelPopUpFun();
       // no error
     }, error => {
@@ -116,5 +124,13 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
   cancelPopUpFun() {
     this.deleteDomainPopUp = false;
     this.currentDomain = undefined!;
+  };
+
+  deleteDomainItem(userId: string, domainObj: any) {
+    this._firestoreCollections.deleteDomainItem(userId, domainObj).then(() => {
+      // no error          
+    }, error => {
+      // error
+    });
   };
 }

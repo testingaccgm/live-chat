@@ -134,4 +134,15 @@ export class FirestoreCollectionsService {
   domainsUnsubscribe() {
     this._domainsSubscription.unsubscribe();
   };
+
+  setUserDomain(newUser: User) {
+    return this._firestore.collection('users').doc(newUser.uid).set({
+      name: newUser.name,
+      email: newUser.email,
+      active: newUser.active,
+      roles: newUser.roles,
+      domains: newUser.domains,
+      uid: newUser.uid
+    });
+  };
 }

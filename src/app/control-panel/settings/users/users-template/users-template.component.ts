@@ -39,6 +39,8 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
   private _domainsSubscription!: Subscription;
   errorOnGetDomains!: string;
   private _errorOnGetDomainsSubscription!: Subscription;
+  currentDomainUser!: User;
+  changeDomainMode: boolean = true;
 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
@@ -168,5 +170,28 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
   closeLogins() {
     this.loginHistory = undefined!;
     this._loginHistorySubscription.unsubscribe();
-  }
+  };
+
+  onDomainChange(event: any, domainIndex: number) {
+    if (event.target.checked) {
+      this.currentDomainUser.domains![domainIndex].checked = true;
+    } else {
+      this.currentDomainUser.domains![domainIndex].checked = false;
+    };    
+  };
+
+  enableChangeDomainMode(user: User) {
+    this.changeDomainMode = true;
+    this.currentDomainUser = user;
+  };
+
+  submitDomain() {
+    this._firestoreCollections.setUserDomain(this.currentDomainUser).then(() => {
+      this.changeDomainMode = false;
+      this.currentDomainUser = undefined!;
+      // no error
+    }, error => {
+      // error
+    })
+  };
 }

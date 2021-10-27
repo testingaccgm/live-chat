@@ -81,14 +81,30 @@
           </div>
         </td>
         <td>
-          <label *ngFor="let userDomain of user.domains">
-            <input
-            type="checkbox"
-              [checked]="userDomain.checked ? 'checked' : null"
-              checked
-              [value]="userDomain.key">
-            {{ userDomain.description }}
-          </label>
+          <div>
+            <label *ngFor="let userDomain of user.domains; let i = index">
+              <input
+              type="checkbox"
+                [disabled]="currentDomainUser?.uid !== user.uid"
+                [checked]="userDomain.checked ? 'checked' : null"
+                [value]="userDomain.key"
+                (change)="onDomainChange($event, i)">
+              {{ userDomain.description }}
+            </label>
+          </div>
+          <div>
+            <button 
+              type="button" 
+              (click)="enableChangeDomainMode(user)">
+                Edit
+            </button>
+            <button 
+              type="button"
+              *ngIf="currentDomainUser && currentDomainUser?.uid == user.id"
+              (click)="submitDomain()">
+                Submit
+            </button>
+          </div>
         </td>
         <td>
           <button 

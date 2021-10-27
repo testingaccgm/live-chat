@@ -74,5 +74,6 @@ export class ChangePasswordComponent implements OnInit {
   stayLogged() {
     this.changePasswordLogoutPopUp = false;
     this.changePasswordMsg = '';
+    this.changePasswordFrom.reset();
   }
 }
