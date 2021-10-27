@@ -1,0 +1,64 @@
+<div>
+  <div>
+    <form [formGroup]="menuOptionsForm" (ngSubmit)="submitMenuOptionsForm(menuOptionsForm)">
+      <div>
+        <div>
+          <img [src]="menuFileLocalPath">
+        </div>
+        <div>
+          <input formControlName="img"
+          #selectImg style="display: none;"
+          type="file" 
+          (change)="selectMenuImg($event)" 
+          accept=".png,.jpg,.jpeg,.svg,.heic">
+        </div>
+        <div>
+          <button 
+          type="button"
+          (click)="selectImg.click()">
+            Select image
+        </button>
+        </div>
+      </div>
+
+      <div>
+        <label for="active">Active</label>
+        <input type="checkbox" name="active" formControlName="active">
+      </div>     
+
+      <div>
+        <label for="key">Key</label>
+        <input type="text" name="key" formControlName="key">
+      </div>
+
+      <div>
+        <label for="description">Description</label>
+        <input type="text" name="description" formControlName="description">
+      </div>
+
+      <div>
+        <button type="submit" [disabled]="menuOptionsForm.invalid">Add</button>
+      </div>
+    </form>
+  </div>
+    <table>
+      <tr>
+        <th>Image</th>
+        <th>Activity</th>
+        <th>Description</th>
+      </tr>
+      <tr *ngFor="let menuOption of menuOptions">
+        <td>
+          <img [src]="menuOption.img">
+        </td>
+        <td>
+          <label>Active</label>
+          <input type="checkbox" [checked]="menuOption.active ? 'checked' : null">
+        </td>
+        <td>{{ menuOption.description }}</td>
+      </tr>
+    </table>
+  <div>
+
+  </div>
+</div>

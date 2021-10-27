@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Domain } from '../models/domains.model';
 
+import { Domain } from '../models/domains.model';
+import { MenuOption } from '../models/menu-option.model';
 import { LoginHistory, User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
@@ -144,5 +145,14 @@ export class FirestoreCollectionsService {
       domains: newUser.domains,
       uid: newUser.uid
     });
+  };
+
+  addMenuOptionItem(menuItemObj: MenuOption) {
+    return this._firestore
+    .collection('menuOptions').add(menuItemObj);
+  };
+
+  getMenuOptions() {
+    return this._firestore.collection('menuOptions').snapshotChanges();
   };
 }

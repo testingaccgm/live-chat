@@ -14,13 +14,15 @@ import { SettingsComponent } from './settings/settings.component';
 import { UsersComponent } from './settings/users/users.component';
 import { BlockedClientsComponent } from './settings/blocked-clients/blocked-clients.component';
 import { AccountSettingsComponent } from './settings/account-settings/account-settings.component';
-import { AllowedDomainsComponent } from './settings/allowed-domains/allowed-domains.component';
+import { AllowedDomainsComponent } from './settings/domain-options/allowed-domains/allowed-domains.component';
 import { ActiveAcountsComponent } from './settings/users/active-acounts/active-acounts.component';
 import { InactiveAcountsComponent } from './settings/users/inactive-acounts/inactive-acounts.component';
 import { UsersTemplateComponent } from './settings/users/users-template/users-template.component';
 import { RoleActive } from '../shared/services/role.activate';
 import { ChangePasswordComponent } from './settings/account-settings/change-password/change-password.component';
 import { ChangeThemeComponent } from './settings/account-settings/change-theme/change-theme.component';
+import { DomainOptionsComponent } from './settings/domain-options/domain-options.component';
+import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-options/chat-menu-options.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { ChangeThemeComponent } from './settings/account-settings/change-theme/c
     InactiveAcountsComponent,
     UsersTemplateComponent,
     ChangePasswordComponent,
-    ChangeThemeComponent    
+    ChangeThemeComponent,
+    DomainOptionsComponent,
+    ChatMenuOptionsComponent   
   ],
   imports: [
     CommonModule,
@@ -102,10 +106,15 @@ import { ChangeThemeComponent } from './settings/account-settings/change-theme/c
                   autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               },
-              {path: 'allowed-domains', component: AllowedDomainsComponent,
+              {path: 'domain-options', component: DomainOptionsComponent,
+                children: [
+                  {path: 'allowed-domains', component: AllowedDomainsComponent},
+                  {path: 'chat-menu-options', component: ChatMenuOptionsComponent},
+                  {path: '', redirectTo: 'allowed-domains', pathMatch: 'full'},
+                ],
                 canActivate: [RoleActive],
                 data: {
-                  role: 'allowedDomains',
+                  role: 'domainOptions',
                   autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               }
