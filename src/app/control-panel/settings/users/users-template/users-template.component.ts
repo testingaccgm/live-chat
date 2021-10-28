@@ -1,9 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { Domain } from 'src/app/shared/models/domains.model';
 import { LoginHistory, User } from 'src/app/shared/models/user.model';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
 
@@ -14,146 +13,110 @@ import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-c
 })
 export class UsersTemplateComponent implements OnInit, OnDestroy {
   @Input() users!: User[];
-
-  errorMsgOnGetUsers!: string;
-  errorMsgOnResetPassword!: string;
+  editUserForm!: FormGroup;
 
   resetPasswordPopUp: boolean = false;
   disabledResetPasswordButton: boolean = false;
-  
-  changeDisplayNameForm!: FormGroup;
-  editDIsplayNameMode: boolean = false;
-  currentDisplayNameId!: string;
-
   currentResetEmail!: string;
 
-  currentRolesUser!: User;
-  changeRolesMode: boolean = true;
+  errorMsgOnResetPassword!: string;
 
   searchParams!: string;
 
   loginHistory!: any;
   private _loginHistorySubscription!: Subscription;
 
-  domains!: Domain[];
-  private _domainsSubscription!: Subscription;
-  errorOnGetDomains!: string;
-  private _errorOnGetDomainsSubscription!: Subscription;
-  currentDomainUser!: User;
-  changeDomainMode: boolean = true;
-
+  currentUser!: User;
+ 
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
     private _firebaseAuth: AngularFireAuth,
-    private _formBuilder: FormBuilder
+    private _fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
-    this.changeDisplayNameForm = this._formBuilder.group({
-      name: [null, [Validators.required]]
-    });
 
-    this._firestoreCollections.getDomains();
-    this._domainsSubscription = this._firestoreCollections.domainsSubject.subscribe(domains => {
-      this.domains = domains;
-    });
-
-    this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
-      this.errorOnGetDomains = error;
-    });
   }
 
   ngOnDestroy(): void {
-    this._domainsSubscription.unsubscribe();
-    this._errorOnGetDomainsSubscription.unsubscribe();
-    this._firestoreCollections.domainsUnsubscribe();
+ 
   }
 
-  resetPassword(email: string) {
-    //loading spinner  
-    this.disabledResetPasswordButton = true;
-    this.currentResetEmail = email;
+  editUser(user: User) {
+    this.currentUser = user;
 
-    this._firebaseAuth.sendPasswordResetEmail(this.currentResetEmail).then(() => {         
-      this.resetPasswordPopUp = true;      
-      this.errorMsgOnResetPassword = '';
-      // remove loading spinner
-    }, error => {      
-      this.errorMsgOnResetPassword = error.message;
-      this.disabledResetPasswordButton = false;
-      // remove loading spinner
-    })
+    this.editUserForm = this._fb.group({
+      name: [user.name, Validators.required],
+      roles: this._fb.array([]),
+      domains: this._fb.array([])
+    });
+
+    const rolesArray = <FormArray> this.editUserForm.get('roles');
+    const domainsArray = <FormArray> this.editUserForm.get('domains');
+
+    for (const role of user.roles!) {
+      rolesArray.push(new FormControl(
+        {
+          checked: role.checked,
+          name: role.name,
+          route: role.route,
+          value: role.value
+        }
+      ));
+    };
+
+    for (const domain of user.domains!) {
+      domainsArray.push(new FormControl(
+        {
+          checked: domain.checked,
+          description: domain.description,
+          domain: domain.domain,
+          key: domain.key
+        }
+      ));
+    };
   };
 
-  closeResetPasswordPopUp() {
-    this.resetPasswordPopUp = false;
-    this.disabledResetPasswordButton = false;
-    this.currentResetEmail = '';
-  };
-
-  enableEditDisplayNameMode(user: User) {
-    this.editDIsplayNameMode = true;
-    this.currentDisplayNameId = user.uid!;
-    this.changeDisplayNameForm.controls['name'].setValue(user.name);
-  };
-
-  editDisplayName(formResult: FormGroup) {
-    if (formResult.invalid) {
+  submitEditUserForm() {
+    if(this.editUserForm.invalid) {
       return;
-    }
+    };
 
-    const userId = this.currentDisplayNameId;
-    const displayName = formResult.value.name!;
-    const newInfo = {userId, displayName};
+    const name = this.editUserForm.value.name;
+    const email = this.currentUser.email;
+    const active = this.currentUser.active;
+    const roles = this.editUserForm.value.roles;
+    const domains = this.editUserForm.value.domains;
+    const uid = this.currentUser.uid;
+    const newInfo = { name, email, active, roles, domains, uid };    
 
-    this._firestoreCollections.updateUserDisplayName(newInfo).then(() => {
-      this.resetDisplayNameFormFun();
-      // no error
+    this._firestoreCollections.setUserData(newInfo, false).then(() => {
+      this.editUserForm.reset();
+      this.currentUser = undefined!;
     }, error => {
-      // display error
+
     })
   };
 
-  resetDisplayNameFormFun() {
-    this.editDIsplayNameMode = false;
-    this.changeDisplayNameForm.reset();
-    this.currentDisplayNameId = '';
+  resetEditUserForm() {
+    this.currentUser = undefined!;
+    this.editUserForm.reset();
   };
 
-  changeAccountActivity(uid: string, param: boolean) {
-    const userId = uid;
-    const parameter = param;
-    const newInfo = {userId, parameter};
-
-    this._firestoreCollections.updateUserActivity(newInfo).then(() => {
-
-      // no error
-    }, error => {
-      // display error
-    })
-  };
-
-  enableChangeRolesMode(user: User) {
-    this.changeRolesMode = false;
-    this.currentRolesUser = user;
-  };
-
-  onRoleChange(event: any, roleIndex: number) {
+  onRoleChange(event: any, index: number) {
     if (event.target.checked) {
-      this.currentRolesUser.roles![roleIndex].checked = true;
+      this.editUserForm.value.roles[index].checked = true;
     } else {
-      this.currentRolesUser.roles![roleIndex].checked = false;
+      this.editUserForm.value.roles[index].checked = false;
     };    
   };
 
-  submitRoles() {
-    this._firestoreCollections.setUserRoles(this.currentRolesUser).then(() => {
-      this.currentRolesUser = undefined!;
-      this.changeRolesMode = true;
-      // no error
-    }, error => {
-      // error
-    })
+  onDomainChange(event: any, index: number) {
+    if (event.target.checked) {
+      this.editUserForm.value.domains[index].checked = true;
+    } else {
+      this.editUserForm.value.domains[index].checked = false;
+    };      
   };
 
   getUserLogins(userId: string) {
@@ -172,26 +135,38 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
     this._loginHistorySubscription.unsubscribe();
   };
 
-  onDomainChange(event: any, domainIndex: number) {
-    if (event.target.checked) {
-      this.currentDomainUser.domains![domainIndex].checked = true;
-    } else {
-      this.currentDomainUser.domains![domainIndex].checked = false;
-    };    
-  };
+  changeAccountActivity(uid: string, param: boolean) {
+    const userId = uid;
+    const parameter = param;
+    const newInfo = {userId, parameter};
 
-  enableChangeDomainMode(user: User) {
-    this.changeDomainMode = true;
-    this.currentDomainUser = user;
-  };
+    this._firestoreCollections.updateUserActivity(newInfo).then(() => {
 
-  submitDomain() {
-    this._firestoreCollections.setUserDomain(this.currentDomainUser).then(() => {
-      this.changeDomainMode = false;
-      this.currentDomainUser = undefined!;
       // no error
     }, error => {
-      // error
+      // display error
+    })
+  };
+
+  closeResetPasswordPopUp() {
+    this.resetPasswordPopUp = false;
+    this.disabledResetPasswordButton = false;
+    this.currentResetEmail = '';
+  };
+
+  resetPassword(email: string) {
+    //loading spinner  
+    this.disabledResetPasswordButton = true;
+    this.currentResetEmail = email;
+
+    this._firebaseAuth.sendPasswordResetEmail(this.currentResetEmail).then(() => {         
+      this.resetPasswordPopUp = true;      
+      this.errorMsgOnResetPassword = '';
+      // remove loading spinner
+    }, error => {      
+      this.errorMsgOnResetPassword = error.message;
+      this.disabledResetPasswordButton = false;
+      // remove loading spinner
     })
   };
 }

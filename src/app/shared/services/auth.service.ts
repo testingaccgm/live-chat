@@ -46,7 +46,7 @@ export class AuthService {
     this.secondaryApp.auth().createUserWithEmailAndPassword(newUser.email, newUser.password!)
     .then((user) => {
       newUser.uid = user.user!.uid;
-      this._firestoreCollections.setUserData(newUser)
+      this._firestoreCollections.setUserData(newUser, true)
       .then(() => {
           this.secondaryApp.auth().signOut();
           this.errorOnSetUserData = '';

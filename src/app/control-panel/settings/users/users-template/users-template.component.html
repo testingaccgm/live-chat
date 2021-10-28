@@ -4,41 +4,43 @@
     <input type="text" [(ngModel)]="searchParams" placeholder="Search by email or display name...">
     <table>
       <tr>
+        <th></th>
         <th>Email Address</th>
         <th>Display Name</th>
-        <th>Reset Password</th>
         <th>Roles</th>
         <th>Domains</th>
+        <th>Reset Password</th>
         <th>Activity</th>
         <th>Login History</th>
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
         <td>
+          <button type="button" (click)="editUser(user)">Edit</button>
+        </td>
+        <td>
           {{ user.email }}
         </td>
         <td>
-          <div *ngIf="currentDisplayNameId !== user.uid">
-            <p>{{ user.name }}</p>
-            <button 
-              (click)="enableEditDisplayNameMode(user)" 
-              type="button">
-                Edit
-            </button>
-          </div>
-          <div *ngIf="editDIsplayNameMode && currentDisplayNameId == user.uid">
-            <form [formGroup]="changeDisplayNameForm" (ngSubmit)="editDisplayName(changeDisplayNameForm)">
-              <div>
-                <input type="name" formControlName="name" placeholder="Enter display name...">
-              </div>
-              <div>
-                <button 
-                  [disabled]="changeDisplayNameForm.invalid"
-                  type="submit">
-                    Submit
-                </button>
-                <button type="button" (click)="resetDisplayNameFormFun()">Cancel</button>
-              </div>
-            </form>
+          {{ user.name }}
+        </td>
+        <td>
+          <label *ngFor="let role of user.roles">           
+            <input 
+              disabled
+              type="checkbox"
+              [attr.checked]="role.checked ? 'checked' : null">
+            {{ role.name }}
+          </label>
+        </td>
+        <td>
+          <div>
+            <label *ngFor="let userDomain of user.domains">
+              <input
+                type="checkbox"
+                disabled
+                [checked]="userDomain.checked ? 'checked' : null">
+              {{ userDomain.description }}
+            </label>
           </div>
         </td>
         <td>
@@ -48,63 +50,6 @@
             (click)="resetPassword(user.email)">
               Reset Password
           </button>
-        </td>
-        <td>
-          <div>
-            <div>
-              <label *ngFor="let role of user.roles; let i = index">           
-                <input 
-                  [disabled]="currentRolesUser?.uid !== user.uid"
-                  type="checkbox" 
-                  [value]="role.value" 
-                  [attr.checked]="role.checked ? 'checked' : null"
-                  [attr.name]="role.name"
-                  [attr.data-route]="role.route"              
-                  [attr.data-checked]="role.checked"
-                  (change)="onRoleChange($event, i)">
-                {{ role.name }}
-              </label>    
-            </div>
-            <div>
-              <button 
-                type="button" 
-                (click)="enableChangeRolesMode(user)">
-                  Edit
-              </button>
-              <button 
-                *ngIf="!changeRolesMode && currentRolesUser?.uid == user.id"
-                type="button"
-                (click)="submitRoles()">
-                  Submit
-              </button>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div>
-            <label *ngFor="let userDomain of user.domains; let i = index">
-              <input
-              type="checkbox"
-                [disabled]="currentDomainUser?.uid !== user.uid"
-                [checked]="userDomain.checked ? 'checked' : null"
-                [value]="userDomain.key"
-                (change)="onDomainChange($event, i)">
-              {{ userDomain.description }}
-            </label>
-          </div>
-          <div>
-            <button 
-              type="button" 
-              (click)="enableChangeDomainMode(user)">
-                Edit
-            </button>
-            <button 
-              type="button"
-              *ngIf="currentDomainUser && currentDomainUser?.uid == user.id"
-              (click)="submitDomain()">
-                Submit
-            </button>
-          </div>
         </td>
         <td>
           <button 
@@ -150,6 +95,37 @@
         <td>{{ login.city }}</td>
       </tr>
     </table>
+  </div>
+
+  <div *ngIf="currentUser">
+    <form [formGroup]="editUserForm" (ngSubmit)="submitEditUserForm()">
+      <div>
+        <label for="name">Display name</label>
+        <input type="text" formControlName="name">
+      </div>
+      <div>
+        <label *ngFor="let role of currentUser.roles; let i = index">
+          {{ role.name }}
+          <input 
+            type="checkbox"
+            [checked]="role.checked ? 'checked' : null"
+            (change)="onRoleChange($event, i)">
+        </label>
+      </div>
+      <div>
+        <label *ngFor="let domain of currentUser.domains; let i = index">
+          {{ domain.description }}
+          <input 
+            type="checkbox"
+            [checked]="domain.checked ? 'checked' : null"
+            (change)="onDomainChange($event, i)">
+        </label>
+      </div>
+      <div>
+        <button type="submit">Apply</button>
+        <button type="button" (click)="resetEditUserForm()">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>
 

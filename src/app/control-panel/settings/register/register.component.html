@@ -125,7 +125,7 @@
               type="checkbox" 
               [value]="domain.key"
               [name]="domain.description"
-              (change)="onDomainChange($event)">
+              (change)="onDomainChange($event, i)">
             {{ domain.description }}
           </label>    
         </div>

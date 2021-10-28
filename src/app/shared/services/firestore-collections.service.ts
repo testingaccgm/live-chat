@@ -18,30 +18,23 @@ export class FirestoreCollectionsService {
     private _firestore: AngularFirestore
   ) {}
 
-  setUserData(newUser: User) {
-    const usersCollection = this._firestore.collection('users').doc(newUser.uid);
+  setUserData(userInfo: User, newReg: boolean) {
+    const usersCollection = this._firestore.collection('users').doc(userInfo.uid);
     return usersCollection.set({
-      name: newUser.name,
-      email: newUser.email,
-      active: newUser.active,
-      roles: newUser.roles,
-      domains: newUser.domains,
-      uid: newUser.uid
+      name: userInfo.name,
+      email: userInfo.email,
+      active: userInfo.active,
+      roles: userInfo.roles,
+      domains: userInfo.domains,
+      uid: userInfo.uid
     }).then(() => {
-      return usersCollection.collection('loginHistory').doc(newUser.uid).set({
-        loginHistory: []
-      });
-    });
-  };
-
-  setUserRoles(newUser: User) {
-    return this._firestore.collection('users').doc(newUser.uid).set({
-      name: newUser.name,
-      email: newUser.email,
-      active: newUser.active,
-      roles: newUser.roles,
-      domains: newUser.domains,
-      uid: newUser.uid
+      if(newReg) {
+        return usersCollection.collection('loginHistory').doc(userInfo.uid).set({
+          loginHistory: []
+        });
+      } else {
+        return;
+      }
     });
   };
 
@@ -67,13 +60,6 @@ export class FirestoreCollectionsService {
         country: userLocation.country,
         city: userLocation.city
       })
-    })
-  };
-
-  updateUserDisplayName(newInfo: {userId: string, displayName: string}) {
-    return this._firestore
-    .collection('users').doc(newInfo.userId).update({
-      name: newInfo.displayName
     })
   };
 

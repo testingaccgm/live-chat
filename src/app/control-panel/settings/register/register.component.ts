@@ -43,6 +43,15 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this._firestoreCollections.getDomains();
+    this._domainsSubscription = this._firestoreCollections.domainsSubject.subscribe(domains => {
+      this.domains = domains;
+    });
+
+    this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
+      this.errorOnGetDomains = error;
+    });
+
     this.signupForm = this._formBuilder.group({
         name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
         email: [null, [Validators.required, Validators.email]],
@@ -70,14 +79,18 @@ export class RegisterComponent implements OnInit {
       ));
     };
 
-    this._firestoreCollections.getDomains();
-    this._domainsSubscription = this._firestoreCollections.domainsSubject.subscribe(domains => {
-      this.domains = domains;
-    });
-
-    this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
-      this.errorOnGetDomains = error;
-    });
+    if (this.domains != undefined) {
+      for (const domain of this.domains) {
+        this.domainsArray.push(new FormControl(
+          {
+            checked: domain.checked,
+            description: domain.description,
+            domain: domain.domain,
+            key: domain.key
+          }
+        ));
+      };
+    }
 
     this._errorAuthMsgSubscription =
       this._authService.errorAuthMsgSubject.subscribe((error) => {
@@ -127,6 +140,14 @@ export class RegisterComponent implements OnInit {
     };
   };
 
+  onDomainChange(event: any, index: number) {
+    if (event.target.checked) {
+      this.domainsArray.value[index].checked = true;
+    } else {
+      this.domainsArray.value[index].checked = false;
+    };  
+  };
+
   onSubmit(signupForm: FormGroup) {
     if (signupForm.invalid) {
       return;
@@ -149,23 +170,5 @@ export class RegisterComponent implements OnInit {
     };
 
     this._authService.signUp(newUser);
-  };
-
-  onDomainChange(event: any) {
-    if (event.target.checked) {
-      this.domainsArray.push(new FormControl({
-        description: event.target.name,
-        key: event.target.value
-      }));
-    } else {
-      let i: number = 0;
-      this.domainsArray.controls.forEach(item => {
-        if (item.value == event.target.value) {
-          this.domainsArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    };    
   };
 }
