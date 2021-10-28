@@ -19,7 +19,9 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   menuFileLocalPath: string = this.menuDefaultImg;
 
   menuOptions!: MenuOption[];
-  private _menuOptionsSubscription!: Subscription; 
+  private _menuOptionsSubscription!: Subscription;
+
+  isOptionMenuActive: boolean = false;
 
   constructor(
     private _fb: FormBuilder,
@@ -51,6 +53,15 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._menuOptionsSubscription.unsubscribe();
+  };
+
+  activateMenuOptionForm() {
+    this.isOptionMenuActive = true;
+  };
+
+  deactivateMenuOptionForm() {
+    this.isOptionMenuActive = false;
+    this.menuOptionsForm.reset();
   };
 
   submitMenuOptionsForm(menuOptionsForm: FormGroup) {

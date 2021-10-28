@@ -1,6 +1,10 @@
 <div>
   <div>
-    <form [formGroup]="menuOptionsForm" (ngSubmit)="submitMenuOptionsForm(menuOptionsForm)">
+    <button *ngIf="!isOptionMenuActive" type="button" (click)="activateMenuOptionForm()">Add menu option</button>
+  </div>
+
+  <div>
+    <form *ngIf="isOptionMenuActive" [formGroup]="menuOptionsForm" (ngSubmit)="submitMenuOptionsForm(menuOptionsForm)">
       <div>
         <div>
           <img [src]="menuFileLocalPath">
@@ -38,27 +42,42 @@
 
       <div>
         <button type="submit" [disabled]="menuOptionsForm.invalid">Add</button>
+        <button type="button" (click)="deactivateMenuOptionForm()">Cancel</button>
       </div>
     </form>
   </div>
+
+  <div>
     <table>
       <tr>
+        <th></th>
         <th>Image</th>
         <th>Activity</th>
         <th>Description</th>
       </tr>
       <tr *ngFor="let menuOption of menuOptions">
         <td>
+          <button type="button">Edit</button>
+        </td>
+        <td>
           <img [src]="menuOption.img">
         </td>
         <td>
           <label>Active</label>
-          <input type="checkbox" [checked]="menuOption.active ? 'checked' : null">
+          <input type="checkbox" disabled [checked]="menuOption.active ? 'checked' : null">
         </td>
         <td>{{ menuOption.description }}</td>
       </tr>
     </table>
-  <div>
+  </div>
 
+  <div>
+    <form >
+      
+      <div>
+        <button type="submit">Apply</button>
+        <button type="button">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>
