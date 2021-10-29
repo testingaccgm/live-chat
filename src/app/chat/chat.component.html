@@ -7,8 +7,15 @@
     <div>
       <mat-form-field>
       <mat-select formControlName="option">
-        <mat-option value="test">
-          test
+        <mat-option *ngFor="let option of menuOptions" [value]="option.key">
+          <div style="display: flex;">
+            <div>
+              <img width="20px" [src]="option.img">
+            </div>
+            <div>
+              <p>{{ option.description }}</p>
+            </div>
+          </div>
         </mat-option>
       </mat-select>
     </mat-form-field>
