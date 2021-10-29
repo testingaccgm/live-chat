@@ -4,9 +4,12 @@
   </div>
 
   <div>
-    <form *ngIf="isOptionMenuActive" [formGroup]="menuOptionsForm" (ngSubmit)="submitMenuOptionsForm(menuOptionsForm)">
+    <form 
+      *ngIf="isOptionMenuActive" 
+      [formGroup]="menuOptionsForm" 
+      (ngSubmit)="isInEditMenuEditOptionMode ? submitmenuEditOptionsForm() : submitMenuOptionsForm(menuOptionsForm)">
       <div>
-        <div>
+        <div *ngIf="!isInEditMenuEditOptionMode">
           <img [src]="menuFileLocalPath">
         </div>
         <div>
@@ -41,8 +44,8 @@
       </div>
 
       <div>
-        <button type="submit" [disabled]="menuOptionsForm.invalid">Add</button>
-        <button type="button" (click)="deactivateMenuOptionForm()">Cancel</button>
+        <button type="submit" [disabled]="menuOptionsForm.invalid">{{ isInEditMenuEditOptionMode ? 'Change' : 'Add' }}</button>
+        <button type="button" (click)="clearMenuOptionForm()">Cancel</button>
       </div>
     </form>
   </div>
@@ -51,16 +54,30 @@
     <table>
       <tr>
         <th></th>
+        <th></th>
         <th>Image</th>
         <th>Activity</th>
         <th>Description</th>
       </tr>
       <tr *ngFor="let menuOption of menuOptions">
         <td>
-          <button type="button">Edit</button>
+          <button type="button" (click)="editOption(menuOption)">Edit</button>
         </td>
         <td>
-          <img [src]="menuOption.img">
+          <button type="button" (click)="deleteMenuOptionPopUp(menuOption)">Delete</button>
+        </td>
+        <td>
+          <div>
+            <input style="display: none;"
+            #editImg
+            type="file" 
+            (change)="editMenuImg($event, menuOption)" 
+            accept=".png,.jpg,.jpeg,.svg,.heic">
+          </div>
+          <img [src]="menuEditedImage && currentOption.id == menuOption.id ? menuEditedImage : menuOption.img">
+          <button type="button" (click)="editImg.click()">Edit Image (icon)</button>
+          <button type="button" *ngIf="menuEditedImage && currentOption.id == menuOption.id" (click)="applyNewImg()">Apply (icon)</button>
+          <button type="button" *ngIf="menuEditedImage && currentOption.id == menuOption.id" (click)="clearMenuOptionForm()">Cancel (icon)</button>
         </td>
         <td>
           <label>Active</label>
@@ -71,13 +88,9 @@
     </table>
   </div>
 
-  <div>
-    <form >
-      
-      <div>
-        <button type="submit">Apply</button>
-        <button type="button">Cancel</button>
-      </div>
-    </form>
+  <div *ngIf="isDeleteMenuOptionPopUpActive">
+    <p>Menu {{ currentOption.description }} will be deleted!</p>
+    <button type="button" (click)="deleteMenuOption()">OK</button>
+    <button type="button" (click)="clearMenuOptionForm()">Cancel</button>
   </div>
 </div>

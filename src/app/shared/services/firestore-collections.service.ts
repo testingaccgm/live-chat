@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
@@ -15,7 +16,8 @@ export class FirestoreCollectionsService {
   private _domainsSubscription!: Subscription;
 
   constructor(
-    private _firestore: AngularFirestore
+    private _firestore: AngularFirestore,
+    private _storage: AngularFireStorage
   ) {}
 
   setUserData(userInfo: User, newReg: boolean) {
@@ -138,7 +140,32 @@ export class FirestoreCollectionsService {
     .collection('menuOptions').add(menuItemObj);
   };
 
+  deleteMenuOptionItem(menuItemObj: MenuOption) {
+    return this._firestore
+    .collection('menuOptions').doc(menuItemObj.id).delete();
+  };
+
+  editMenuOptionItem(menuItemObj: MenuOption) {
+    return this._firestore
+    .collection('menuOptions').doc(menuItemObj.id).update({
+      key: menuItemObj.key,
+      description: menuItemObj.description,
+      active: menuItemObj.active
+    });
+  };
+
+  editMenuOptioImage(menuItemId: string, imgUrl: string) {
+    return this._firestore
+    .collection('menuOptions').doc(menuItemId).update({
+      img: imgUrl
+    });
+  };
+
   getMenuOptions() {
     return this._firestore.collection('menuOptions').snapshotChanges();
+  };
+
+  deleteItemFromFireStorage(url: string) {
+    return this._storage.storage.refFromURL(url).delete();
   };
 }
