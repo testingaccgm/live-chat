@@ -29,6 +29,8 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   
   isDeleteMenuOptionPopUpActive: boolean = false;
 
+  @ViewChild ('editImg') editImg!: ElementRef;
+
   constructor(
     private _fb: FormBuilder,
     private _angularFireStorage: AngularFireStorage,
@@ -73,6 +75,7 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
     this.menuEditedImage = undefined!;
     this.menuFileLocalPath = this.menuDefaultImg;
     this.menuOptionsForm.reset();
+    this.editImg.nativeElement.value = '';    
   };
 
   submitMenuOptionsForm(menuOptionsForm: FormGroup) {
