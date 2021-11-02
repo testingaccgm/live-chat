@@ -16,8 +16,6 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
 
   domains!: Domain[];
   private _domainsSubscription!: Subscription;
-  errorOnGetDomains!: string;
-  private _errorOnGetDomainsSubscription!: Subscription;
 
   users!: User[];
   private _usersSubscription!: Subscription;
@@ -33,17 +31,8 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.addDomainForm = this._fb.group({
       domain: [null, Validators.required],
-      key: [null, Validators.required],
+      key: [null, [Validators.required, Validators.pattern('^[a-z]*$')]],
       description: [null, Validators.required]
-    });
-
-    this._firestoreCollections.getDomains();
-    this._domainsSubscription = this._firestoreCollections.domainsSubject.subscribe(domains => {
-      this.domains = domains;
-    });
-
-    this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
-      this.errorOnGetDomains = error;
     });
 
     this._usersSubscription = this._firestoreCollections.getUsers().subscribe(users => {
@@ -58,12 +47,21 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
     }, error => {
       // error
     });
+
+    this._domainsSubscription = this._firestoreCollections.getDomains().subscribe(domains => {
+      this.domains = domains.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ... e.payload.doc.data() as Domain
+        }
+      })
+    }, error => {
+
+    });
   }
 
   ngOnDestroy(): void {
    this._domainsSubscription.unsubscribe();
-   this._errorOnGetDomainsSubscription.unsubscribe();
-   this._firestoreCollections.domainsUnsubscribe();
    this._usersSubscription.unsubscribe();
   }
 
@@ -76,11 +74,12 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
     const key = addDomainForm.value.key
     const description = addDomainForm.value.description
     const checked = false;
-    const domainObj = { domain, key, description, checked }
+    const domainObj = { domain, key, description }
+    const userDomainObj = { domain, key, description, checked }
 
     this._firestoreCollections.addDomain(domainObj).then(() => {
-      for (const user of this.users) {
-        this._firestoreCollections.setDomain(user.uid!, domainObj).then(() => {
+      for (const user of this.users) {        
+        this._firestoreCollections.setDomain(user.uid!, userDomainObj).then(() => {
           
         }, error => {
 

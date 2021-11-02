@@ -22,8 +22,6 @@ export class RegisterComponent implements OnInit {
 
   domains!: Domain[];
   private _domainsSubscription!: Subscription;
-  errorOnGetDomains!: string;
-  private _errorOnGetDomainsSubscription!: Subscription;
   domainsArray!: FormArray;
 
   errorAuthMsg!: string;
@@ -43,13 +41,15 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._firestoreCollections.getDomains();
-    this._domainsSubscription = this._firestoreCollections.domainsSubject.subscribe(domains => {
-      this.domains = domains;
-    });
+    this._domainsSubscription = this._firestoreCollections.getDomains().subscribe(domains => {
+      this.domains = domains.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ... e.payload.doc.data() as Domain
+        }
+      })
+    }, error => {
 
-    this._errorOnGetDomainsSubscription = this._firestoreCollections.errorOnGetDomainsSubject.subscribe(error => {
-      this.errorOnGetDomains = error;
     });
 
     this.signupForm = this._formBuilder.group({
@@ -113,8 +113,6 @@ export class RegisterComponent implements OnInit {
     this._errorOnSetUserDataSubscription.unsubscribe();
     this._isLoadingSubscription.unsubscribe();
     this._domainsSubscription.unsubscribe();
-    this._errorOnGetDomainsSubscription.unsubscribe();
-    this._firestoreCollections.domainsUnsubscribe();
 
     this._authService.errorAuthMsg = '';
     this._authService.errorAuthMsgSubject.next(this._authService.errorAuthMsg);

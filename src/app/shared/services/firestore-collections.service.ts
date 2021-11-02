@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { Chat } from '../models/chat.model';
 
 import { Domain } from '../models/domains.model';
 import { MenuOption } from '../models/menu-option.model';
@@ -10,11 +11,6 @@ import { LoginHistory, User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class FirestoreCollectionsService {
-  domains!: Domain[];
-  domainsSubject = new BehaviorSubject<Domain[]>(undefined!);
-  errorOnGetDomainsSubject = new BehaviorSubject<string>('');
-  private _domainsSubscription!: Subscription;
-
   constructor(
     private _firestore: AngularFirestore,
     private _storage: AngularFireStorage
@@ -105,23 +101,7 @@ export class FirestoreCollectionsService {
   };
 
   getDomains() {
-    this._domainsSubscription = this._firestore.collection('domains')
-    .snapshotChanges().subscribe(domains => {      
-      this.domains = domains.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ... e.payload.doc.data() as Domain
-        }
-      });
-      this.domainsSubject.next(this.domains);
-      this.errorOnGetDomainsSubject.next('');
-    }, error => {
-      this.errorOnGetDomainsSubject.next(error.message);
-    });
-  };
-
-  domainsUnsubscribe() {
-    this._domainsSubscription.unsubscribe();
+    return this._firestore.collection('domains').snapshotChanges();
   };
 
   setUserDomain(newUser: User) {
@@ -165,7 +145,17 @@ export class FirestoreCollectionsService {
     return this._firestore.collection('menuOptions').snapshotChanges();
   };
 
+  getActiveMenuOptions() {
+    return this._firestore.
+    collection('menuOptions', (data) => data.where('active', '==', true)).
+    snapshotChanges();
+  };
+
   deleteItemFromFireStorage(url: string) {
     return this._storage.storage.refFromURL(url).delete();
+  };
+
+  addChatOnQue(chat: Chat) {
+    return this._firestore.collection(chat.domain).add(chat);
   };
 }
