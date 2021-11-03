@@ -24,4 +24,12 @@
       <button type="submit" [disabled]="startChatForm.invalid">Start chat</button>
     </div>
   </form>
+
+  <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'pending'">
+    Your chant will be accepted soon!
+  </div>
+
+  <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
+    chat form
+  </div>
 </div>

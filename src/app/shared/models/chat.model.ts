@@ -5,7 +5,15 @@ export class Chat {
     public option: string,
     public domain: string,
     public status: string,
-    public operator?: string,
-    public id?: string
+    public id: string,
+    public chatHistory?: ChatHistiry[],
+    public operatorDisplayName?: string,
+    public operatorEmail?: string,
+  ) {}
+};
+
+export class ChatHistiry {
+  constructor(
+    
   ) {}
 };

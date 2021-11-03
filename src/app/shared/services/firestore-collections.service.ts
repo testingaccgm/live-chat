@@ -155,7 +155,14 @@ export class FirestoreCollectionsService {
     return this._storage.storage.refFromURL(url).delete();
   };
 
-  addChatOnQue(chat: Chat) {
-    return this._firestore.collection(chat.domain).add(chat);
+  addChat(chat: Chat) {
+    return this._firestore.collection(chat.domain).doc('activeChats')
+    .collection('activeChats').doc(chat.id).set(chat);
   };
+
+  getChat(domain: string, status: string, chatId: string) {
+    return this._firestore.collection(domain).doc(status)
+    .collection(status, (data) => data.where('id', '==', chatId))
+    .snapshotChanges();
+  }
 }
