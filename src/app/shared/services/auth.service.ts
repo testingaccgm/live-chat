@@ -106,7 +106,6 @@ export class AuthService {
       (data) => {
         const userInfo = data.map((e) => {
           return {
-            id: e.payload.doc.id,
             ...(e.payload.doc.data() as User),
           }
         });

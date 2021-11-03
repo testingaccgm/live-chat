@@ -85,8 +85,7 @@ export class RegisterComponent implements OnInit {
           {
             checked: domain.checked,
             description: domain.description,
-            domain: domain.domain,
-            key: domain.key
+            domain: domain.domain
           }
         ));
       };

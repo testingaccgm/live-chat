@@ -1,1 +1,21 @@
-<p>chats works!</p>
+<div>
+  <p>Pending chats</p>
+  <div>
+    <div *ngFor="let domain of user?.domains">
+      <div *ngIf="domain.checked">
+        <p>{{ domain.description }}</p>
+        <!-- <div *ngFor="let chat of pendingChats | filterRolePipe: domain.checked">
+          test
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <p>Chat rooms</p>
+</div>
+
+<div>
+  <p>Client's info</p>
+</div>

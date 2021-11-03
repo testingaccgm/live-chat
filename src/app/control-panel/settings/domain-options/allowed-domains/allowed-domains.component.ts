@@ -30,8 +30,7 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.addDomainForm = this._fb.group({
-      domain: [null, Validators.required],
-      key: [null, [Validators.required, Validators.pattern('^[a-z]*$')]],
+      domain: [null, [Validators.required, Validators.pattern('^[a-z]*$')]],
       description: [null, Validators.required]
     });
 
@@ -71,11 +70,10 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
     }
 
     const domain = addDomainForm.value.domain
-    const key = addDomainForm.value.key
     const description = addDomainForm.value.description
     const checked = false;
-    const domainObj = { domain, key, description }
-    const userDomainObj = { domain, key, description, checked }
+    const domainObj = { domain, description }
+    const userDomainObj = { domain, description, checked }
 
     this._firestoreCollections.addDomain(domainObj).then(() => {
       for (const user of this.users) {        
@@ -95,16 +93,15 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
   deleteDomain() {
     this._firestoreCollections.deleteDomain(this.currentDomain.id!).then(() => {
     const description = this.currentDomain.description;
-    const domain = this.currentDomain.domain;
-    const key = this.currentDomain.key;    
+    const domain = this.currentDomain.domain;   
 
       for (const user of this.users) {
-        const domainObj = {checked: true, description, domain, key};
+        const domainObj = {checked: true, description, domain};
         this.deleteDomainItem(user.uid!, domainObj);
       };
 
       for (const user of this.users) {
-        const domainObj = {checked: false, description, domain, key};
+        const domainObj = {checked: false, description, domain};
         this.deleteDomainItem(user.uid!, domainObj);
       };
 

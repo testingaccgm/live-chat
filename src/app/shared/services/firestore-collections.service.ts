@@ -76,8 +76,7 @@ export class FirestoreCollectionsService {
   setDomain(userId: string, role: Domain) {
     return this._firestore.collection('users').doc(userId).update({
       domains: firebase.default.firestore.FieldValue.arrayUnion({
-        domain: role.domain,        
-        key: role.key,
+        domain: role.domain,
         description: role.description,
         checked: role.checked
       })
@@ -155,14 +154,36 @@ export class FirestoreCollectionsService {
     return this._storage.storage.refFromURL(url).delete();
   };
 
+  // ###
+
+  // addChat(chat: Chat) {
+  //   return this._firestore.collection(chat.domain).doc('activeChats')
+  //   .collection('activeChats').doc(chat.id).set(chat);
+  // };
+
+  // getChat(domain: string, status: string, chatId: string) {
+  //   return this._firestore.collection(domain).doc(status)
+  //   .collection(status, (data) => data.where('id', '==', chatId))
+  //   .snapshotChanges();
+  // };
+
+  // getPendingChats(domain: string) {
+  //   return this._firestore.collection(domain).doc('activeChats')
+  //   .collection('activeChats', (data) => data.where('status', '==', 'pending'))
+  //   .snapshotChanges();
+  // };
+
   addChat(chat: Chat) {
-    return this._firestore.collection(chat.domain).doc('activeChats')
-    .collection('activeChats').doc(chat.id).set(chat);
+    return this._firestore.collection('activeChats').doc(chat.id).set(chat);
   };
 
-  getChat(domain: string, status: string, chatId: string) {
-    return this._firestore.collection(domain).doc(status)
-    .collection(status, (data) => data.where('id', '==', chatId))
+  getChat(chatId: string) {
+    return this._firestore.collection('activeChats', (data) => data.where('id', '==', chatId))
     .snapshotChanges();
-  }
+  };
+
+  getPendingChats() {
+    return this._firestore.collection('activeChats', (data) => data.where('status', '==', 'pending'))
+    .snapshotChanges();
+  };
 }

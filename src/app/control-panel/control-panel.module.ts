@@ -42,7 +42,7 @@ import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-op
     ChangePasswordComponent,
     ChangeThemeComponent,
     DomainOptionsComponent,
-    ChatMenuOptionsComponent   
+    ChatMenuOptionsComponent
   ],
   imports: [
     CommonModule,

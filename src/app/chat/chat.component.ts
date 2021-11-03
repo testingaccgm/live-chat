@@ -25,7 +25,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   domain!: string;
 
   clientUsername!: string;
-  clientChatDomain!: string;
   clientChatId!: string;
 
   currentChat: Chat[] = [];
@@ -40,7 +39,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.clientChatDomain = JSON.parse(localStorage.getItem('domain')!);
     this.clientUsername = JSON.parse(localStorage.getItem('username')!);
     this.clientChatId = JSON.parse(localStorage.getItem('chatId')!);
         
@@ -74,7 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         
         new Promise<void>((resolve, reject) => {
           for (let i = 0; i < this.domains.length; i++) {            
-            if(this.domains[i].key == this.domain) {              
+            if(this.domains[i].domain == this.domain) {              
               return resolve();
             } else {
               if (i == this.domains.length-1) {
@@ -91,8 +89,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._router.navigate(['/error']);
     };
 
-    if (this.clientChatId && this.clientChatDomain) {
-      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
+    if (this.clientChatId) {
+      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatId).subscribe(chat => {
         this.currentChat = chat.map(e => {
           return {
             ... e.payload.doc.data() as Chat
@@ -134,14 +132,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     const id = this._generateId.generateId();
     const chat = { username, option, domain, status, id}
 
-    this.clientChatDomain = domain;
     this.clientChatId = id;
-    localStorage.setItem('domain', JSON.stringify(domain));
     localStorage.setItem('chatId', JSON.stringify(id));
     localStorage.setItem('username', JSON.stringify(username));    
     
     this._firestoreCollections.addChat(chat).then(() => {
-      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
+      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatId).subscribe(chat => {
         this.currentChat = chat.map(e => {
           return {
             ... e.payload.doc.data() as Chat

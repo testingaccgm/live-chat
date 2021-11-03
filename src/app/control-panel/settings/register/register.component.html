@@ -123,7 +123,7 @@
           <label *ngFor="let domain of domains; let i = index">           
             <input 
               type="checkbox" 
-              [value]="domain.key"
+              [value]="domain.domain"
               [name]="domain.description"
               (change)="onDomainChange($event, i)">
             {{ domain.description }}
