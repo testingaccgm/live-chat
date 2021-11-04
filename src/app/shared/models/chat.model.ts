@@ -1,7 +1,7 @@
 export class Chat {
   constructor(
     public username: string,
-    // public userIp: string,
+    public clientInformation: ClientInformation[],
     public option: string,
     public domain: string,
     public status: string,
@@ -17,3 +17,11 @@ export class ChatHistiry {
     
   ) {}
 };
+
+export class ClientInformation {
+  constructor(
+    public ip: string,
+    public country: string,
+    public city: string,
+  ){}
+}

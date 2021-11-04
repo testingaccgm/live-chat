@@ -1,21 +1,48 @@
 <div>
   <p>Pending chats</p>
   <div>
-    <div *ngFor="let domain of user?.domains">
-      <div *ngIf="domain.checked">
-        <p>{{ domain.description }}</p>
-        <!-- <div *ngFor="let chat of pendingChats | filterRolePipe: domain.checked">
-          test
-        </div> -->
+    <div *ngFor="let domainEl of activeChats">
+      <div>
+        <p>{{ domainEl.domainDescription }}</p>
+      </div>
+      <div>
+        <div *ngFor="let chat of domainEl.chats">
+          <div *ngIf="chat.status == 'pending'">
+            <p>{{ chat.username }}</p>
+            <p>{{ chat.option }}</p>
+            <div>
+              <button type="button" (click)="acceptChat(chat)">Accept</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <div>
-  <p>Chat rooms</p>
-</div>
-
-<div>
-  <p>Client's info</p>
+  <p>Chats</p>
+  <div>
+    <div *ngFor="let domainEl of activeChats">
+      <div *ngFor="let chat of domainEl.chats">
+        <div *ngIf="chat.status == 'active' && chat.operatorEmail == user.email">
+          <div>
+            <p>{{ chat.username }}</p>
+            <p>{{ chat.option }}</p>
+          </div>
+          <div>
+            <p>Client's info</p>
+            <div>
+              <p>{{ chat.clientInformation[0].ip }}</p>
+              <p>{{ chat.clientInformation[0].city }}</p>
+              <p>{{ chat.clientInformation[0].country }}</p>
+            </div>
+          </div>
+          <div>
+            <app-chat-form [chatId]="chat.id"></app-chat-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

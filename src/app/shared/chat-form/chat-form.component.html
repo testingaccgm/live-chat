@@ -1,0 +1,6 @@
+<form [formGroup]="chatForm" (ngSubmit)="submitChatForm(chatForm)">
+  <textarea formControlName="textarea"></textarea>
+  <div>
+    <button type="submit">Send</button>
+  </div>
+</form>

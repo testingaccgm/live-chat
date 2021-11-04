@@ -2,12 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
+import { environment } from 'src/environments/environment';
 import { MenuOption } from '../shared/models/menu-option.model';
 import { FirestoreCollectionsService } from '../shared/services/firestore-collections.service';
 import { Domain } from '../shared/models/domains.model';
 import { GenerateIdService } from '../shared/services/generate-id.service';
-import { Chat } from '../shared/models/chat.model';
+import { Chat, ClientInformation } from '../shared/models/chat.model';
 
 @Component({
   selector: 'app-chat',
@@ -25,22 +27,27 @@ export class ChatComponent implements OnInit, OnDestroy {
   domain!: string;
 
   clientUsername!: string;
+  clientChatDomain!: string;
   clientChatId!: string;
 
   currentChat: Chat[] = [];
   private _currentChatSubscription!: Subscription;
+
+  clientInformation: ClientInformation[] = [];
 
   constructor(
     private _fb: FormBuilder,
     private _firestoreCollections: FirestoreCollectionsService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _generateId: GenerateIdService
+    private _generateId: GenerateIdService,
+    private _http: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.clientUsername = JSON.parse(localStorage.getItem('username')!);
     this.clientChatId = JSON.parse(localStorage.getItem('chatId')!);
+    this.clientChatDomain = JSON.parse(localStorage.getItem('domain')!);
         
     this.startChatForm = this._fb.group({
       username: [this.clientUsername, Validators.required],
@@ -89,8 +96,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._router.navigate(['/error']);
     };
 
-    if (this.clientChatId) {
-      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatId).subscribe(chat => {
+    if (this.clientChatId && this.clientChatDomain) {
+      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
         this.currentChat = chat.map(e => {
           return {
             ... e.payload.doc.data() as Chat
@@ -106,6 +113,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       })
     };
+
+    this.getClientInformation();
   };
 
   ngOnDestroy(): void {
@@ -126,18 +135,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     const username = startChatForm.value.username;
+    const clientInformation = this.clientInformation;
     const option = startChatForm.value.option;
     const domain = this.domain;
     const status = 'pending';
     const id = this._generateId.generateId();
-    const chat = { username, option, domain, status, id}
+    const chat = { username, clientInformation, option, domain, status, id};
 
     this.clientChatId = id;
+    this.clientChatDomain = domain;
     localStorage.setItem('chatId', JSON.stringify(id));
+    localStorage.setItem('domain', JSON.stringify(domain));
     localStorage.setItem('username', JSON.stringify(username));    
     
     this._firestoreCollections.addChat(chat).then(() => {
-      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatId).subscribe(chat => {
+      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
         this.currentChat = chat.map(e => {
           return {
             ... e.payload.doc.data() as Chat
@@ -148,6 +160,20 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       })
     }, error => {
+
+    });
+  };
+
+  getClientInformation() {
+    this._http.get("https://api.geoapify.com/v1/ipinfo?apiKey=" + environment.geoLocationAPIKey)
+    .subscribe((res: any) => {
+      const ip = res.ip;
+      const country = res.country.name;
+      const city = res.city.name;
+      const clientInformationObj = { ip, country, city};
+
+       this.clientInformation.push(clientInformationObj);
+    }, (error) => {
 
     });
   };

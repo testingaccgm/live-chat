@@ -8,7 +8,6 @@ import * as firebase from 'firebase/app';
 import { environment } from 'src/environments/environment';
 import { LoginHistory, User } from '../models/user.model';
 import { FirestoreCollectionsService } from './firestore-collections.service';
-import { GenerateIdService } from './generate-id.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -37,8 +36,7 @@ export class AuthService {
     private _router: Router,
     private _firebaseAuth: AngularFireAuth,
     private _firestoreCollections: FirestoreCollectionsService,
-    private _http: HttpClient,
-    private _generateIdService: GenerateIdService
+    private _http: HttpClient
   ) { }
 
   signUp(newUser: User) {
@@ -134,9 +132,9 @@ export class AuthService {
   setUserIP() {
     this._userLocationSubscription = this._http.get("https://api.geoapify.com/v1/ipinfo?apiKey=" + environment.geoLocationAPIKey)
     .subscribe((res: any) => {
-      this.userLocation.country = res.country.name,
-      this.userLocation.city = res.city.name,
-      this.userLocation.ip = res.ip,
+      this.userLocation.country = res.country.name;
+      this.userLocation.city = res.city.name;
+      this.userLocation.ip = res.ip;
       this.userLocation.date = firebase.default.firestore.Timestamp.now();
 
       this._firestoreCollections.setUserIPAddress(this.userLocation).then(() => {        

@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatInputModule,
     MatSelectModule,
+    SharedModule,
     RouterModule.forChild([
       {path: '', component: ChatComponent},
       {path: '**', redirectTo: ''}

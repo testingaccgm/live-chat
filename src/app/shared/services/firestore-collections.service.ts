@@ -154,36 +154,34 @@ export class FirestoreCollectionsService {
     return this._storage.storage.refFromURL(url).delete();
   };
 
-  // ###
-
-  // addChat(chat: Chat) {
-  //   return this._firestore.collection(chat.domain).doc('activeChats')
-  //   .collection('activeChats').doc(chat.id).set(chat);
-  // };
-
-  // getChat(domain: string, status: string, chatId: string) {
-  //   return this._firestore.collection(domain).doc(status)
-  //   .collection(status, (data) => data.where('id', '==', chatId))
-  //   .snapshotChanges();
-  // };
-
-  // getPendingChats(domain: string) {
-  //   return this._firestore.collection(domain).doc('activeChats')
-  //   .collection('activeChats', (data) => data.where('status', '==', 'pending'))
-  //   .snapshotChanges();
-  // };
-
   addChat(chat: Chat) {
-    return this._firestore.collection('activeChats').doc(chat.id).set(chat);
+    return this._firestore.collection(chat.domain).doc('activeChats')
+    .collection('activeChats').doc(chat.id).set(chat);
   };
 
-  getChat(chatId: string) {
-    return this._firestore.collection('activeChats', (data) => data.where('id', '==', chatId))
+  getChat(domain: string, status: string, chatId: string) {
+    return this._firestore.collection(domain).doc(status)
+    .collection(status, (data) => data.where('id', '==', chatId))
     .snapshotChanges();
   };
 
-  getPendingChats() {
-    return this._firestore.collection('activeChats', (data) => data.where('status', '==', 'pending'))
+  getChats(domain: string, status: string) {
+    return this._firestore.collection(domain).doc(status)
+    .collection(status).snapshotChanges();
+  };
+
+  acceptPendingChat(chat: Chat, operator: { operatorDisplayName: string, operatorEmail: string }) {
+    return this._firestore.collection(chat.domain).doc('activeChats')
+    .collection('activeChats').doc(chat.id).update({
+      status: 'active',
+      operatorDisplayName: operator.operatorDisplayName,
+      operatorEmail: operator.operatorEmail
+    })
+  };
+
+  getCurrentChats(domain: string, status: string) {
+    return this._firestore.collection(domain).doc(status)
+    .collection(status, (data) => data.where('status', '==', 'pending'))
     .snapshotChanges();
   };
 }
