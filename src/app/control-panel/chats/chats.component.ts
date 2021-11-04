@@ -60,6 +60,11 @@ export class ChatsComponent implements OnInit, OnDestroy {
         };
       }
     });
+
+    setTimeout(() => {
+      console.log(this.activeChats);
+      
+    }, 1000);
   };
 
   ngOnDestroy(): void {

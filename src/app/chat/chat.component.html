@@ -30,6 +30,6 @@
   </div>
 
   <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
-    <app-chat-form [chatId]="clientChatId"></app-chat-form>
+    <app-chat-form [userInfo]="{nick: clientUsername, chatId: clientChatId}"></app-chat-form>
   </div>
 </div>

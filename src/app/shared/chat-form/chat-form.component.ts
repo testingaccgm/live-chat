@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import * as firebase from 'firebase/app';
 
 import { FirestoreCollectionsService } from '../services/firestore-collections.service';
 
@@ -9,7 +10,7 @@ import { FirestoreCollectionsService } from '../services/firestore-collections.s
   styleUrls: ['./chat-form.component.scss']
 })
 export class ChatFormComponent implements OnInit {
-  @Input() chatId!: string;
+  @Input() userInfo!: { nick: string, chatId: string};
   chatForm!: FormGroup;
 
   constructor(
@@ -19,12 +20,19 @@ export class ChatFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.chatForm = this._fb.group({
-      textarea: [null, Validators.required]
+      message: [null, Validators.required]
     });
   };
 
   submitChatForm(chatForm: FormGroup) {
+    if (chatForm.invalid) {
+      return;
+    }
+    const chatId = this.userInfo.chatId;
+    const message = chatForm.value.message;
+    const time = firebase.default.firestore.Timestamp.now()
+
     console.log(chatForm);
-    console.log(this.chatId);
+    console.log(this.userInfo);
   };
 }

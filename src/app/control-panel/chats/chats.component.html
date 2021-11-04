@@ -25,7 +25,7 @@
   <div>
     <div *ngFor="let domainEl of activeChats">
       <div *ngFor="let chat of domainEl.chats">
-        <div *ngIf="chat.status == 'active' && chat.operatorEmail == user.email">
+        <div *ngIf="chat.status == 'active' && chat.operatorEmail == user?.email">
           <div>
             <p>{{ chat.username }}</p>
             <p>{{ chat.option }}</p>
@@ -39,7 +39,7 @@
             </div>
           </div>
           <div>
-            <app-chat-form [chatId]="chat.id"></app-chat-form>
+            <app-chat-form [userInfo]="{nick: chat.operatorDisplayName, chatId: chat.id}"></app-chat-form>
           </div>
         </div>
       </div>
