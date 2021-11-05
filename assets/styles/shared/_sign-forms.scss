@@ -1,0 +1,94 @@
+.sign-form {
+  background-color: var(--color2);
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.75);
+  max-width: 767px;
+  padding: 20px;
+  margin: 0 auto;
+  position: relative;
+  >* {
+    display: block;
+  }
+  &__sign-up-header {
+    h2 {
+      color: $red;
+      text-align: center;
+      font-size: 1.3em;
+      padding: 5px;
+    }
+  }
+  &__sign-element {
+    font-size: 1.1em;
+    margin: 20px 0;
+    .phone, .name, .email, .password {
+      display: flex;
+    }
+    .name {
+      .name-img {
+        @include signFormBackround;
+        background-image: url("../../images/sign-forms/user.png");
+      }
+    }
+    .phone {
+      .phone-img {
+        @include signFormBackround;
+        background-image: url("../../images/sign-forms/phone.png");
+      }
+      input {
+        -webkit-appearance: none;
+        -moz-appearance: textfield;
+        margin: 0;
+        border-left: none !important;
+        @include inputNoArrows;
+      }
+    }
+    .email {
+      .email-img {
+        @include signFormBackround;
+        background-image: url("../../images/sign-forms/email.png");
+        padding: 10px;
+      }
+    }
+    .password {
+      .password-img {
+        @include signFormBackround;
+        background-image: url("../../images/sign-forms/password.png");
+      }
+    }
+    .sign-error {
+      li {
+        color: $red;
+        font-size: 1.1em;
+        padding: 10px 0 0 0;
+        list-style: none;
+      }
+    }
+    input {
+      width: calc(100% - 50px);
+      border: 1px solid var(--color8);
+      color: var(--color7);
+      border-radius: 0 3px 3px 0;
+      box-sizing: border-box;
+      padding: 7px;
+      font-size: 1.1em;
+      outline: none;
+      background-color: rgba($white, 0.5);
+      filter: none;
+      &:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus {
+        border: 1px solid var(--color8);
+        -webkit-text-fill-color: var(--color7);
+        -webkit-box-shadow: none;
+        transition: background-color 5000s ease-in-out 0s;
+      }
+    }
+    label {
+      margin-bottom: 5px;
+      width: 100%;
+      color: var(--color7);
+    }
+  }
+  .hr-border {
+    border-top: 1px solid var(--color9);
+    border-bottom: 1px solid var(--color5);
+    margin: 20px 0;
+  }
+}

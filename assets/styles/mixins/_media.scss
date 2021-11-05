@@ -1,0 +1,20 @@
+@mixin media ($media) {
+	@if $media == exsm {
+		@media only screen and (min-width: 320px){ @content; }
+	}
+	@else if $media == sm {
+		@media only screen and (min-width: 360px){ @content; }
+	}
+	@else if $media == med {
+		@media only screen and (min-width: 540px){ @content; }
+	}
+	@else if $media == larmed {
+		@media only screen and (min-width: 767px){ @content; }
+	}
+	@else if $media == lar {
+		@media only screen and (min-width: 1024px){ @content; }
+	}
+	@else if $media == exlar {
+		@media only screen and (min-width: 1920px){ @content; }
+	}
+}
