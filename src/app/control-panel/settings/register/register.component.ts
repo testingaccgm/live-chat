@@ -41,32 +41,47 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._domainsSubscription = this._firestoreCollections.getDomains().subscribe(domains => {
-      this.domains = domains.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ... e.payload.doc.data() as Domain
-        }
-      })
-    }, error => {
-
-    });
-
     this.signupForm = this._formBuilder.group({
-        name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
-        confirmPass: [null, [Validators.required]],
-        roles: this._formBuilder.array([]),
-        domains: this._formBuilder.array([]),
-      },
-      {
-        validator: this.confirmPasswordMatcher('password', 'confirmPass'),
-      }
-    );
-    
-    this.rolesArray = <FormArray> this.signupForm.get('roles');
-    this.domainsArray = <FormArray> this.signupForm.get('domains');
+      name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      email: [null, [Validators.required, Validators.email]],
+      password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
+      confirmPass: [null, [Validators.required]],
+      roles: this._formBuilder.array([]),
+      domains: this._formBuilder.array([]),
+    },
+    {
+      validator: this.confirmPasswordMatcher('password', 'confirmPass'),
+    }
+  );
+  
+  this.rolesArray = <FormArray> this.signupForm.get('roles');
+  this.domainsArray = <FormArray> this.signupForm.get('domains');
+
+    new Promise<void>((resolve, reject) => {
+      this._domainsSubscription = this._firestoreCollections.getDomains().subscribe(domains => {
+        this.domains = domains.map(e => {
+          return {
+            id: e.payload.doc.id,
+            ... e.payload.doc.data() as Domain
+          }
+        })
+        if(this.domains != undefined) {
+          resolve()
+        }
+      }, error => {
+  
+      });
+    }).then(() => {
+      for (const domain of this.domains) {
+        this.domainsArray.push(new FormControl(
+          {
+            checked: false,
+            description: domain.description,
+            domain: domain.domain
+          }
+        ));
+      };
+    });
 
     for (const role of this.roles) {
       this.rolesArray.push(new FormControl(
@@ -78,18 +93,6 @@ export class RegisterComponent implements OnInit {
         }
       ));
     };
-
-    if (this.domains != undefined) {
-      for (const domain of this.domains) {
-        this.domainsArray.push(new FormControl(
-          {
-            checked: domain.checked,
-            description: domain.description,
-            domain: domain.domain
-          }
-        ));
-      };
-    }
 
     this._errorAuthMsgSubscription =
       this._authService.errorAuthMsgSubject.subscribe((error) => {
@@ -165,7 +168,7 @@ export class RegisterComponent implements OnInit {
       domains,
       active
     };
-
+    
     this._authService.signUp(newUser);
   };
 }

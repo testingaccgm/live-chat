@@ -1,51 +1,65 @@
 <div>
-  <p>Pending chats</p>
   <div>
-    <div *ngFor="let domainEl of activeChats">
-      <div>
-        <p>{{ domainEl.domainDescription }}</p>
-      </div>
-      <div>
-        <div *ngFor="let chat of domainEl.chats">
-          <div *ngIf="chat.status == 'pending'">
-            <p>{{ chat.username }}</p>
-            <p>{{ chat.option }}</p>
-            <div>
-              <button type="button" (click)="acceptChat(chat)">Accept</button>
+    <p>Pending chats</p>
+    <div>
+      <div *ngFor="let domainEl of activeChats">
+        <div>
+          <p>{{ domainEl.domainDescription }}</p>
+        </div>
+        <div>
+          <div *ngFor="let chat of domainEl.chats">
+            <div *ngIf="chat.status == 'pending'">
+              <p>{{ chat.username }}</p>
+              <p>{{ chat.option }}</p>
+              <div>
+                <button type="button" (click)="acceptChat(chat)">Accept</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div>
-  <p>Chats</p>
+  
   <div>
-    <div *ngFor="let domainEl of activeChats">
-      <div *ngFor="let chat of domainEl.chats">
-        <div *ngIf="chat.status == 'active' && chat.operatorEmail == user?.email">
-          <div>
-            <div>
+    <p>Chats</p>
+    <div>
+      <div *ngFor="let domainEl of activeChats">
+        <div *ngFor="let chat of domainEl.chats">
+          <div *ngIf="chat.status == 'active' && chat.operatorEmail == user?.email">
+            <div (click)="setActiveChat(chat.id)">
               <p>{{ chat.username }}</p>
               <p>{{ chat.option }}</p>
               <p>{{ chat.domain }}</p>
             </div>
-            <div>
-              <app-chat-form-history [chatHistory]="chat.chatHistory"></app-chat-form-history>
+            <div *ngIf="chat.id == activeChat">
+              <div>
+                <div>
+                  <app-chat-form-history [chatHistory]="chat.chatHistory"></app-chat-form-history>
+                </div>
+                <div>
+                  <app-chat-form [userInfo]="{nick: chat.operatorDisplayName, chatId: chat.id, domain: chat.domain}"></app-chat-form>
+                </div>
+              </div>
+              <div>
+                <p>Client's info</p>
+                <div>
+                  <p>{{ chat.clientInformation[0].ip }}</p>
+                  <p>{{ chat.clientInformation[0].city }}</p>
+                  <p>{{ chat.clientInformation[0].country }}</p>
+                  <div>
+                    <form 
+                      [formGroup]="blockForm" 
+                      (ngSubmit)="submitBlockForm(chat.username, chat.clientInformation[0].ip, blockForm)">
+                      <textarea formControlName="reason" placeholder="Blocking reason..."></textarea>
+                      <div>
+                        <button type="submit" [disabled]="blockForm.invalid">Block</button>
+                      </div>
+                    </form>                   
+                  </div>                  
+                </div>
+              </div>
             </div>
-          </div>
-          <div>
-            <p>Client's info</p>
-            <div>
-              <p>{{ chat.clientInformation[0].ip }}</p>
-              <p>{{ chat.clientInformation[0].city }}</p>
-              <p>{{ chat.clientInformation[0].country }}</p>
-            </div>
-          </div>
-          <div>
-            <app-chat-form [userInfo]="{nick: chat.operatorDisplayName, chatId: chat.id, domain: chat.domain}"></app-chat-form>
           </div>
         </div>
       </div>

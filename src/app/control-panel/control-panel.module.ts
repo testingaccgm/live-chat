@@ -23,6 +23,7 @@ import { ChangePasswordComponent } from './settings/account-settings/change-pass
 import { ChangeThemeComponent } from './settings/account-settings/change-theme/change-theme.component';
 import { DomainOptionsComponent } from './settings/domain-options/domain-options.component';
 import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-options/chat-menu-options.component';
+import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-op
     ChangePasswordComponent,
     ChangeThemeComponent,
     DomainOptionsComponent,
-    ChatMenuOptionsComponent
+    ChatMenuOptionsComponent,
+    BlockedUsersComponent
   ],
   imports: [
     CommonModule,
@@ -117,8 +119,19 @@ import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-op
                   role: 'domainOptions',
                   autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
+              },
+              {path: 'blocked-users', component: BlockedUsersComponent,
+              // children: [
+              //   {path: 'allowed-domains', component: AllowedDomainsComponent},
+              //   {path: 'chat-menu-options', component: ChatMenuOptionsComponent},
+              //   {path: '', redirectTo: 'allowed-domains', pathMatch: 'full'},
+              // ],
+              canActivate: [RoleActive],
+              data: {
+                role: 'blockedUsers',
+                autenticationFailureRedirectUrl: '/control-panel/settings'
               }
-            ],
+            }],
             canActivate: [AuthActivate],
             data: {
               autenticationRequired: true,

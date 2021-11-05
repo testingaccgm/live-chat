@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { BlockedUser } from '../models/blocked-user.model';
 import { Chat } from '../models/chat.model';
 
 import { Domain } from '../models/domains.model';
@@ -197,5 +198,13 @@ export class FirestoreCollectionsService {
         time: chatFormObj.time
       })
     });
+  };
+
+  blockUserByIp(blockedUser: BlockedUser) {
+    return this._firestore.collection('blockedUsers').add(blockedUser);
+  };
+
+  getBlockedUsersById(){
+    return this._firestore.collection('blockedUsers').snapshotChanges();
   };
 }

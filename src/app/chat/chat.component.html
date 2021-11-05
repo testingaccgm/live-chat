@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!isBlocked && isBlocked != undefined">
   <form 
     [formGroup]="startChatForm" 
     (ngSubmit)="submitStartChatForm(startChatForm)"
@@ -40,4 +40,8 @@
       <app-chat-form [userInfo]="{nick: clientUsername, chatId: clientChatId, domain: clientChatDomain}"></app-chat-form>
     </div>
   </div>
+</div>
+
+<div *ngIf="isBlocked && isBlocked != undefined">
+  Block acc msg
 </div>

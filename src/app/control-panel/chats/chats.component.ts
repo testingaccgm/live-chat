@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { BlockedUser } from 'src/app/shared/models/blocked-user.model';
 
 import { Chat } from 'src/app/shared/models/chat.model';
 import { User } from 'src/app/shared/models/user.model';
@@ -25,12 +26,19 @@ export class ChatsComponent implements OnInit, OnDestroy {
 
   activeChats: IChats[] = [];
 
+  activeChat!: string;
+
+  blockForm!: FormGroup;
+
   constructor(
     private _authService: AuthService,
-    private _firestoreCollections: FirestoreCollectionsService
+    private _firestoreCollections: FirestoreCollectionsService,
+    private _fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
+    this.activeChat = JSON.parse(localStorage.getItem('activeChat')!);
+
     new Promise<void>((resolve, reject) => {
       this._userSubscription = this._authService.user.subscribe(user => {
         this.user = user;
@@ -64,6 +72,10 @@ export class ChatsComponent implements OnInit, OnDestroy {
         })
       };
     });
+
+    this.blockForm = this._fb.group({
+      reason: [null, Validators.required]
+    });
   };
 
   ngOnDestroy(): void {
@@ -79,9 +91,38 @@ export class ChatsComponent implements OnInit, OnDestroy {
     const operatorEmail = this.user.email;
     const operator = { operatorDisplayName, operatorEmail }
     this._firestoreCollections.acceptPendingChat(chat, operator).then(() => {
-
+      this.setActiveChat(chat.id);
     }, error => {
 
     });
+  };
+
+  setActiveChat(chatId: string) {
+    this.activeChat = chatId;
+    localStorage.setItem('activeChat', JSON.stringify(this.activeChat));
+    this.blockForm.reset();
+  };
+
+  submitBlockForm(clientUsername: string, clientIp: string, blockForm: FormGroup) {
+    if (blockForm.invalid) {
+      return;
+    }
+
+    const username = clientUsername;
+    const ip = clientIp;
+    const reason = blockForm.value.reason;
+    const operator = this.user.email;
+
+    const blockedUserObj: BlockedUser = { username, ip, reason, operator }
+
+    this._firestoreCollections.blockUserByIp(blockedUserObj).then(() => {
+      blockForm.reset();
+    }, error => {
+
+    });
+  };
+
+  closeChat() {
+
   };
 }

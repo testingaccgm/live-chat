@@ -10,6 +10,7 @@ import { FirestoreCollectionsService } from '../shared/services/firestore-collec
 import { Domain } from '../shared/models/domains.model';
 import { GenerateIdService } from '../shared/services/generate-id.service';
 import { Chat, ClientInformation } from '../shared/models/chat.model';
+import { BlockedUser } from '../shared/models/blocked-user.model';
 
 @Component({
   selector: 'app-chat',
@@ -35,6 +36,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   clientInformation: ClientInformation[] = [];
 
+  blockedUsers!: BlockedUser[];
+  private _blockedUsersSubscription!: Subscription;
+
+  isBlocked: boolean = undefined!;
+
   constructor(
     private _fb: FormBuilder,
     private _firestoreCollections: FirestoreCollectionsService,
@@ -45,6 +51,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getClientInformation();
+
     this.clientUsername = JSON.parse(localStorage.getItem('username')!);
     this.clientChatId = JSON.parse(localStorage.getItem('chatId')!);
     this.clientChatDomain = JSON.parse(localStorage.getItem('domain')!);
@@ -112,13 +120,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       }, error => {
 
       })
-    };
-
-    this.getClientInformation();    
+    };      
   };
 
   ngOnDestroy(): void {
     this._menuOptionsSubscription.unsubscribe();
+    this._blockedUsersSubscription.unsubscribe();
 
     if (this._currentChatSubscription) {
       this._currentChatSubscription.unsubscribe();
@@ -173,6 +180,32 @@ export class ChatComponent implements OnInit, OnDestroy {
       const clientInformationObj = { ip, country, city};
 
        this.clientInformation.push(clientInformationObj);
+
+       this._blockedUsersSubscription = this._firestoreCollections.getBlockedUsersById().subscribe(blockedUsers => {
+        this.blockedUsers = blockedUsers.map(e => {
+          return {
+            id: e.payload.doc.id,
+            ... e.payload.doc.data() as BlockedUser
+          }
+        });
+        
+        new Promise<void>((resolve, reject) => {
+          for (let i = 0; i < this.blockedUsers.length; i++) {
+            if(ip == this.blockedUsers[i].ip) {
+              this.isBlocked = true;
+              resolve();            
+            } else {
+              if(i == this.blockedUsers.length-1) {
+                this.isBlocked = false;
+                resolve();
+              }
+            }
+          }
+        });
+      }, error => {
+  
+      });
+
     }, (error) => {
 
     });
