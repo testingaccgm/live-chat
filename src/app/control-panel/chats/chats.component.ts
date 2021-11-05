@@ -31,40 +31,39 @@ export class ChatsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this._userSubscription = this._authService.user.subscribe(user => {
-      this.user = user;
-      if (this.user != undefined) {
-        for (const domainRole of this.user.domains!) {
-          if(domainRole.checked) {
-            const domainDescription = domainRole.description;
-            const fsCollection = domainRole.domain;
-            const chatsSubscription = '';
-
-            const domainRoleObj = { domainDescription, fsCollection, chatsSubscription }
-            this.activeChats.push(domainRoleObj)
-          }
+    new Promise<void>((resolve, reject) => {
+      this._userSubscription = this._authService.user.subscribe(user => {
+        this.user = user;
+        if (this.user != undefined) {
+          resolve();
         }
+      });
+    }).then(() => {
+      for (const domainRole of this.user.domains!) {
+        if(domainRole.checked) {
+          const domainDescription = domainRole.description;
+          const fsCollection = domainRole.domain;
+          const chatsSubscription = '';
 
-        for (let i = 0; i < this.activeChats.length; i++) {
-          const domain = this.activeChats[i].fsCollection;
-          const status = 'activeChats';
-
-          this.activeChats[i].chatsSubscription = this._firestoreCollections.getChats(domain, status)
-          .subscribe(data => {
-            this.activeChats[i].chats = data.map(e => {
-              return {
-                ... e.payload.doc.data()
-              }
-            })
-          })
-        };
+          const domainRoleObj = { domainDescription, fsCollection, chatsSubscription }
+          this.activeChats.push(domainRoleObj)
+        }
       }
-    });
 
-    setTimeout(() => {
-      console.log(this.activeChats);
-      
-    }, 1000);
+      for (let i = 0; i < this.activeChats.length; i++) {
+        const domain = this.activeChats[i].fsCollection;
+        const status = 'activeChats';
+
+        this.activeChats[i].chatsSubscription = this._firestoreCollections.getChats(domain, status)
+        .subscribe(data => {
+          this.activeChats[i].chats = data.map(e => {
+            return {
+              ... e.payload.doc.data()
+            }
+          })
+        })
+      };
+    });
   };
 
   ngOnDestroy(): void {

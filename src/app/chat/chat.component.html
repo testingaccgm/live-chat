@@ -1,5 +1,8 @@
 <div>
-  <form [formGroup]="startChatForm" (ngSubmit)="submitStartChatForm(startChatForm)">
+  <form 
+    [formGroup]="startChatForm" 
+    (ngSubmit)="submitStartChatForm(startChatForm)"
+    *ngIf="currentChat[0]?.status !== 'pending' && currentChat[0]?.status !== 'active'">
     <div>
       <label for="username">Username</label>
       <input type="text" name="username" formControlName="username">
@@ -30,6 +33,11 @@
   </div>
 
   <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
-    <app-chat-form [userInfo]="{nick: clientUsername, chatId: clientChatId}"></app-chat-form>
+    <div>
+      <app-chat-form-history [chatHistory]="currentChat[0].chatHistory"></app-chat-form-history>
+    </div>
+    <div>
+      <app-chat-form [userInfo]="{nick: clientUsername, chatId: clientChatId, domain: clientChatDomain}"></app-chat-form>
+    </div>
   </div>
 </div>

@@ -16,6 +16,7 @@ export class ChatHistiry {
   constructor(
     public nick: string,
     public message: string,
+    public domain: string,
     public time: firebase.default.firestore.Timestamp
   ) {}
 };

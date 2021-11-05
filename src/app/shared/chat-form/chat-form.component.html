@@ -1,4 +1,7 @@
-<form [formGroup]="chatForm" (ngSubmit)="submitChatForm(chatForm)">
+<form 
+  [formGroup]="chatForm" 
+  (ngSubmit)="submitChatForm(chatForm)"
+  (keydown)="submitOnEnter($event, chatForm)">
   <textarea formControlName="message"></textarea>
   <div>
     <button type="submit">Send</button>

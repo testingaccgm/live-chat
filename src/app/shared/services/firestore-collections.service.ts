@@ -184,4 +184,18 @@ export class FirestoreCollectionsService {
     .collection(status, (data) => data.where('status', '==', 'pending'))
     .snapshotChanges();
   };
+
+  addMessage(
+    chat: { nick: string, chatId: string, domain: string }, 
+    chatFormObj: { message: string, time: firebase.default.firestore.Timestamp }
+    ){
+    return this._firestore.collection(chat.domain).doc('activeChats')
+    .collection('activeChats').doc(chat.chatId).update({
+      chatHistory: firebase.default.firestore.FieldValue.arrayUnion({
+        nick: chat.nick,
+        message: chatFormObj.message,
+        time: chatFormObj.time
+      })
+    });
+  };
 }

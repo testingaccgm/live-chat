@@ -10,7 +10,7 @@ import { FirestoreCollectionsService } from '../services/firestore-collections.s
   styleUrls: ['./chat-form.component.scss']
 })
 export class ChatFormComponent implements OnInit {
-  @Input() userInfo!: { nick: string, chatId: string};
+  @Input() userInfo!: { nick: string, chatId: string, domain: string };
   chatForm!: FormGroup;
 
   constructor(
@@ -28,11 +28,26 @@ export class ChatFormComponent implements OnInit {
     if (chatForm.invalid) {
       return;
     }
-    const chatId = this.userInfo.chatId;
-    const message = chatForm.value.message;
-    const time = firebase.default.firestore.Timestamp.now()
 
-    console.log(chatForm);
-    console.log(this.userInfo);
+    const nick = this.userInfo.nick;
+    const chatId = this.userInfo.chatId;
+    const domain = this.userInfo.domain;
+    const userInfoObj = { nick, chatId, domain }
+
+    const message = chatForm.value.message;
+    const time = firebase.default.firestore.Timestamp.now();
+    const chatFormObj = { message, time };
+
+    this._firestoreCollections.addMessage(userInfoObj, chatFormObj).then(() => {
+      chatForm.reset();
+    }, error => {
+
+    });
+  };
+
+  submitOnEnter(event:any, chatForm: FormGroup) {
+    if (event.keyCode === 13) {
+      this.submitChatForm(chatForm)
+    }
   };
 }
