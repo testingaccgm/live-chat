@@ -1,4 +1,4 @@
-<div *ngIf="!isBlocked && isBlocked != undefined">
+<div *ngIf="isBlocked != undefined && isBlocked != true">
   <form 
     [formGroup]="startChatForm" 
     (ngSubmit)="submitStartChatForm(startChatForm)"
@@ -42,6 +42,6 @@
   </div>
 </div>
 
-<div *ngIf="isBlocked && isBlocked != undefined">
+<div *ngIf="isBlocked != undefined && isBlocked != false">
   Block acc msg
 </div>

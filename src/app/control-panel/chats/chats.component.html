@@ -56,7 +56,10 @@
                         <button type="submit" [disabled]="blockForm.invalid">Block</button>
                       </div>
                     </form>                   
-                  </div>                  
+                  </div>
+                  <div>
+                    <button type="button" (click)="activateChatPopUp(chat.id)">Close Chat</button>
+                  </div>
                 </div>
               </div>
             </div>

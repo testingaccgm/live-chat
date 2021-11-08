@@ -125,7 +125,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._menuOptionsSubscription.unsubscribe();
-    this._blockedUsersSubscription.unsubscribe();
+    
+    if (this._blockedUsersSubscription) {
+      this._blockedUsersSubscription.unsubscribe();
+    }
 
     if (this._currentChatSubscription) {
       this._currentChatSubscription.unsubscribe();
@@ -188,14 +191,17 @@ export class ChatComponent implements OnInit, OnDestroy {
             ... e.payload.doc.data() as BlockedUser
           }
         });
+        if (this.blockedUsers.length == 0) {
+          this.isBlocked = false;
+        };
         
         new Promise<void>((resolve, reject) => {
           for (let i = 0; i < this.blockedUsers.length; i++) {
             if(ip == this.blockedUsers[i].ip) {
               this.isBlocked = true;
-              resolve();            
+              resolve();
             } else {
-              if(i == this.blockedUsers.length-1) {
+              if(i == this.blockedUsers.length-1 || this.blockedUsers.length == 0) {
                 this.isBlocked = false;
                 resolve();
               }

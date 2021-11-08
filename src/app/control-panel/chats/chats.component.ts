@@ -30,6 +30,8 @@ export class ChatsComponent implements OnInit, OnDestroy {
 
   blockForm!: FormGroup;
 
+  chatPopUp: boolean = false;
+
   constructor(
     private _authService: AuthService,
     private _firestoreCollections: FirestoreCollectionsService,
@@ -120,6 +122,10 @@ export class ChatsComponent implements OnInit, OnDestroy {
     }, error => {
 
     });
+  };
+
+  activateChatPopUp(chatId: string) {
+
   };
 
   closeChat() {
