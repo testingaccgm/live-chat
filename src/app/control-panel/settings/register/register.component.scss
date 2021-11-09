@@ -13,6 +13,7 @@
       &__option {
         display: flex;
         align-items: center;
+        margin-bottom: 5px;
         @include hover(normal) {
           background-color: lighten($yellow, 40%);
         }

@@ -1,0 +1,45 @@
+@import "../../../../../assets/styles/variables/colors";
+
+.users-container {
+  position: relative;
+}
+
+.search-field {
+  margin: 20px 0;
+  width: 30%;
+  display: flex;
+  &__icon {
+    width: 31px;
+    height: 31px;
+    background-color: $yellow;
+    background-image: url("../../../../../assets/images/icons/search-icon.png");
+    background-size: 70% 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  &__input {
+    border: 1px solid var(--color8);
+    outline: none;
+    padding: 5px;
+    font-size: 1.1rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    width: calc(100% - 31px);
+  }
+}
+
+.table {
+  width: 100%;
+  th {
+    text-align: left;
+  }
+  td, th  {
+    padding-bottom: 10px;
+  }
+}
+
+.table, .table th, .table td {
+  border-collapse: collapse;
+}

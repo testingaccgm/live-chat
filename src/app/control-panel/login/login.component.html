@@ -15,7 +15,7 @@
           <div class="email-img"></div>
           <input type="text" name="email" formControlName="email">
         </div>
-        <ul class="sign-error">
+        <ul class="error">
           <li *ngIf="
           !signinForm.get('email')!.valid && 
           !signinForm.get('email')!.hasError('email') && 
@@ -36,7 +36,7 @@
           <div class="password-img"></div>
           <input type="password" name="password" formControlName="password">
         </div>
-        <ul class="sign-error">
+        <ul class="error">
           <li *ngIf="
           !signinForm.get('password')!.valid &&
           !signinForm.get('password')!.hasError('maxlength') &&
@@ -59,7 +59,7 @@
 
       <div>
         <button class="btn-default" type="submit" [disabled]="!signinForm.valid">Login</button>
-        <ul class="sign-error">
+        <ul class="error">
           <li class="error-msg" *ngIf="errorAuthMsg">{{ errorAuthMsg }}</li>
           <li class="error-msg" *ngIf="errorOnGetuserData">{{ errorOnGetuserData }}</li>
         </ul>

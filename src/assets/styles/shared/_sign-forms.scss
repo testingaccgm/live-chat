@@ -53,14 +53,6 @@
         background-image: url("../../images/sign-forms/password.png");
       }
     }
-    .sign-error {
-      li {
-        color: $red;
-        font-size: 1.1em;
-        padding: 10px 0 0 0;
-        list-style: none;
-      }
-    }
     input {
       width: calc(100% - 50px);
       border: 1px solid var(--color8);
@@ -80,7 +72,6 @@
       }
     }
     label {
-      margin-bottom: 5px;
       width: 100%;
       color: var(--color7);
     }

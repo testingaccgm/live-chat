@@ -1,17 +1,20 @@
-<div>
-  <!-- loading spinner -->
-  <div>
-    <input type="text" [(ngModel)]="searchParams" placeholder="Search by email or display name...">
-    <table>
+<div class="users-container">
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <div *ngIf="users?.length! > 0">
+    <div class="search-field">
+      <div class="search-field__icon"></div>
+      <input class="search-field__input" type="text" [(ngModel)]="searchParams" placeholder="Search by email or display name...">
+    </div>
+    <table class="table">
       <tr>
         <th></th>
         <th>Email Address</th>
         <th>Display Name</th>
         <th>Roles</th>
         <th>Domains</th>
-        <th>Reset Password</th>
-        <th>Activity</th>
-        <th>Login History</th>
+        <th></th>
+        <th></th>
+        <th></th>
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
         <td>
@@ -75,11 +78,19 @@
     </table>
   </div>
 
-  <div *ngIf="resetPasswordPopUp">
-    <p>
-      Reset password email was successfully sent to {{currentResetEmail}}!
-    </p>
-    <button type="button" (click)="closeResetPasswordPopUp()">Close</button>
+  <p *ngIf="users?.length == 0">
+    Тhere are currently no users added.
+  </p>
+
+  <div class="fixed-pop-up-container" *ngIf="resetPasswordPopUp">
+    <div class="pop-up-body">
+      <p>
+        Reset password email was successfully sent to <span style="font-weight: bold;">{{currentResetEmail}}</span>!
+      </p>
+      <div class="pop-up-buttons">
+        <button class="btn-default narrow-btn" type="button" (click)="closeResetPasswordPopUp()">Close</button>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="loginHistory">
@@ -130,7 +141,11 @@
       </div>
     </form>
   </div>
+
+  <ul class="error">
+    <li *ngIf="errorOnSetUserData">{{ errorOnSetUserData }}</li>
+    <li *ngIf="errorOnGetUserLogins">{{ errorOnGetUserLogins }}</li>
+    <li *ngIf="errorOnUpdateUserActivity">{{ errorOnUpdateUserActivity }}</li>
+    <li *ngIf="errorMsgOnResetPassword">{{ errorMsgOnResetPassword }}</li>
+  </ul>
 </div>
-
-
-<!-- <script>(function(){var pp=document.createElement('script'), ppr=document.getElementsByTagName('script')[0]; stid='dGdWRW1odUwyekJ1dkI0ZEUxOUJsUT09';pp.type='text/javascript'; pp.async=true; pp.src=('https:' == document.location.protocol ? 'https://' : 'http://') + 's01.live2support.com/dashboardv2/chatwindow/'; ppr.parentNode.insertBefore(pp, ppr);})();</script> -->

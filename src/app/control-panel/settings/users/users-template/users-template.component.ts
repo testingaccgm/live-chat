@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -11,36 +11,34 @@ import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-c
   templateUrl: './users-template.component.html',
   styleUrls: ['./users-template.component.scss']
 })
-export class UsersTemplateComponent implements OnInit, OnDestroy {
-  @Input() users!: User[];
+export class UsersTemplateComponent {
+  @Input() users: User[] = [];
   editUserForm!: FormGroup;
 
   resetPasswordPopUp: boolean = false;
   disabledResetPasswordButton: boolean = false;
   currentResetEmail!: string;
 
-  errorMsgOnResetPassword!: string;
-
+  
   searchParams!: string;
-
+  
   loginHistory!: any;
   private _loginHistorySubscription!: Subscription;
-
+  
   currentUser!: User;
+
+  isLoading: boolean = false;
+  
+  errorOnSetUserData: string = '';
+  errorOnGetUserLogins: string = '';
+  errorOnUpdateUserActivity: string = '';
+  errorMsgOnResetPassword: string = '';
  
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
     private _firebaseAuth: AngularFireAuth,
     private _fb: FormBuilder
   ) { }
-
-  ngOnInit(): void {
-
-  }
-
-  ngOnDestroy(): void {
- 
-  }
 
   editUser(user: User) {
     this.currentUser = user;
@@ -92,8 +90,9 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
     this._firestoreCollections.setUserData(newInfo, false).then(() => {
       this.editUserForm.reset();
       this.currentUser = undefined!;
+      this.errorOnSetUserData = '';
     }, error => {
-
+      this.errorOnSetUserData = error.message;
     })
   };
 
@@ -125,8 +124,11 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
           id: e.payload.doc.id,
           ...e.payload.doc.data() as LoginHistory
         }
-      })      
-    })
+      });
+      this.errorOnGetUserLogins = '';
+    }, error => {
+      this.errorOnGetUserLogins = error.message;
+    });
   };
 
   closeLogins() {
@@ -140,10 +142,9 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
     const newInfo = {userId, parameter};
 
     this._firestoreCollections.updateUserActivity(newInfo).then(() => {
-
-      // no error
+      this.errorOnUpdateUserActivity = '';
     }, error => {
-      // display error
+      this.errorOnUpdateUserActivity = error.message;
     })
   };
 
@@ -154,18 +155,18 @@ export class UsersTemplateComponent implements OnInit, OnDestroy {
   };
 
   resetPassword(email: string) {
-    //loading spinner  
+    this.isLoading = true;
     this.disabledResetPasswordButton = true;
     this.currentResetEmail = email;
 
     this._firebaseAuth.sendPasswordResetEmail(this.currentResetEmail).then(() => {         
       this.resetPasswordPopUp = true;      
       this.errorMsgOnResetPassword = '';
-      // remove loading spinner
+      this.isLoading = false;
     }, error => {      
       this.errorMsgOnResetPassword = error.message;
       this.disabledResetPasswordButton = false;
-      // remove loading spinner
+      this.isLoading = false;
     })
   };
 }

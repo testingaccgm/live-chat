@@ -67,13 +67,6 @@ img {
   user-select: none;
 }
 
-.error-msg {
-  color: $red;
-  font-size: 1.1em;
-  padding: 10px 0 0 0;
-  list-style: none;
-}
-
 input.ng-invalid.ng-touched,
 .invalid {
   border: 2px solid $red !important;
@@ -83,7 +76,7 @@ input.ng-invalid.ng-touched,
   background-color: $yellow;
   width: 100%;
   height: 50px;
-  color: $black;
+  color: $white;
   font-size: 1.1em;
   transition: all 0.5s ease;
   @include btn;
@@ -107,4 +100,41 @@ input.ng-invalid.ng-touched,
 
 button:disabled {
   cursor: not-allowed;
+}
+
+.error {
+  li {
+    color: $red;
+    font-size: 1.1em;
+    padding: 10px 0 0 0;
+    list-style: none;
+  }
+}
+
+.error-msg {
+  color: $red;
+  font-size: 1.1em;
+  padding: 10px 0 0 0;
+  list-style: none;
+}
+
+.fixed-pop-up-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .pop-up-body {
+    padding: 10px;
+    background-color: $white;
+    text-align: center;
+    border-radius: 5px;
+    .pop-up-buttons {
+      margin-top: 20px;
+    }
+  }
 }
