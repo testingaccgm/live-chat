@@ -1,9 +1,9 @@
 <div class="container">
   <div *ngIf="user != undefined && user != null" class="header-nav">
     <ul class="header-nav__links">
-      <li [routerLink]="['chats']" routerLinkActive="router-link-active" >Chats</li>
-      <li [routerLink]="['settings']" routerLinkActive="router-link-active" >Settings</li>
+      <li [routerLink]="['chats']" routerLinkActive="header-router-link-active" >Chats</li>
+      <li [routerLink]="['settings']" routerLinkActive="header-router-link-active" >Settings</li>
     </ul>
-    <button class="header-nav__logout-btn" (click)="logout()">Logout</button>
+    <button class="header-nav__logout-btn btn-default narrow-btn" (click)="logout()">Logout</button>
   </div>
 </div>

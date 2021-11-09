@@ -1,15 +1,23 @@
+@import '../../../assets/styles/variables/colors';
+
 .header-nav {
   display: flex;
+  padding-right: 10px;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  &__links {
+  align-items: center;  
+  box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 75%);
+  margin-bottom: 30px;
+  &__links {    
     display: flex;
     align-items: center;
     li {
+      padding: 10px;
       list-style: none;
       margin-right: 10px;
       cursor: pointer;
+    }
+    .header-router-link-active {
+      background-color: $yellow;
     }
   }
 }

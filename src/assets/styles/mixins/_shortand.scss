@@ -11,7 +11,7 @@
 }
 
 @mixin signFormBackround {
-  background-color: $red;
+  background-color: $yellow;
   background-size: contain;
   background-position: center;
   background-origin: content-box;
@@ -98,13 +98,6 @@
   scrollbar-width: thin;
 }
 
-@mixin categories-active {
-  color: $red !important;
-  font-weight: bold;
-  background: url('../../images/shared/nav-underline.png') center no-repeat;
-  background-position-y: 27px;
-}
-
 @mixin placeholderColor($color) {
   &::placeholder {
     color: $color;
@@ -124,7 +117,7 @@
 }
 
 @mixin default-textarea {
-  outline-color: $red;
+  outline-color: $yellow;
   background-color: var(--color12);
   border: 1px solid var(--color9);
   border-radius: 5px;

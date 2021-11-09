@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase/app';
-import { BehaviorSubject, Subscription } from 'rxjs';
+
 import { BlockedUser } from '../models/blocked-user.model';
 import { Chat } from '../models/chat.model';
-
 import { Domain } from '../models/domains.model';
 import { MenuOption } from '../models/menu-option.model';
 import { LoginHistory, User } from '../models/user.model';
