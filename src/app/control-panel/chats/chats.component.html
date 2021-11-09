@@ -48,17 +48,27 @@
                   <p>{{ chat.clientInformation[0].city }}</p>
                   <p>{{ chat.clientInformation[0].country }}</p>
                   <div>
-                    <form 
+                    <button type="button" (click)="enableBlockOptio()" *ngIf="!isBlockOptionActive">Block client</button>
+                    <form
+                      *ngIf="isBlockOptionActive"
                       [formGroup]="blockForm" 
-                      (ngSubmit)="submitBlockForm(chat.username, chat.clientInformation[0].ip, blockForm)">
+                      (ngSubmit)="submitBlockForm(chat, blockForm)">
                       <textarea formControlName="reason" placeholder="Blocking reason..."></textarea>
                       <div>
                         <button type="submit" [disabled]="blockForm.invalid">Block</button>
+                        <button type="button" (click)="cancelBLokcOption()">Close</button>
                       </div>
                     </form>                   
                   </div>
                   <div>
-                    <button type="button" (click)="activateChatPopUp(chat.id)">Close Chat</button>
+                    <button *ngIf="!isCloseChatPopUpAcive" type="button" (click)="enableChatPopUp()">Close Chat</button>
+                    <div *ngIf="isCloseChatPopUpAcive">
+                      <p>Аre you sure you want to close this chat?</p>
+                      <div>
+                        <button (click)="closeChat(chat)">Yes</button>
+                        <button (click)="disableCloseChatOption()">No</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

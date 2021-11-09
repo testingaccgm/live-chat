@@ -3,6 +3,7 @@ export class BlockedUser {
     public username: string,
     public ip: string,
     public reason: string,
-    public operator: string
+    public operator: string,
+    public id?: string
   ) {}
 };

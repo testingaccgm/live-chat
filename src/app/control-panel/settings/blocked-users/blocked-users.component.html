@@ -1,1 +1,40 @@
-<p>blocked-users works!</p>
+<div>
+  <div>
+    <div>
+      <button *ngIf="!isInBlockMode" type="button" (click)="enableAddBlockMode()">Block User</button>
+    </div>
+    <div *ngIf="isInBlockMode">
+      <form [formGroup]="addUserForBlockForm" (ngSubmit)="submitAddUserForBlockForm(addUserForBlockForm)">
+        <div>
+          <input type="text" formControlName="username" placeholder="Username...">
+          <input type="text" formControlName="ip" placeholder="IP...">
+          <input type="text" formControlName="reason" placeholder="Reason...">
+        </div>
+        <div>
+          <button type="submit" [disabled]="addUserForBlockForm.invalid">Submit</button>
+          <button type="button" (click)="resetAddUserForBlockForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <table *ngIf="blockedUsers.length > 0">
+    <tr>
+      <th>Username</th>
+      <th>IP</th>
+      <th>Reason</th>
+      <th>Blocked By</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let user of blockedUsers">
+      <td>{{ user.username }}</td>
+      <td>{{ user.ip }}</td>
+      <td>{{ user.reason }}</td>
+      <td>{{ user.operator }}</td>
+      <td>
+        <button type="button" (click)="unblockUser(user.id!)">Unblock</button>
+      </td>
+    </tr>
+  </table>
+
+  <p *ngIf="blockedUsers.length == 0">Тhere are currently no blocked users.</p>
+</div>

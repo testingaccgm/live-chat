@@ -32,6 +32,10 @@ export class ChatsComponent implements OnInit, OnDestroy {
 
   chatPopUp: boolean = false;
 
+  isBlockOptionActive: boolean = false;
+
+  isCloseChatPopUpAcive: boolean = false;
+
   constructor(
     private _authService: AuthService,
     private _firestoreCollections: FirestoreCollectionsService,
@@ -105,30 +109,52 @@ export class ChatsComponent implements OnInit, OnDestroy {
     this.blockForm.reset();
   };
 
-  submitBlockForm(clientUsername: string, clientIp: string, blockForm: FormGroup) {
+  submitBlockForm(chat: Chat, blockForm: FormGroup) {
     if (blockForm.invalid) {
       return;
     }
 
-    const username = clientUsername;
-    const ip = clientIp;
+    const username = chat.username;
+    const ip = chat.clientInformation[0].ip;
     const reason = blockForm.value.reason;
     const operator = this.user.email;
 
     const blockedUserObj: BlockedUser = { username, ip, reason, operator }
 
     this._firestoreCollections.blockUserByIp(blockedUserObj).then(() => {
-      blockForm.reset();
+      this.cancelBLokcOption();
+      this.closeChat(chat);
     }, error => {
 
     });
   };
 
-  activateChatPopUp(chatId: string) {
-
+  enableBlockOptio() {
+   this.isBlockOptionActive = true;
   };
 
-  closeChat() {
+  cancelBLokcOption() {
+    this.blockForm.reset();
+    this.isBlockOptionActive = false;
+  };
 
+  enableChatPopUp() {
+    this.isCloseChatPopUpAcive = true;
+  };
+
+  closeChat(chat: Chat) {
+    this._firestoreCollections.addChat(chat, 'finishedChats').then(() => {
+      this._firestoreCollections.deleteChat(chat.domain, chat.id).then(() => {
+       this.disableCloseChatOption();       
+      }, error => {
+
+      })
+    }, error => {
+
+    });
+  };
+
+  disableCloseChatOption() {
+    this.isCloseChatPopUpAcive = false;
   };
 }

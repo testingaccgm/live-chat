@@ -12,7 +12,6 @@ import { AuthActivate } from '../shared/services/auth.activate';
 import { HeaderComponent } from './header/header.component';
 import { SettingsComponent } from './settings/settings.component';
 import { UsersComponent } from './settings/users/users.component';
-import { BlockedClientsComponent } from './settings/blocked-clients/blocked-clients.component';
 import { AccountSettingsComponent } from './settings/account-settings/account-settings.component';
 import { AllowedDomainsComponent } from './settings/domain-options/allowed-domains/allowed-domains.component';
 import { ActiveAcountsComponent } from './settings/users/active-acounts/active-acounts.component';
@@ -34,7 +33,6 @@ import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.co
     HeaderComponent,
     SettingsComponent,
     UsersComponent,
-    BlockedClientsComponent,
     AccountSettingsComponent,
     AllowedDomainsComponent,
     ActiveAcountsComponent,
@@ -89,13 +87,6 @@ import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.co
                   autenticationFailureRedirectUrl: '/control-panel/settings'
                 }
               },
-              {path: 'blocked-clients', component: BlockedClientsComponent,
-                canActivate: [RoleActive],
-                data: {
-                  role: 'blockedClients',
-                  autenticationFailureRedirectUrl: '/control-panel/settings'
-                }
-              },
               {path: 'account-settings', component: AccountSettingsComponent,
                 children: [
                   {path: 'change-password', component: ChangePasswordComponent},
@@ -121,11 +112,6 @@ import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.co
                 }
               },
               {path: 'blocked-users', component: BlockedUsersComponent,
-              // children: [
-              //   {path: 'allowed-domains', component: AllowedDomainsComponent},
-              //   {path: 'chat-menu-options', component: ChatMenuOptionsComponent},
-              //   {path: '', redirectTo: 'allowed-domains', pathMatch: 'full'},
-              // ],
               canActivate: [RoleActive],
               data: {
                 role: 'blockedUsers',

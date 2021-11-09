@@ -155,9 +155,14 @@ export class FirestoreCollectionsService {
     return this._storage.storage.refFromURL(url).delete();
   };
 
-  addChat(chat: Chat) {
-    return this._firestore.collection(chat.domain).doc('activeChats')
-    .collection('activeChats').doc(chat.id).set(chat);
+  addChat(chat: Chat, type: string) {
+    return this._firestore.collection(chat.domain).doc(type)
+    .collection(type).doc(chat.id).set(chat);
+  };
+
+  deleteChat(domain: string, chatId: string) {
+    return this._firestore.collection(domain).doc('activeChats')
+    .collection('activeChats').doc(chatId).delete();
   };
 
   getChat(domain: string, status: string, chatId: string) {
@@ -206,5 +211,9 @@ export class FirestoreCollectionsService {
 
   getBlockedUsersById(){
     return this._firestore.collection('blockedUsers').snapshotChanges();
+  };
+
+  deleteBlockedUser(blockedUserId: string) {
+   return this._firestore.collection('blockedUsers').doc(blockedUserId).delete();
   };
 }

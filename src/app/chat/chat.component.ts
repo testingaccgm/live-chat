@@ -158,7 +158,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     localStorage.setItem('domain', JSON.stringify(domain));
     localStorage.setItem('username', JSON.stringify(username));    
     
-    this._firestoreCollections.addChat(chat).then(() => {
+    this._firestoreCollections.addChat(chat, 'activeChats').then(() => {
       this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
         this.currentChat = chat.map(e => {
           return {
