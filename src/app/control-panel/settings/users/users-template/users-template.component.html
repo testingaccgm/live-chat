@@ -15,7 +15,7 @@
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
         <td>
-          <button type="button" (click)="editUser(user)">Edit</button>
+          <button class="btn-default narrow-btn" type="button" (click)="editUser(user)">Edit</button>
         </td>
         <td>
           {{ user.email }}
@@ -45,6 +45,7 @@
         </td>
         <td>
           <button 
+            class="btn-default narrow-btn"
             type="button"
             [disabled]="disabledResetPasswordButton && currentResetEmail == user.email" 
             (click)="resetPassword(user.email)">
@@ -52,13 +53,15 @@
           </button>
         </td>
         <td>
-          <button 
+          <button
+            class="btn-default narrow-btn"
             type="button" 
             *ngIf="!user.active" 
             (click)="changeAccountActivity(user.uid, true)">
               Activate
           </button>
-          <button 
+          <button
+          class="btn-default narrow-btn"
             type="button" 
             *ngIf="user.active" 
             (click)="changeAccountActivity(user.uid, false)">
@@ -66,7 +69,7 @@
           </button>
         </td>
         <td>
-          <button type="button" (click)="getUserLogins(user.uid)">Login History</button>
+          <button class="btn-default narrow-btn" type="button" (click)="getUserLogins(user.uid)">Login History</button>
         </td>
       </tr>
     </table>

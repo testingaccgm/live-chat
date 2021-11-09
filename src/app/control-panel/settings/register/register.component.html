@@ -100,34 +100,48 @@
         </ul>
       </div>
 
-      <div class="sign-form__sign-element">
-        <p>Roles</p>
+      <div class="sign-form__sign-element options">
         <div>
-          <label *ngFor="let role of roles; let i = index">           
-            <input 
-              type="checkbox" 
-              [value]="role.value" 
-              [attr.checked]="role.checked ? 'checked' : null"
-              [attr.name]="role.name"
-              [attr.data-route]="role.route"              
-              [attr.data-checked]="role.checked"
-              (change)="onRoleChange($event, i)">
-            {{ role.name }}
-          </label>    
+          <div class="sign-form__sign-up-header">
+            <h2>Roles</h2>
+          </div>
+    
+          <hr class="hr-border">
+          <div class="sign-form__sign-element__option-containter">
+            <div class="sign-form__sign-element__option-containter__option" *ngFor="let role of roles; let i = index">
+              <label> 
+                {{ role.name }}
+              </label>
+              <input 
+                type="checkbox" 
+                [value]="role.value" 
+                [attr.checked]="role.checked ? 'checked' : null"
+                [attr.name]="role.name"
+                [attr.data-route]="role.route"              
+                [attr.data-checked]="role.checked"
+                (change)="onRoleChange($event, i)">
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="sign-form__sign-element">
-        <p>Domains</p>
+  
         <div>
-          <label *ngFor="let domain of domains; let i = index">           
-            <input 
-              type="checkbox" 
-              [value]="domain.domain"
-              [name]="domain.description"
-              (change)="onDomainChange($event, i)">
-            {{ domain.description }}
-          </label>    
+          <div class="sign-form__sign-up-header">
+            <h2>Domains</h2>
+          </div>
+    
+          <hr class="hr-border">
+          <div class="sign-form__sign-element__option-containter">
+            <div class="sign-form__sign-element__option-containter__option" *ngFor="let domain of domains; let i = index">
+              <label>
+                {{ domain.description }}
+              </label>
+              <input 
+                type="checkbox" 
+                [value]="domain.domain"
+                [name]="domain.description"
+                (change)="onDomainChange($event, i)">
+            </div>
+          </div>
         </div>
       </div>
 

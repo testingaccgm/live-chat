@@ -1,6 +1,5 @@
 .sign-form {
-  background-color: var(--color2);
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.75);
+  background-color: var(--color2);  
   max-width: 767px;
   padding: 20px;
   margin: 0 auto;
@@ -89,6 +88,6 @@
   .hr-border {
     border-top: 1px solid var(--color9);
     border-bottom: 1px solid var(--color5);
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
   }
 }

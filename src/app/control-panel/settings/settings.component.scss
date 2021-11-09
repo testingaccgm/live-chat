@@ -1,14 +1,37 @@
+@import "../../../assets/styles/variables/colors";
+@import "../../../assets/styles/mixins/shortand";
+
 .settings {
   display: flex;
   align-items: flex-start;
+  height: calc(100vh - 48px);
   &__nav {
     width: 10%;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 1px solid var(--color8);
+    padding-right: 10px;
     ul li {
       list-style: none;
       cursor: pointer;
+      padding: 5px 0 5px 10px;      
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      p {
+        font-size: 1.1rem;
+      }
+    }
+    .settings-link-active {
+      background-color: $yellow;
+      font-weight: bold;
     }
   }
   &__options {
     width: 90%;
+    height: 100%;
+    padding: 5px 10px 20px 10px;
+    box-sizing: border-box;
+    overflow: scroll;
+    @include scrollbar(normal);
   }
 }
