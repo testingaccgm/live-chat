@@ -4,6 +4,7 @@ export class BlockedUser {
     public ip: string,
     public reason: string,
     public operator: string,
+    public date: firebase.default.firestore.Timestamp,
     public id?: string
   ) {}
 };

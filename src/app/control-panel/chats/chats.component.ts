@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { BlockedUser } from 'src/app/shared/models/blocked-user.model';
+import * as firebase from 'firebase/app';
 
 import { Chat } from 'src/app/shared/models/chat.model';
 import { User } from 'src/app/shared/models/user.model';
@@ -118,8 +119,9 @@ export class ChatsComponent implements OnInit, OnDestroy {
     const ip = chat.clientInformation[0].ip;
     const reason = blockForm.value.reason;
     const operator = this.user.email;
+    const date = firebase.default.firestore.Timestamp.now();
 
-    const blockedUserObj: BlockedUser = { username, ip, reason, operator }
+    const blockedUserObj: BlockedUser = { username, ip, reason, operator, date }
 
     this._firestoreCollections.blockUserByIp(blockedUserObj).then(() => {
       this.cancelBLokcOption();

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
@@ -12,7 +13,11 @@ export class ChangePasswordComponent implements OnInit {
   changePasswordFrom!: FormGroup;
   changePasswordPopUp: boolean = false;
   changePasswordLogoutPopUp: boolean = false;
-  changePasswordMsg!: string;
+
+  errorOnChangePassword: string = '';
+
+  isLoading: boolean = false;
+  private _isLoadingSubscription!: Subscription;
 
   constructor(
     private _fb: FormBuilder,
@@ -22,13 +27,15 @@ export class ChangePasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.changePasswordFrom = this._fb.group({
-      password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
+      password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
       confirmPass: [null, [Validators.required]],
     },
     {
       validator: this.confirmPasswordMatcher('password', 'confirmPass'),
     });
-  }
+
+    // this._isLoadingSubscription = 
+  };
 
   confirmPasswordMatcher(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
@@ -47,18 +54,20 @@ export class ChangePasswordComponent implements OnInit {
       return;
     }
 
+    // this._authService.enableLoadingSpinner();    
+
     const password = changePasswordFrom.value.password;
 
     this._firebaseAuth.currentUser.then(user => {     
       user?.updatePassword(password).then(() => {
         this.changePasswordPopUp = true;
         changePasswordFrom.reset();
-        //no error
+        this.errorOnChangePassword = '';
+        // this._authService.disableLoadingSpinner();
       }, error => {
         this.changePasswordLogoutPopUp = true;
-        this.changePasswordMsg = error.message;
-        
-        //error
+        this.errorOnChangePassword = error.message;
+        // this._authService.disableLoadingSpinner();
       });
     });
   };
@@ -73,7 +82,7 @@ export class ChangePasswordComponent implements OnInit {
 
   stayLogged() {
     this.changePasswordLogoutPopUp = false;
-    this.changePasswordMsg = '';
+    this.errorOnChangePassword = '';
     this.changePasswordFrom.reset();
   }
 }

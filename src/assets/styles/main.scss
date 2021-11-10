@@ -137,3 +137,22 @@ button:disabled {
     }
   }
 }
+
+.table {
+  width: 100%;
+  &__option {
+    display: flex;
+    align-items: center;
+    & > div:not(:last-child) {
+      margin-right: 15px;
+    }    
+  }
+  td, th  {
+    padding-bottom: 10px;
+    text-align: left;
+  }
+}
+
+.table, .table th, .table td {
+  border-collapse: collapse;
+}

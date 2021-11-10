@@ -1,40 +1,54 @@
 <div>
-  <div>
+  <div class="block-form-container">
     <div>
-      <button *ngIf="!isInBlockMode" type="button" (click)="enableAddBlockMode()">Block User</button>
+      <button
+        class="btn-default narrow-btn"
+        *ngIf="!isInBlockMode" 
+        type="button" 
+        (click)="enableAddBlockMode()">
+          Block User
+        </button>
     </div>
     <div *ngIf="isInBlockMode">
-      <form [formGroup]="addUserForBlockForm" (ngSubmit)="submitAddUserForBlockForm(addUserForBlockForm)">
-        <div>
+      <form class="block-user-form" [formGroup]="addUserForBlockForm" (ngSubmit)="submitAddUserForBlockForm(addUserForBlockForm)">
+        <div class="block-user-form__inputs">
           <input type="text" formControlName="username" placeholder="Username...">
           <input type="text" formControlName="ip" placeholder="IP...">
           <input type="text" formControlName="reason" placeholder="Reason...">
         </div>
         <div>
-          <button type="submit" [disabled]="addUserForBlockForm.invalid">Submit</button>
-          <button type="button" (click)="resetAddUserForBlockForm()">Cancel</button>
+          <button style="margin-right: 10px;" class="btn-default narrow-btn" type="submit" [disabled]="addUserForBlockForm.invalid">Submit</button>
+          <button class="btn-default narrow-btn" type="button" (click)="resetAddUserForBlockForm()">Cancel</button>
         </div>
       </form>
     </div>
   </div>
-  <table *ngIf="blockedUsers.length > 0">
+  <table class="table" *ngIf="blockedUsers.length > 0">
     <tr>
+      <th></th>
       <th>Username</th>
       <th>IP</th>
       <th>Reason</th>
-      <th>Blocked By</th>
-      <th></th>
+      <th>Blocked by</th>
+      <th>Time of block</th>
     </tr>
     <tr *ngFor="let user of blockedUsers">
+      <td>
+        <button class="btn-default narrow-btn" type="button" (click)="unblockUser(user.id!)">Unblock</button>
+      </td>
       <td>{{ user.username }}</td>
       <td>{{ user.ip }}</td>
       <td>{{ user.reason }}</td>
       <td>{{ user.operator }}</td>
-      <td>
-        <button type="button" (click)="unblockUser(user.id!)">Unblock</button>
-      </td>
+      <td>{{ user.date.toDate() | date:'dd.MM.yyyy' }} at {{ user.date.toDate() | date:'HH:mm' }}</td>
     </tr>
   </table>
 
   <p *ngIf="blockedUsers.length == 0">Тhere are currently no blocked users.</p>
+
+  <ul class="error">
+    <li *ngIf="errorOnGetBlockedUsers">{{ errorOnGetBlockedUsers }}</li>
+    <li *ngIf="errorOnDeleteBlockedUsers">{{ errorOnDeleteBlockedUsers }}</li>
+    <li *ngIf="errorOnBlockUser">{{ errorOnBlockUser }}</li>
+  </ul>
 </div>

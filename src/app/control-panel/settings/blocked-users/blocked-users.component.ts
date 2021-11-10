@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import * as firebase from 'firebase/app';
 
 import { BlockedUser } from 'src/app/shared/models/blocked-user.model';
 import { User } from 'src/app/shared/models/user.model';
@@ -21,7 +22,11 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
   addUserForBlockForm!: FormGroup;
 
   user!: User;
-  private _userSubscription!: Subscription;;
+  private _userSubscription!: Subscription;
+
+  errorOnGetBlockedUsers: string = '';
+  errorOnDeleteBlockedUsers: string = '';
+  errorOnBlockUser: string = '';
 
   constructor(
     private _fireStoreCollections: FirestoreCollectionsService,
@@ -37,8 +42,10 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
           ... e.payload.doc.data() as BlockedUser
         }
       });
-    }, error => {
 
+      this.errorOnGetBlockedUsers = ''
+    }, error => {
+      this.errorOnGetBlockedUsers = error.message;
     });
 
     this._userSubscription = this._authService.user.subscribe(user => {
@@ -60,9 +67,9 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
 
   unblockUser(blockedUserId: string) {
     this._fireStoreCollections.deleteBlockedUser(blockedUserId).then(() => {
-
+      this.errorOnDeleteBlockedUsers = '';
     }, error => {
-
+      this.errorOnDeleteBlockedUsers = error.message;
     });
   };
 
@@ -83,12 +90,14 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
     const ip = addUserForBlockForm.value.ip;
     const reason = addUserForBlockForm.value.reason;
     const operator = this.user.email;
-    const blockedUserObj = { username, ip, reason, operator }
+    const date = firebase.default.firestore.Timestamp.now();
+    const blockedUserObj = { username, ip, reason, operator, date }
 
    this._fireStoreCollections.blockUserByIp(blockedUserObj).then(() => {
     this.resetAddUserForBlockForm();
+    this.errorOnBlockUser = '';
    }, error => {
-
+    this.errorOnBlockUser = error.message;
    });
   };
 }

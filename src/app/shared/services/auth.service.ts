@@ -119,7 +119,7 @@ export class AuthService {
           }
         });
         this.user.next(userInfo[0]);
-        this.userLocation.uid = userInfo[0].uid!;
+        this.userLocation.uid = userInfo[0]?.uid!;
 
         if (!userInfo[0].active) {
           this.logout();
