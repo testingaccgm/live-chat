@@ -6,7 +6,7 @@
   align-items: flex-start;
   height: calc(100vh - 48px);  
   &__nav {
-    width: 10%;
+    width: 170px;
     height: 100%;
     box-sizing: border-box;
     border-right: 1px solid var(--color8);
@@ -29,7 +29,7 @@
     }
   }
   &__options {
-    width: 90%;
+    width: calc(100% - 170px);
     height: 100%;
     padding: 5px 10px 20px 10px;
     box-sizing: border-box;

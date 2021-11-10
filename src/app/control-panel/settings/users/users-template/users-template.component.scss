@@ -8,7 +8,7 @@
 
 .search-field {
   margin: 20px 0;
-  width: 30%;
+  width: 400px;
   display: flex;
   &__icon {
     width: 31px;
@@ -46,4 +46,15 @@
   width: 500px;
   border: none;
   text-align: left;
+}
+
+.table {
+  width: 100%;
+  &__option {
+    display: flex;
+    align-items: center;
+    & > div:not(:last-child) {
+      margin-right: 15px;
+    }    
+  }
 }

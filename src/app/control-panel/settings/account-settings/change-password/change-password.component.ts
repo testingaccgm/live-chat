@@ -17,7 +17,6 @@ export class ChangePasswordComponent implements OnInit {
   errorOnChangePassword: string = '';
 
   isLoading: boolean = false;
-  private _isLoadingSubscription!: Subscription;
 
   constructor(
     private _fb: FormBuilder,
@@ -33,8 +32,6 @@ export class ChangePasswordComponent implements OnInit {
     {
       validator: this.confirmPasswordMatcher('password', 'confirmPass'),
     });
-
-    // this._isLoadingSubscription = 
   };
 
   confirmPasswordMatcher(controlName: string, matchingControlName: string) {
@@ -54,7 +51,7 @@ export class ChangePasswordComponent implements OnInit {
       return;
     }
 
-    // this._authService.enableLoadingSpinner();    
+    this.isLoading = true;   
 
     const password = changePasswordFrom.value.password;
 
@@ -63,11 +60,11 @@ export class ChangePasswordComponent implements OnInit {
         this.changePasswordPopUp = true;
         changePasswordFrom.reset();
         this.errorOnChangePassword = '';
-        // this._authService.disableLoadingSpinner();
+        this.isLoading = false;
       }, error => {
         this.changePasswordLogoutPopUp = true;
         this.errorOnChangePassword = error.message;
-        // this._authService.disableLoadingSpinner();
+        this.isLoading = false;
       });
     });
   };
