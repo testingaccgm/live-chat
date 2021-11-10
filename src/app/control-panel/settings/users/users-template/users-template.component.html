@@ -13,8 +13,6 @@
         <th>Roles</th>
         <th>Domains</th>
         <th></th>
-        <th></th>
-        <th></th>
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
         <td>
@@ -58,27 +56,28 @@
             type="button"
             [disabled]="disabledResetPasswordButton && currentResetEmail == user.email" 
             (click)="resetPassword(user.email)">
-              Reset Password
+              Reset pass
           </button>
-        </td>
-        <td>
           <button
             class="btn-default narrow-btn"
             type="button" 
             *ngIf="!user.active" 
             (click)="changeAccountActivity(user.uid, true)">
-              Activate
+            Activate
           </button>
           <button
-          class="btn-default narrow-btn"
+            class="btn-default narrow-btn"
             type="button" 
             *ngIf="user.active" 
             (click)="changeAccountActivity(user.uid, false)">
               Deactivate
           </button>
-        </td>
-        <td>
-          <button class="btn-default narrow-btn" type="button" (click)="getUserLogins(user.uid)">Login History</button>
+          <button 
+            class="btn-default narrow-btn" 
+            type="button" 
+            (click)="getUserLogins(user.uid)">
+              Logins
+          </button>
         </td>
       </tr>
     </table>
