@@ -1,4 +1,6 @@
 @import "../../../../../assets/styles/variables/colors";
+@import "../../../../../assets/styles/mixins/shortand";
+@import "../../../../../assets/styles/shared/sign-forms";
 
 .users-container {
   position: relative;
@@ -32,14 +34,35 @@
 
 .table {
   width: 100%;
-  th {
-    text-align: left;
+  &__option {
+    display: flex;
+    align-items: center;
+    & > div:not(:last-child) {
+      margin-right: 15px;
+    }    
   }
   td, th  {
     padding-bottom: 10px;
+    text-align: left;
   }
 }
 
 .table, .table th, .table td {
   border-collapse: collapse;
+}
+
+.login-history {
+  width: 50%;
+  height: 500px;
+  overflow: scroll;
+  @include scrollbar(normal);
+  &__close-btn {
+    text-align: right;
+  }
+}
+
+.edit-user-form {
+  width: 500px;
+  border: none;
+  text-align: left;
 }

@@ -15,7 +15,7 @@
           <div class="name-img"></div>
           <input type="text" name="name" formControlName="name">
         </div>
-        <ul class="sign-error">
+        <ul class="error">
           <li *ngIf="
           !signupForm.get('name')!.valid &&
           !signupForm.get('name')!.hasError('maxlength') &&
@@ -26,7 +26,7 @@
           <li *ngIf="
           signupForm.get('name')!.hasError('maxlength') && 
           signupForm.get('name')!.touched">
-            The name could not be longer then 30 characters!
+            The name could not be longer then 10 characters!
           </li>
           <li *ngIf="
           signupForm.get('name')!.hasError('minlength') && 
@@ -42,7 +42,7 @@
           <div class="email-img"></div>
           <input type="text" name="email" formControlName="email">
         </div>
-        <ul class="sign-error">
+        <ul class="error">
           <li *ngIf="
           !signupForm.get('email')!.valid && 
           !signupForm.get('email')!.hasError('email') && 
@@ -63,7 +63,7 @@
           <div class="password-img"></div>
           <input type="password" name="password" formControlName="password">
         </div>
-        <ul class="sign-error">
+        <ul class="error">
           <li *ngIf="
           !signupForm.get('password')!.valid &&
           !signupForm.get('password')!.hasError('maxlength') &&
@@ -74,7 +74,7 @@
           <li *ngIf="
           signupForm.get('password')!.hasError('maxlength') &&
           signupForm.get('password')!.touched">
-            The password could not be longer then 30 symbols!
+            The password could not be longer then 20 symbols!
           </li>
           <li *ngIf="
           signupForm.get('password')!.hasError('minlength') &&
@@ -91,7 +91,7 @@
           <input type="password" name="confirmPass" formControlName="confirmPass"
             [ngClass]="{'invalid': !signupForm.get('confirmPass')!.valid && signupForm.get('confirmPass')!.dirty}">
         </div>
-        <ul class="sign-error">
+        <ul class="error">
           <li *ngIf="
           !signupForm.get('confirmPass')!.valid && 
           signupForm.get('confirmPass')!.dirty">
@@ -147,11 +147,20 @@
 
       <div class="sign-form__sign-form-btn">
         <button class="btn-default" type="submit" [disabled]="!signupForm.valid">Create registration</button>
-        <ul class="sign-error">
-          <li class="error-msg" *ngIf="errorAuthMsg">{{ errorAuthMsg }}</li>
-          <li class="error-msg" *ngIf="errorOnSetUserData">{{ errorOnSetUserData }}</li>
+        <ul class="error">
+          <li *ngIf="errorAuthMsg">{{ errorAuthMsg }}</li>
+          <li *ngIf="errorOnSetUserData">{{ errorOnSetUserData }}</li>
         </ul>
       </div>
     </form>
+  </div>
+
+  <div *ngIf="finishedReg" class="fixed-pop-up-container">
+    <div class="pop-up-body">
+      <p>The registration has been created.</p>
+      <div class="pop-up-buttons">
+        <button class="btn-default narrow-btn" type="button" (click)="resetForm()">Close</button>
+      </div>
+    </div>
   </div>
 </div>

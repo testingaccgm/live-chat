@@ -27,23 +27,29 @@
           {{ user.name }}
         </td>
         <td>
-          <label *ngFor="let role of user.roles">           
-            <input 
-              disabled
-              type="checkbox"
-              [attr.checked]="role.checked ? 'checked' : null">
-            {{ role.name }}
-          </label>
+          <div class="table__option">
+            <div *ngFor="let role of user.roles">
+              <label>
+                {{ role.name }}
+              </label>
+              <input 
+                disabled
+                type="checkbox"
+                [attr.checked]="role.checked ? 'checked' : null">
+            </div>
+          </div>
         </td>
         <td>
-          <div>
-            <label *ngFor="let userDomain of user.domains">
+          <div class="table__option">
+            <div *ngFor="let userDomain of user.domains">
+              <label>
+                {{ userDomain.description }}
+              </label>
               <input
                 type="checkbox"
                 disabled
                 [checked]="userDomain.checked ? 'checked' : null">
-              {{ userDomain.description }}
-            </label>
+            </div>
           </div>
         </td>
         <td>
@@ -93,53 +99,106 @@
     </div>
   </div>
 
-  <div *ngIf="loginHistory">
-    <button (click)="closeLogins()">Close</button>
-    <table>
-      <tr>
-        <th>Time</th>
-        <th>IP</th>
-        <th>Country</th>
-        <th>City</th>
-      </tr>
-      <tr *ngFor="let login of loginHistory[0].loginHistory">
-        <td>{{ login.date.toDate() | date:'dd.MM.yyyy' }} at {{ login.date.toDate() | date:'HH:mm' }}</td>
-        <td>{{ login.ip }}</td>
-        <td>{{ login.country }}</td>
-        <td>{{ login.city }}</td>
-      </tr>
-    </table>
+  <div class="fixed-pop-up-container" *ngIf="loginHistory[0]?.loginHistory">
+    <div class="pop-up-body login-history">
+      <div class="login-history__close-btn">
+        <button class="btn-default narrow-btn" (click)="closeLogins()">Close</button>
+      </div>
+      <table class="table" *ngIf="loginHistory[0]?.loginHistory.length > 0">
+        <tr>
+          <th>Time</th>
+          <th>IP</th>
+          <th>Country</th>
+          <th>City</th>
+        </tr>
+        <tr *ngFor="let login of loginHistory[0]?.loginHistory">
+          <td>{{ login.date.toDate() | date:'dd.MM.yyyy' }} at {{ login.date.toDate() | date:'HH:mm' }}</td>
+          <td>{{ login.ip }}</td>
+          <td>{{ login.country }}</td>
+          <td>{{ login.city }}</td>
+        </tr>
+      </table>
+      <p *ngIf="loginHistory[0]?.loginHistory.length == 0">
+        Тhe current user still has no logins.
+      </p>
+    </div>
   </div>
 
-  <div *ngIf="currentUser">
-    <form [formGroup]="editUserForm" (ngSubmit)="submitEditUserForm()">
-      <div>
-        <label for="name">Display name</label>
-        <input type="text" formControlName="name">
-      </div>
-      <div>
-        <label *ngFor="let role of currentUser.roles; let i = index">
-          {{ role.name }}
-          <input 
-            type="checkbox"
-            [checked]="role.checked ? 'checked' : null"
-            (change)="onRoleChange($event, i)">
-        </label>
-      </div>
-      <div>
-        <label *ngFor="let domain of currentUser.domains; let i = index">
-          {{ domain.description }}
-          <input 
-            type="checkbox"
-            [checked]="domain.checked ? 'checked' : null"
-            (change)="onDomainChange($event, i)">
-        </label>
-      </div>
-      <div>
-        <button type="submit">Apply</button>
-        <button type="button" (click)="resetEditUserForm()">Cancel</button>
-      </div>
-    </form>
+  <div class="fixed-pop-up-container" *ngIf="currentUser">
+    <div class="pop-up-body">
+      <form class="sign-form edit-user-form" [formGroup]="editUserForm" (ngSubmit)="submitEditUserForm()">
+        <div class="sign-form__sign-up-header">
+          <h2>Change User</h2>
+        </div>
+        <div class="sign-form__sign-element">
+          <label for="name">Display name</label>
+          <div class="name">
+            <div class="name-img"></div>
+            <input type="text" name="name" formControlName="name">
+          </div>
+          <ul class="error">
+            <li *ngIf="
+            !editUserForm.get('name')!.valid &&
+            !editUserForm.get('name')!.hasError('maxlength') &&
+            !editUserForm.get('name')!.hasError('minlength') &&
+            editUserForm.get('name')!.touched">
+              Please enter your name!
+            </li>
+            <li *ngIf="
+            editUserForm.get('name')!.hasError('maxlength') && 
+            editUserForm.get('name')!.touched">
+              The name could not be longer then 10 characters!
+            </li>
+            <li *ngIf="
+            editUserForm.get('name')!.hasError('minlength') && 
+            editUserForm.get('name')!.touched">
+              The name should be at least 3 characters!
+            </li>
+          </ul>
+        </div>
+
+        <div class="sign-form__sign-element options">
+          <div>
+            <div class="sign-form__sign-up-header">
+              <h2>Roles</h2>
+            </div>
+            <hr class="hr-border">
+            <div class="sign-form__sign-element__option-containter">
+              <div class="sign-form__sign-element__option-containter__option" *ngFor="let role of currentUser.roles; let i = index">
+                <label>
+                  {{ role.name }}
+                </label>
+                <input 
+                  type="checkbox"
+                  [checked]="role.checked ? 'checked' : null"
+                  (change)="onRoleChange($event, i)">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="sign-form__sign-up-header">
+              <h2>Domains</h2>
+            </div>      
+            <hr class="hr-border">
+            <div class="sign-form__sign-element__option-containter">
+              <div class="sign-form__sign-element__option-containter__option" *ngFor="let domain of currentUser.domains; let i = index">
+                <label>
+                  {{ domain.description }}
+                </label>
+                <input 
+                  type="checkbox"
+                  [checked]="domain.checked ? 'checked' : null"
+                  (change)="onDomainChange($event, i)">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button style="margin-right: 10px;" class="btn-default narrow-btn" type="submit">Apply</button>
+          <button class="btn-default narrow-btn" type="button" (click)="resetEditUserForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <ul class="error">

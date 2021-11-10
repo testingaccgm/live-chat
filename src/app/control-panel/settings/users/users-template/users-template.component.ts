@@ -22,7 +22,7 @@ export class UsersTemplateComponent {
   
   searchParams!: string;
   
-  loginHistory!: any;
+  loginHistory: any = [];
   private _loginHistorySubscription!: Subscription;
   
   currentUser!: User;
@@ -44,7 +44,7 @@ export class UsersTemplateComponent {
     this.currentUser = user;
 
     this.editUserForm = this._fb.group({
-      name: [user.name, Validators.required],
+      name: [user.name, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       roles: this._fb.array([]),
       domains: this._fb.array([])
     });
@@ -124,7 +124,7 @@ export class UsersTemplateComponent {
           id: e.payload.doc.id,
           ...e.payload.doc.data() as LoginHistory
         }
-      });
+      });      
       this.errorOnGetUserLogins = '';
     }, error => {
       this.errorOnGetUserLogins = error.message;
@@ -132,7 +132,7 @@ export class UsersTemplateComponent {
   };
 
   closeLogins() {
-    this.loginHistory = undefined!;
+    this.loginHistory = [];
     this._loginHistorySubscription.unsubscribe();
   };
 

@@ -4,13 +4,15 @@
 .settings {
   display: flex;
   align-items: flex-start;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 48px);  
   &__nav {
     width: 10%;
     height: 100%;
     box-sizing: border-box;
     border-right: 1px solid var(--color8);
     padding-right: 10px;
+    overflow: scroll;
+    @include scrollbar(normal);
     ul li {
       list-style: none;
       cursor: pointer;

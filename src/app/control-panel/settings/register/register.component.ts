@@ -33,6 +33,9 @@ export class RegisterComponent implements OnInit {
   isLoading!: boolean;
   private _isLoadingSubscription!: Subscription;
 
+  finishedReg: boolean = false;
+  private _finishedRegSubscription!: Subscription;
+
   constructor(
     private _formBuilder: FormBuilder,
     private _authService: AuthService,
@@ -42,9 +45,9 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.signupForm = this._formBuilder.group({
-      name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
+      password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
       confirmPass: [null, [Validators.required]],
       roles: this._formBuilder.array([]),
       domains: this._formBuilder.array([]),
@@ -107,7 +110,11 @@ export class RegisterComponent implements OnInit {
     this._isLoadingSubscription = this._authService.isLoadingSubject
     .subscribe((boolean) => {
       this.isLoading = boolean;
-    });  
+    });
+
+    this._finishedRegSubscription = this._authService.finishedRegSubject.subscribe(boolean => {
+      this.finishedReg = boolean;
+    });
   }
 
   ngOnDestroy(): void {
@@ -115,6 +122,7 @@ export class RegisterComponent implements OnInit {
     this._errorOnSetUserDataSubscription.unsubscribe();
     this._isLoadingSubscription.unsubscribe();
     this._domainsSubscription.unsubscribe();
+    this._finishedRegSubscription.unsubscribe();
 
     this._authService.errorAuthMsg = '';
     this._authService.errorAuthMsgSubject.next(this._authService.errorAuthMsg);
@@ -170,5 +178,11 @@ export class RegisterComponent implements OnInit {
     };
     
     this._authService.signUp(newUser);
+  };
+
+  resetForm() {
+    this.signupForm.reset();
+    this._authService.finishedReg = false;
+    this._authService.finishedRegSubject.next(this._authService.finishedReg);
   };
 }

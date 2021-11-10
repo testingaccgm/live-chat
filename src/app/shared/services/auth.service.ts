@@ -30,6 +30,9 @@ export class AuthService {
   isLoading: boolean = false;
   isLoadingSubject = new BehaviorSubject<boolean>(this.isLoading);
 
+  finishedReg: boolean = false;
+  finishedRegSubject = new BehaviorSubject<boolean>(this.finishedReg);
+
   secondaryApp = firebase.default.initializeApp(environment.firebaseConfig, 'Secondary');
 
   constructor(
@@ -41,6 +44,10 @@ export class AuthService {
 
   signUp(newUser: User) {
     this.enableLoadingSpinner();
+
+    this.finishedReg = false;
+    this.finishedRegSubject.next(this.finishedReg);
+    
     this.secondaryApp.auth().createUserWithEmailAndPassword(newUser.email, newUser.password!)
     .then((user) => {
       newUser.uid = user.user!.uid;
@@ -56,6 +63,10 @@ export class AuthService {
       );
       this.errorAuthMsg = '';
       this.errorAuthMsgSubject.next(this.errorAuthMsg);
+
+      this.finishedReg = true;
+      this.finishedRegSubject.next(this.finishedReg);
+
       this.disableLoadingSpinner();
     }, (error) => {
       this.errorAuthHandler(error);

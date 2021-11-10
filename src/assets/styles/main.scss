@@ -48,7 +48,6 @@ $live-chat-theme: mat.define-light-theme((
 }
 
 body {
-  min-width: 320px;
   background-color: var(--color1);
   @include scrollbar (body);
 }

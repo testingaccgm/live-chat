@@ -2,30 +2,4 @@
 @import '../../../../assets/styles/mixins/shortand';
 @import '../../../../assets/styles/mixins/fonts';
 @import '../../../../assets/styles/mixins/hovers';
-
 @import '../../../../assets/styles/shared/sign-forms';
-
-.sign-form {
-  border: 1px solid var(--color8);
-  border-radius: 5px;
-  &__sign-element {
-    &__option-containter {
-      &__option {
-        display: flex;
-        align-items: center;
-        margin-bottom: 5px;
-        @include hover(normal) {
-          background-color: lighten($yellow, 40%);
-        }
-      }
-    }
-  }
-  .options {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .options > div {
-    width: 49%;
-  }
-}
