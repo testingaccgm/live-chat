@@ -1,0 +1,22 @@
+.domain-form {
+  margin-bottom: 10px;
+  &__inputs {
+    margin-bottom: 10px;
+    width: 440px;
+    input {
+      border-radius: 5px;
+      border: 1px solid var(--color8);
+      outline: none;
+      padding: 5px;      
+      width: 200px;
+    }
+    input:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+  &__buttons {
+    button {
+      width: 65px !important;
+    }
+  }
+}

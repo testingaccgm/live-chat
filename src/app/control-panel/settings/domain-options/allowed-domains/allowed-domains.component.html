@@ -1,6 +1,9 @@
 <div>
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
   <div>
-    <button 
+    <button
+      *ngIf="!showDomainForm"
       style="margin-bottom: 10px;" 
       type="button" 
       class="btn-default narrow-btn" 
@@ -9,23 +12,23 @@
     </button>
 
     <form 
-      style="margin-bottom: 10px;"
+      class="domain-form"
       *ngIf="showDomainForm" 
       [formGroup]="addDomainForm" 
       (ngSubmit)="submitDomainForm(addDomainForm)">
-        <div>
+        <div class="domain-form__inputs">
           <input type="text" formControlName="domain" placeholder="Link parameter...">
           <input type="text" formControlName="description" placeholder="Description...">
         </div>
-        <div>
-          <button type="submit" [disabled]="addDomainForm.invalid">Add</button>
-          <button type="button" (click)="onResetDomainForm()">Cancel</button>
+        <div class="domain-form__buttons">
+          <button style="margin-right: 10px;" class="btn-default narrow-btn" type="submit" [disabled]="addDomainForm.invalid">Add</button>
+          <button class="btn-default narrow-btn" type="button" (click)="onResetDomainForm()">Cancel</button>
         </div>
     </form>
   </div>
 
   <div>
-    <table>
+    <table class="table">
       <tr>
         <th>Link parameter</th>
         <th>Description</th>
@@ -35,17 +38,19 @@
         <td>{{ domain.domain }}</td>
         <td>{{ domain.description }}</td>
         <td>
-          <button (click)="deleteDomainPopUpFun(domain)">Delete</button>
+          <button class="btn-default narrow-btn" (click)="deleteDomainPopUpFun(domain)">Delete</button>
         </td>
       </tr>
     </table>
   </div>
 
-  <div *ngIf="deleteDomainPopUp">
-    <p>Аre you sure you want to delete domain {{ currentDomain.description }}?</p>
-    <div>
-      <button (click)="deleteDomain()">Yes</button>
-      <button (click)="cancelPopUpFun()">No</button>
+  <div class="fixed-pop-up-container" *ngIf="deleteDomainPopUp">
+    <div class="pop-up-body">
+      <p>Аre you sure you want to delete domain {{ currentDomain.description }}?</p>
+      <div class="pop-up-buttons">
+        <button class="btn-default narrow-btn" style="margin-right: 10px;" (click)="deleteDomain()">Yes</button>
+        <button class="btn-default narrow-btn" (click)="cancelPopUpFun()">No</button>
+      </div>
     </div>
   </div>
 

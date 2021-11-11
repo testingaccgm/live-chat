@@ -18,26 +18,13 @@
   &__sign-element {
     font-size: 1.1em;
     margin: 20px 0;
-    .phone, .name, .email, .password {
+    .name, .email, .password {
       display: flex;
     }
     .name {
       .name-img {
         @include signFormBackround;
         background-image: url("../../images/sign-forms/user.png");
-      }
-    }
-    .phone {
-      .phone-img {
-        @include signFormBackround;
-        background-image: url("../../images/sign-forms/phone.png");
-      }
-      input {
-        -webkit-appearance: none;
-        -moz-appearance: textfield;
-        margin: 0;
-        border-left: none !important;
-        @include inputNoArrows;
       }
     }
     .email {

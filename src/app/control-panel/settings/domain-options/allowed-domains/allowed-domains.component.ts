@@ -25,6 +25,8 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
 
   showDomainForm: boolean = false;
 
+  isLoading: boolean = false;
+
   errorOnGetUsers: string = '';
   errorOnGetDomains: string = '';
   errorOnAddDomain: string = '';
@@ -85,7 +87,9 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
   submitDomainForm(addDomainForm: FormGroup) {
     if (addDomainForm.invalid) {
       return;
-    }
+    };
+
+    this.isLoading = true;
 
     const domain = addDomainForm.value.domain
     const description = addDomainForm.value.description
@@ -98,14 +102,18 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
         this._firestoreCollections.setDomain(user.uid!, userDomainObj).then(() => {
           this.onResetDomainForm();
           this.errorOnSetDomain = '';
+          this.isLoading = false;
         }, error => {
           this.errorOnSetDomain = error.message;
+          this.isLoading = false;
         });
       };
       addDomainForm.reset();
       this.errorOnAddDomain = '';
+      this.isLoading = false;
     }, error => {
       this.errorOnAddDomain = error.message;
+      this.isLoading = false;
     })
   };
 

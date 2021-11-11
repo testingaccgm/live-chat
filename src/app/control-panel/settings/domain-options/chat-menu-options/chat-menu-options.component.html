@@ -93,4 +93,15 @@
     <button type="button" (click)="deleteMenuOption()">OK</button>
     <button type="button" (click)="clearMenuOptionForm()">Cancel</button>
   </div>
+
+  <ul class="error">
+    <li *ngIf="erroOnGetMenuOptions">{{ erroOnGetMenuOptions }}</li>
+    <li *ngIf="errorOnUploadImg">{{ errorOnUploadImg }}</li>
+    <li *ngIf="errorOnAddMenuOption">{{ errorOnAddMenuOption }}</li>
+    <li *ngIf="erroOnGetDWURL">{{ erroOnGetDWURL }}</li>
+    <li *ngIf="erroOnDeleteItemFromFS">{{ erroOnDeleteItemFromFS }}</li>
+    <li *ngIf="errorOnDeleteMenuOption">{{ errorOnDeleteMenuOption }}</li>
+    <li *ngIf="errorOnAddMenuOptionItem">{{ errorOnAddMenuOptionItem }}</li>
+    <li *ngIf="erroOnEditMenuOption">{{ erroOnEditMenuOption }}</li>
+  </ul>
 </div>
