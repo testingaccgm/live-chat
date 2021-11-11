@@ -31,27 +31,6 @@
   border-radius: 3px;
 }
 
-@mixin nav-active {
-  color: $red !important;
-  font-weight: bold;
-  background: url('../../images/shared/nav-underline.png') center no-repeat;
-  background-position-y: 21px;
-}
-
-@mixin changePhoneBtn {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  user-select: none;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-color: transparent;
-  margin-left: 10px;
-}
-
 @mixin scrollbar($scrollbar) {
   // -webkit-
   &::-webkit-scrollbar {
@@ -130,29 +109,4 @@
   color: var(--color7);
   @include placeholderColor($red);
   @include scrollbar(normal);
-}
-
-@mixin image-container-images {
-  position: relative;
-  padding: 3px;
-  img {
-    max-width: 200px;
-    max-height: 112px;
-    border-radius: 3px;
-  }
-  div {
-    @include btn;
-    position: absolute;
-    top: 7px;
-    right: 7px;
-    width: 6px;
-    height: 6px;
-    font-weight: bold;
-    color: $white;
-    background-color: $red;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
-  }
 }

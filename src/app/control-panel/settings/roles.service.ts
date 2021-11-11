@@ -10,6 +10,7 @@ export class RolesService {
     {name: 'Blocked Users', value: 'blockedUsers', route: 'blocked-users', checked: true},
     {name: 'Account Settings', value: 'accountSettings', route: 'account-settings', checked: true},
     {name: 'Domain Options', value: 'domainOptions', route: 'domain-options', checked: false},
+    {name: 'Reports', value: 'reports', route: 'reports', checked: false}
   ];
   
   constructor() { }

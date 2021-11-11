@@ -23,6 +23,15 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
   deleteDomainPopUp: boolean = false;
   currentDomain!: Domain;
 
+  showDomainForm: boolean = false;
+
+  errorOnGetUsers: string = '';
+  errorOnGetDomains: string = '';
+  errorOnAddDomain: string = '';
+  errorOnSetDomain: string = '';
+  errorOnDeleteDomain: string = '';
+  errorOnDeleteDomainItem: string = '';
+
   constructor(
     private _fb: FormBuilder,
     private _firestoreCollections: FirestoreCollectionsService
@@ -41,10 +50,9 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
           ... e.payload.doc.data() as User
         }
       });
-
-      // no error
+      this.errorOnGetUsers = '';
     }, error => {
-      // error
+      this.errorOnGetUsers = error.message;
     });
 
     this._domainsSubscription = this._firestoreCollections.getDomains().subscribe(domains => {
@@ -53,16 +61,26 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
           id: e.payload.doc.id,
           ... e.payload.doc.data() as Domain
         }
-      })
+      });
+      this.errorOnGetDomains = '';
     }, error => {
-
+      this.errorOnGetDomains = error.message;
     });
-  }
+  };
 
   ngOnDestroy(): void {
    this._domainsSubscription.unsubscribe();
    this._usersSubscription.unsubscribe();
-  }
+  };
+
+  onShowDomainForm() {
+    this.showDomainForm = true;
+  };
+
+  onResetDomainForm() {
+    this.showDomainForm = false;
+    this.addDomainForm.reset();
+  };
 
   submitDomainForm(addDomainForm: FormGroup) {
     if (addDomainForm.invalid) {
@@ -78,15 +96,16 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
     this._firestoreCollections.addDomain(domainObj).then(() => {
       for (const user of this.users) {        
         this._firestoreCollections.setDomain(user.uid!, userDomainObj).then(() => {
-          
+          this.onResetDomainForm();
+          this.errorOnSetDomain = '';
         }, error => {
-
+          this.errorOnSetDomain = error.message;
         });
       };
       addDomainForm.reset();
-      // no error
+      this.errorOnAddDomain = '';
     }, error => {
-      // error
+      this.errorOnAddDomain = error.message;
     })
   };
 
@@ -106,9 +125,9 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
       };
 
       this.cancelPopUpFun();
-      // no error
+      this.errorOnDeleteDomain = '';
     }, error => {
-      // error
+      this.errorOnDeleteDomain = error.message;
     })
   };
 
@@ -124,9 +143,9 @@ export class AllowedDomainsComponent implements OnInit, OnDestroy {
 
   deleteDomainItem(userId: string, domainObj: any) {
     this._firestoreCollections.deleteDomainItem(userId, domainObj).then(() => {
-      // no error          
+      this.errorOnDeleteDomainItem = '';          
     }, error => {
-      // error
+      this.errorOnDeleteDomainItem = error.message;
     });
   };
 }

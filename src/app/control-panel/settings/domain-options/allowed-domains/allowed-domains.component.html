@@ -1,26 +1,35 @@
 <div>
-  <div>Strict Mode</div>
-
   <div>
-    <button>Add domain</button>
+    <button 
+      style="margin-bottom: 10px;" 
+      type="button" 
+      class="btn-default narrow-btn" 
+      (click)="onShowDomainForm()">
+        Add domain
+    </button>
 
-    <form [formGroup]="addDomainForm" (ngSubmit)="submitDomainForm(addDomainForm)">
-      <div>
-        <input type="text" formControlName="domain" placeholder="Domain...">
-        <input type="text" formControlName="description" placeholder="Description...">
-      </div>
-      <div>
-        <button type="submit" [disabled]="addDomainForm.invalid">Add</button>
-      </div>
+    <form 
+      style="margin-bottom: 10px;"
+      *ngIf="showDomainForm" 
+      [formGroup]="addDomainForm" 
+      (ngSubmit)="submitDomainForm(addDomainForm)">
+        <div>
+          <input type="text" formControlName="domain" placeholder="Link parameter...">
+          <input type="text" formControlName="description" placeholder="Description...">
+        </div>
+        <div>
+          <button type="submit" [disabled]="addDomainForm.invalid">Add</button>
+          <button type="button" (click)="onResetDomainForm()">Cancel</button>
+        </div>
     </form>
   </div>
 
   <div>
     <table>
       <tr>
-        <th>Domain</th>
+        <th>Link parameter</th>
         <th>Description</th>
-        <th>Delete</th>
+        <th></th>
       </tr>
       <tr *ngFor="let domain of domains">
         <td>{{ domain.domain }}</td>
@@ -39,4 +48,13 @@
       <button (click)="cancelPopUpFun()">No</button>
     </div>
   </div>
+
+  <ul class="error">
+    <li *ngIf="errorOnGetUsers">{{ errorOnGetUsers }}</li>
+    <li *ngIf="errorOnGetDomains">{{ errorOnGetDomains }}</li>
+    <li *ngIf="errorOnAddDomain">{{ errorOnAddDomain }}</li>
+    <li *ngIf="errorOnSetDomain">{{ errorOnSetDomain }}</li>
+    <li *ngIf="errorOnDeleteDomain">{{ errorOnDeleteDomain }}</li>
+    <li *ngIf="errorOnDeleteDomainItem">{{ errorOnDeleteDomainItem }}</li>
+  </ul>
 </div>

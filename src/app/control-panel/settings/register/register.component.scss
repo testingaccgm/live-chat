@@ -3,3 +3,7 @@
 @import '../../../../assets/styles/mixins/fonts';
 @import '../../../../assets/styles/mixins/hovers';
 @import '../../../../assets/styles/shared/sign-forms';
+
+.sign-form {
+  min-width: 400px;
+}

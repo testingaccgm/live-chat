@@ -23,6 +23,7 @@ import { ChangeThemeComponent } from './settings/account-settings/change-theme/c
 import { DomainOptionsComponent } from './settings/domain-options/domain-options.component';
 import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-options/chat-menu-options.component';
 import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.component';
+import { ReportsComponent } from './settings/reports/reports.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.co
     ChangeThemeComponent,
     DomainOptionsComponent,
     ChatMenuOptionsComponent,
-    BlockedUsersComponent
+    BlockedUsersComponent,
+    ReportsComponent
   ],
   imports: [
     CommonModule,
@@ -112,12 +114,20 @@ import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.co
                 }
               },
               {path: 'blocked-users', component: BlockedUsersComponent,
-              canActivate: [RoleActive],
-              data: {
-                role: 'blockedUsers',
-                autenticationFailureRedirectUrl: '/control-panel/settings'
+                canActivate: [RoleActive],
+                data: {
+                  role: 'blockedUsers',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
+                }
+              },
+              {path: 'reports', component: ReportsComponent,
+                canActivate: [RoleActive],
+                data: {
+                  role: 'reports',
+                  autenticationFailureRedirectUrl: '/control-panel/settings'
+                }
               }
-            }],
+            ],
             canActivate: [AuthActivate],
             data: {
               autenticationRequired: true,

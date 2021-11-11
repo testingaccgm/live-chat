@@ -28,6 +28,8 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
   errorOnDeleteBlockedUsers: string = '';
   errorOnBlockUser: string = '';
 
+  isLoading: boolean = false;
+
   constructor(
     private _fireStoreCollections: FirestoreCollectionsService,
     private _fb: FormBuilder,
@@ -86,6 +88,9 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
     if (addUserForBlockForm.invalid) {
       return;
     };
+
+    this.isLoading = true;
+
     const username = addUserForBlockForm.value.username;
     const ip = addUserForBlockForm.value.ip;
     const reason = addUserForBlockForm.value.reason;
@@ -95,9 +100,11 @@ export class BlockedUsersComponent implements OnInit, OnDestroy {
 
    this._fireStoreCollections.blockUserByIp(blockedUserObj).then(() => {
     this.resetAddUserForBlockForm();
+    this.isLoading = false;
     this.errorOnBlockUser = '';
    }, error => {
     this.errorOnBlockUser = error.message;
+    this.isLoading = false;
    });
   };
 }

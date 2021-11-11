@@ -16,17 +16,23 @@
       </tr>
       <tr *ngFor="let user of users | searchPipe: searchParams; let ui = index">
         <td>
-          <button class="btn-default narrow-btn" type="button" (click)="editUser(user)">Edit</button>
+          <div class="table__edit">
+            <button class="btn-default narrow-btn" type="button" (click)="editUser(user)">Edit</button>
+          </div>
         </td>
         <td>
-          {{ user.email }}
+          <div class="table__email">
+            {{ user.email }}
+          </div>
         </td>
         <td>
-          {{ user.name }}
+          <div class="table__name">
+            {{ user.name }}
+          </div>          
         </td>
         <td>
-          <div class="table__option">
-            <div *ngFor="let role of user.roles">
+          <div class="table__option table__roles">
+            <div class="table__roles__role" *ngFor="let role of user.roles">
               <label>
                 {{ role.name }}
               </label>
@@ -38,8 +44,8 @@
           </div>
         </td>
         <td>
-          <div class="table__option">
-            <div *ngFor="let userDomain of user.domains">
+          <div class="table__option table__domains">
+            <div class="table__domains__domain" *ngFor="let userDomain of user.domains">
               <label>
                 {{ userDomain.description }}
               </label>
@@ -51,33 +57,35 @@
           </div>
         </td>
         <td>
-          <button 
-            class="btn-default narrow-btn"
-            type="button"
-            [disabled]="disabledResetPasswordButton && currentResetEmail == user.email" 
-            (click)="resetPassword(user.email)">
-              Reset pass
-          </button>
-          <button
-            class="btn-default narrow-btn"
-            type="button" 
-            *ngIf="!user.active" 
-            (click)="changeAccountActivity(user.uid, true)">
-            Activate
-          </button>
-          <button
-            class="btn-default narrow-btn"
-            type="button" 
-            *ngIf="user.active" 
-            (click)="changeAccountActivity(user.uid, false)">
-              Deactivate
-          </button>
-          <button 
-            class="btn-default narrow-btn" 
-            type="button" 
-            (click)="getUserLogins(user.uid)">
-              Logins
-          </button>
+          <div class="table__buttons">
+            <button
+              class="btn-default narrow-btn"
+              type="button"
+              [disabled]="disabledResetPasswordButton && currentResetEmail == user.email" 
+              (click)="resetPassword(user.email)">
+                Reset pass
+            </button>
+            <button
+              class="btn-default narrow-btn"
+              type="button" 
+              *ngIf="!user.active" 
+              (click)="changeAccountActivity(user.uid, true)">
+                Activate
+            </button>
+            <button
+              class="btn-default narrow-btn"
+              type="button" 
+              *ngIf="user.active" 
+              (click)="changeAccountActivity(user.uid, false)">
+                Deactivate
+            </button>
+            <button 
+              class="btn-default narrow-btn" 
+              type="button" 
+              (click)="getUserLogins(user.uid)">
+                Logins
+            </button>
+          </div>
         </td>
       </tr>
     </table>
