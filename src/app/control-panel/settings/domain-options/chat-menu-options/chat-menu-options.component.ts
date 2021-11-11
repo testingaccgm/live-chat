@@ -24,7 +24,7 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   private _menuOptionsSubscription!: Subscription;
   currentOption!: MenuOption;
 
-  isOptionMenuActive: boolean = false;
+  ismenuOptionsFormActive: boolean = false;
   isInEditMenuEditOptionMode: boolean = false;
   
   menuEditedImage!: string;
@@ -49,7 +49,7 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.menuOptionsForm = this._fb.group({
-      key: [null, Validators.required],
+      key: [null, [Validators.required, Validators.pattern('^[a-z]*$')]],
       description: [null, Validators.required],
       active: [true],
       img: [null, Validators.required]
@@ -74,11 +74,11 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   };
 
   activateMenuOptionForm() {
-    this.isOptionMenuActive = true;
+    this.ismenuOptionsFormActive = true;
   };
 
   clearMenuOptionForm() {
-    this.isOptionMenuActive = false;    
+    this.ismenuOptionsFormActive = false;    
     this.currentOption = undefined!;
     this.isDeleteMenuOptionPopUpActive = false;
     this.isInEditMenuEditOptionMode = false;
@@ -103,7 +103,7 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
       return this._firestoreCollectionService.addMenuOptionItem(menuItemObj).then(() => {
         this.clearMenuOptionForm();
         this.menuFileLocalPath = this.menuDefaultImg;
-        this.isOptionMenuActive = false;
+        this.ismenuOptionsFormActive = false;
         this.errorOnAddMenuOption = '';
       }, error => {
         this.errorOnAddMenuOption = error.message;
@@ -166,7 +166,7 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   };
 
   editOption(menuOptionItem: MenuOption) {
-    this.isOptionMenuActive = true;
+    this.ismenuOptionsFormActive = true;
     this.isInEditMenuEditOptionMode = true;
     this.currentOption = menuOptionItem;
 

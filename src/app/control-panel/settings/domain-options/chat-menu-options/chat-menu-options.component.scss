@@ -1,3 +1,38 @@
+.menu-option-form {
+  width: 400px;
+  &__item{
+    margin-top: 10px;
+  }
+  &__buttons {
+    margin-top: 10px;
+    button {
+      min-width: 65px !important;
+    }
+    button:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+  .active {
+    label {
+      margin-right: 10px;
+    }
+  }
+  .input-option {
+    display: flex;
+    flex-direction: column;
+    input {
+      border: 1px solid var(--color8);
+      border-radius: 3px;
+      padding: 5px;
+      outline: none;
+    }
+  }
+  .img-upload {
+    text-align: center;
+  }
+}
+
+// ######
 img {
   width: 100px;
 }

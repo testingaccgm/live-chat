@@ -20,6 +20,9 @@
           <input type="text" formControlName="domain" placeholder="Link parameter...">
           <input type="text" formControlName="description" placeholder="Description...">
         </div>
+        <ul class="error">
+          <li *ngIf="addDomainForm.get('domain')!.hasError('pattern')">Аllowed characters: a-z</li>
+        </ul>
         <div class="domain-form__buttons">
           <button style="margin-right: 10px;" class="btn-default narrow-btn" type="submit" [disabled]="addDomainForm.invalid">Add</button>
           <button class="btn-default narrow-btn" type="button" (click)="onResetDomainForm()">Cancel</button>

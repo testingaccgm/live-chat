@@ -1,14 +1,20 @@
 <div>
-  <div>
-    <button *ngIf="!isOptionMenuActive" type="button" (click)="activateMenuOptionForm()">Add menu option</button>
-  </div>
+  <button
+    style="margin-bottom: 10px;"
+    class="btn-default narrow-btn"
+    *ngIf="!ismenuOptionsFormActive" 
+    type="button" 
+    (click)="activateMenuOptionForm()">
+      Add menu option
+  </button>
 
   <div>
     <form 
-      *ngIf="isOptionMenuActive" 
+      class="menu-option-form"
+      *ngIf="ismenuOptionsFormActive" 
       [formGroup]="menuOptionsForm" 
       (ngSubmit)="isInEditMenuEditOptionMode ? submitmenuEditOptionsForm() : submitMenuOptionsForm(menuOptionsForm)">
-      <div>
+      <div class="img-upload">
         <div *ngIf="!isInEditMenuEditOptionMode">
           <img [src]="menuFileLocalPath">
         </div>
@@ -20,7 +26,8 @@
           accept=".png,.jpg,.jpeg,.svg,.heic">
         </div>
         <div>
-          <button 
+        <button 
+          class="btn-default narrow-btn"
           type="button"
           (click)="selectImg.click()">
             Select image
@@ -28,24 +35,39 @@
         </div>
       </div>
 
-      <div>
+      <div class="menu-option-form__item active">
         <label for="active">Active</label>
         <input type="checkbox" name="active" formControlName="active">
       </div>     
 
-      <div>
-        <label for="key">Key</label>
-        <input type="text" name="key" formControlName="key">
+      <div class="menu-option-form__item">
+        <div class="input-option">
+          <label for="key">Key</label>
+          <input type="text" name="key" formControlName="key">
+        </div>
+        <ul class="error">
+          <li *ngIf="menuOptionsForm.get('key')!.hasError('pattern')">Аllowed characters: a-z</li>
+        </ul>
       </div>
 
-      <div>
+      <div class="menu-option-form__item input-option">
         <label for="description">Description</label>
         <input type="text" name="description" formControlName="description">
       </div>
 
-      <div>
-        <button type="submit" [disabled]="menuOptionsForm.invalid">{{ isInEditMenuEditOptionMode ? 'Change' : 'Add' }}</button>
-        <button type="button" (click)="clearMenuOptionForm()">Cancel</button>
+      <div class="menu-option-form__buttons">
+        <button
+          class="btn-default narrow-btn"
+          type="submit" 
+          [disabled]="menuOptionsForm.invalid">
+            {{ isInEditMenuEditOptionMode ? 'Change' : 'Add' }}
+        </button>
+        <button
+          class="btn-default narrow-btn"
+          type="button" 
+          (click)="clearMenuOptionForm()">
+            Cancel
+        </button>
       </div>
     </form>
   </div>
