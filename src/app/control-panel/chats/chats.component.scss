@@ -1,0 +1,48 @@
+@import "../../../assets/styles/variables/colors";
+
+.chats {
+  display: flex;
+  align-items: flex-start;
+  height: calc(100vh - 48px);
+  &__pending {
+    width: 170px;
+    height: 100%;
+    border-right: 1px solid var(--color8);
+  }
+  &__chats {
+    width: calc(100% - 170px);
+    position: relative;
+    &__content {
+      position: absolute;
+      display: flex;
+      top: 29px;
+      left: 210px;
+      &__chat-history {
+        width: 700px;
+      }
+    }
+    &__nav {
+      width: 200px;
+      &__chat-info {
+        padding: 5px;
+        cursor: pointer;
+        span {
+          display: inline-block;
+          width: 56px;
+        }
+      }
+      .active-chat {
+        background-color: $yellow;
+        color: $white;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+    }
+  }
+  &__title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 5px 0 5px 10px;
+    border-bottom: 1px solid var(--color8);
+  }
+}

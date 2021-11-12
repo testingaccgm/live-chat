@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as firebase from 'firebase/app';
 
@@ -9,8 +9,9 @@ import { FirestoreCollectionsService } from '../services/firestore-collections.s
   templateUrl: './chat-form.component.html',
   styleUrls: ['./chat-form.component.scss']
 })
-export class ChatFormComponent implements OnInit {
+export class ChatFormComponent implements OnInit, AfterViewInit {
   @Input() userInfo!: { nick: string, chatId: string, domain: string };
+  @ViewChild('textarea') textarea!: ElementRef<HTMLElement>;
   chatForm!: FormGroup;
 
   constructor(
@@ -24,10 +25,14 @@ export class ChatFormComponent implements OnInit {
     });
   };
 
+  ngAfterViewInit(): void {
+    this.textarea.nativeElement.focus();
+  };
+
   submitChatForm(chatForm: FormGroup) {
     if (chatForm.invalid) {
       return;
-    }
+    };
 
     const nick = this.userInfo.nick;
     const chatId = this.userInfo.chatId;
@@ -39,7 +44,7 @@ export class ChatFormComponent implements OnInit {
     const chatFormObj = { message, time };
 
     this._firestoreCollections.addMessage(userInfoObj, chatFormObj).then(() => {
-      chatForm.reset();
+
     }, error => {
 
     });
@@ -47,7 +52,7 @@ export class ChatFormComponent implements OnInit {
 
   submitOnEnter(event:any, chatForm: FormGroup) {
     if (event.keyCode === 13) {
-      this.submitChatForm(chatForm)
+      this.submitChatForm(chatForm);
     }
   };
 }

@@ -1,0 +1,22 @@
+@import "../../../assets/styles/mixins/shortand";
+@import "../../../assets/styles/variables/colors";
+
+.chat-form {
+  display: flex;
+  align-items: center;
+  &__message {
+    @include default-textarea;
+    margin-right: 10px
+  }
+  &__submit-btn {
+   @include btn;
+   border-radius: 50%;
+   width: 35px;
+   height: 35px;
+   background-color: $yellow;
+   background-image: url("../../../assets/images/icons/arrow.png");
+   background-size: 80%;
+   background-repeat: no-repeat;
+   background-position: center;
+  }
+}

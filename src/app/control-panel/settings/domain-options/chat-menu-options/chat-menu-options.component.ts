@@ -1,9 +1,7 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { FirestoreCollectionsService } from 'src/app/shared/services/firestore-collections.service';
 
-import { GenerateIdService } from 'src/app/shared/services/generate-id.service';
 import { MenuOption } from 'src/app/shared/models/menu-option.model';
 import { Subscription } from 'rxjs';
 
@@ -13,12 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./chat-menu-options.component.scss']
 })
 export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
-  @ViewChild ('editImg') editImg!: ElementRef;
-
   menuOptionsForm!: FormGroup;
-  menuFile!: any;
-  menuDefaultImg: string = '../../../../../assets/images/menu-options/upload-img.png';
-  menuFileLocalPath: string = this.menuDefaultImg;
 
   menuOptions!: MenuOption[];
   private _menuOptionsSubscription!: Subscription;
@@ -28,31 +21,27 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   isInEditMenuEditOptionMode: boolean = false;
   
   menuEditedImage!: string;
+
+  isLoading: boolean = false;
   
   isDeleteMenuOptionPopUpActive: boolean = false;
 
   erroOnGetMenuOptions: string = '';
-  errorOnUploadImg: string = '';
   errorOnAddMenuOption: string = '';
-  erroOnGetDWURL: string = '';
-  erroOnDeleteItemFromFS: string = '';
   errorOnDeleteMenuOption: string = '';
   errorOnAddMenuOptionItem: string = '';
   erroOnEditMenuOption: string = '';
 
   constructor(
     private _fb: FormBuilder,
-    private _angularFireStorage: AngularFireStorage,
-    private _firestoreCollectionService: FirestoreCollectionsService,
-    private _generateIdService: GenerateIdService
+    private _firestoreCollectionService: FirestoreCollectionsService
   ) { }
 
   ngOnInit(): void {
     this.menuOptionsForm = this._fb.group({
-      key: [null, [Validators.required, Validators.pattern('^[a-z]*$')]],
+      key: [null, [Validators.required]],
       description: [null, Validators.required],
-      active: [true],
-      img: [null, Validators.required]
+      active: [true]
     });
 
     this._menuOptionsSubscription = this._firestoreCollectionService.getMenuOptions()
@@ -83,67 +72,30 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
     this.isDeleteMenuOptionPopUpActive = false;
     this.isInEditMenuEditOptionMode = false;
     this.menuEditedImage = undefined!;
-    this.menuFileLocalPath = this.menuDefaultImg;
     this.menuOptionsForm.reset();
-    this.editImg.nativeElement.value = '';    
   };
 
   submitMenuOptionsForm(menuOptionsForm: FormGroup) {
     if (menuOptionsForm.invalid) {
       return;
-    };    
+    };
 
-    this.uploadImgToFirestore().then(() => {
-      const key = menuOptionsForm.value.key;
-      const description = menuOptionsForm.value.description;
-      const img = menuOptionsForm.value.img;
-      const active = menuOptionsForm.value.active;
-      const menuItemObj = { key, description, img, active };      
+    this.isLoading = true;
 
-      return this._firestoreCollectionService.addMenuOptionItem(menuItemObj).then(() => {
-        this.clearMenuOptionForm();
-        this.menuFileLocalPath = this.menuDefaultImg;
-        this.ismenuOptionsFormActive = false;
-        this.errorOnAddMenuOption = '';
-      }, error => {
-        this.errorOnAddMenuOption = error.message;
-      });      
+    const key = menuOptionsForm.value.key;
+    const description = menuOptionsForm.value.description;
+    const active = menuOptionsForm.value.active;
+    const menuItemObj = { key, description, active };      
+
+    return this._firestoreCollectionService.addMenuOptionItem(menuItemObj).then(() => {
+      this.clearMenuOptionForm();
+      this.ismenuOptionsFormActive = false;
+      this.errorOnAddMenuOption = '';
+      this.isLoading = false;
+    }, error => {
+      this.errorOnAddMenuOption = error.message;
+      this.isLoading = false;
     });
-  };
-
-  selectMenuImg(event: any) {
-    this.menuFile = event.target.files[0];
-    if (this.menuFile) {
-      const reader = new FileReader();
-      reader.onload = (event: any) => {
-        this.menuFileLocalPath = event.target.result;
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    } else {
-      this.menuFileLocalPath = this.menuDefaultImg;
-    };    
-  };
-
-  uploadImgToFirestore() {
-    return new Promise<void>((resolve, reject) => {
-      this._angularFireStorage.upload(
-        "/optionMenuImages/" +
-        this._generateIdService.generateId() +
-        this.menuFile.name, this.menuFile)
-      .then((uploadTask) => {
-        uploadTask.ref.getDownloadURL()
-        .then(url => {          
-          this.menuOptionsForm.value.img = url;
-          this.erroOnGetDWURL = '';         
-          resolve();
-        }, error => {
-          this.erroOnGetDWURL = error.message;
-        });
-        this.errorOnUploadImg = ''; 
-      }, error => {
-        this.errorOnUploadImg = error.message;
-      })
-    })
   };
 
   deleteMenuOptionPopUp(menuOption: MenuOption) {
@@ -152,16 +104,11 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
   };
 
   deleteMenuOption() {
-    this._firestoreCollectionService.deleteItemFromFireStorage(this.currentOption.img!).then(() => {
-      this._firestoreCollectionService.deleteMenuOptionItem(this.currentOption).then(() => {
-        this.clearMenuOptionForm();
-        this.errorOnDeleteMenuOption = '';
-      }, error => {
-        this.errorOnDeleteMenuOption = error.message;
-      });
-      this.erroOnDeleteItemFromFS = '';
+    this._firestoreCollectionService.deleteMenuOptionItem(this.currentOption).then(() => {
+      this.clearMenuOptionForm();
+      this.errorOnDeleteMenuOption = '';
     }, error => {
-      this.erroOnDeleteItemFromFS = error.message;
+      this.errorOnDeleteMenuOption = error.message;
     });
   };
 
@@ -170,12 +117,9 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
     this.isInEditMenuEditOptionMode = true;
     this.currentOption = menuOptionItem;
 
-    this.menuOptionsForm = this._fb.group({
-      key: [menuOptionItem.key, Validators.required],
-      description: [menuOptionItem.description, Validators.required],
-      active: [menuOptionItem.active],
-      img: [null]
-    });
+    this.menuOptionsForm.controls['key'].setValue(menuOptionItem.key);
+    this.menuOptionsForm.controls['description'].setValue(menuOptionItem.description);
+    this.menuOptionsForm.controls['active'].setValue(menuOptionItem.active);
   };
 
   submitmenuEditOptionsForm() {
@@ -191,38 +135,6 @@ export class ChatMenuOptionsComponent implements OnInit, OnDestroy {
       this.errorOnAddMenuOptionItem = '';
     }, error => {
       this.errorOnAddMenuOptionItem = error.message;
-    })
-  };
-
-  editMenuImg(event: any, menuOption: MenuOption) {
-    this.currentOption = menuOption;
-    this.menuFile = event.target.files[0];
-    if (this.menuFile) {
-      const reader = new FileReader();
-      reader.onload = (event: any) => {
-        this.menuEditedImage = event.target.result;
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    } else {
-      this.menuEditedImage = undefined!;
-      this.currentOption = undefined!;
-    };
-  };
-
-  applyNewImg() {
-    this._firestoreCollectionService.deleteItemFromFireStorage(this.currentOption.img!).then(() => {
-      this.uploadImgToFirestore().then(() => {
-        console.log(this.menuEditedImage);
-        this._firestoreCollectionService.editMenuOptioImage(this.currentOption.id!, this.menuOptionsForm.value.img).then(() => {
-          this.clearMenuOptionForm();
-          this.erroOnEditMenuOption = '';
-        }, error => {
-          this.erroOnEditMenuOption = error.message;
-        })   
-      });
-      this.erroOnDeleteItemFromFS = '';
-    }, error => {
-      this.erroOnDeleteItemFromFS = error.message;
     })
   };
 }

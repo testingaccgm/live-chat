@@ -1,6 +1,6 @@
-<div>
-  <div>
-    <p>Pending chats</p>
+<div class="chats">
+  <div class="chats__pending">
+    <p class="chats__title">Pending chats</p>
     <div>
       <div *ngFor="let domainEl of activeChats">
         <div>
@@ -21,20 +21,22 @@
     </div>
   </div>
   
-  <div>
-    <p>Chats</p>
+  <div class="chats__chats">
+    <p class="chats__title">Chats</p>
     <div>
       <div *ngFor="let domainEl of activeChats">
         <div *ngFor="let chat of domainEl.chats">
-          <div *ngIf="chat.status == 'active' && chat.operatorEmail == user?.email">
-            <div (click)="setActiveChat(chat.id)">
-              <p>{{ chat.username }}</p>
-              <p>{{ chat.option }}</p>
-              <p>{{ chat.domain }}</p>
+          <div             
+            class="chats__chats__nav" 
+            *ngIf="chat.status == 'active' && chat.operatorEmail == user?.email">
+            <div [ngClass]="{'active-chat' : chat.id == activeChat}" class="chats__chats__nav__chat-info" (click)="setActiveChat(chat.id)">
+              <p><span>user:</span> {{ chat.username }}</p>
+              <p><span>option:</span> {{ chat.option }}</p>
+              <p><span>domain:</span> {{ chat.domain }}</p>
             </div>
-            <div *ngIf="chat.id == activeChat">
+            <div class="chats__chats__content" *ngIf="chat.id == activeChat">
               <div>
-                <div>
+                <div class="chats__chats__content__chat-history">
                   <app-chat-form-history [chatHistory]="chat.chatHistory"></app-chat-form-history>
                 </div>
                 <div>

@@ -1,4 +1,6 @@
 <div>
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
   <button
     style="margin-bottom: 10px;"
     class="btn-default narrow-btn"
@@ -9,119 +11,84 @@
   </button>
 
   <div>
-    <form 
-      class="menu-option-form"
-      *ngIf="ismenuOptionsFormActive" 
-      [formGroup]="menuOptionsForm" 
-      (ngSubmit)="isInEditMenuEditOptionMode ? submitmenuEditOptionsForm() : submitMenuOptionsForm(menuOptionsForm)">
-      <div class="img-upload">
-        <div *ngIf="!isInEditMenuEditOptionMode">
-          <img [src]="menuFileLocalPath">
-        </div>
-        <div>
-          <input formControlName="img"
-          #selectImg style="display: none;"
-          type="file" 
-          (change)="selectMenuImg($event)" 
-          accept=".png,.jpg,.jpeg,.svg,.heic">
-        </div>
-        <div>
-        <button 
-          class="btn-default narrow-btn"
-          type="button"
-          (click)="selectImg.click()">
-            Select image
-        </button>
-        </div>
+    <div [ngClass]="{'fixed-pop-up-container': isInEditMenuEditOptionMode}">
+      <div [ngClass]="{'pop-up-body': isInEditMenuEditOptionMode}">
+        <form
+          class="menu-option-form"
+          *ngIf="ismenuOptionsFormActive" 
+          [formGroup]="menuOptionsForm" 
+          (ngSubmit)="isInEditMenuEditOptionMode ? submitmenuEditOptionsForm() : submitMenuOptionsForm(menuOptionsForm)">
+    
+          <div class="menu-option-form__item active">
+            <label for="active">Active</label>
+            <input type="checkbox" name="active" formControlName="active">
+          </div>     
+    
+          <div class="menu-option-form__item input-option">
+            <label for="key">Key</label>
+            <input type="text" name="key" formControlName="key">
+          </div>
+    
+          <div class="menu-option-form__item input-option">
+            <label for="description">Description</label>
+            <input type="text" name="description" formControlName="description">
+          </div>
+    
+          <div class="menu-option-form__buttons">
+            <button
+              class="btn-default narrow-btn"
+              type="submit" 
+              [disabled]="menuOptionsForm.invalid">
+                {{ isInEditMenuEditOptionMode ? 'Change' : 'Add' }}
+            </button>
+            <button
+              class="btn-default narrow-btn"
+              type="button" 
+              (click)="clearMenuOptionForm()">
+                Cancel
+            </button>
+          </div>
+      </form>
       </div>
-
-      <div class="menu-option-form__item active">
-        <label for="active">Active</label>
-        <input type="checkbox" name="active" formControlName="active">
-      </div>     
-
-      <div class="menu-option-form__item">
-        <div class="input-option">
-          <label for="key">Key</label>
-          <input type="text" name="key" formControlName="key">
-        </div>
-        <ul class="error">
-          <li *ngIf="menuOptionsForm.get('key')!.hasError('pattern')">Аllowed characters: a-z</li>
-        </ul>
-      </div>
-
-      <div class="menu-option-form__item input-option">
-        <label for="description">Description</label>
-        <input type="text" name="description" formControlName="description">
-      </div>
-
-      <div class="menu-option-form__buttons">
-        <button
-          class="btn-default narrow-btn"
-          type="submit" 
-          [disabled]="menuOptionsForm.invalid">
-            {{ isInEditMenuEditOptionMode ? 'Change' : 'Add' }}
-        </button>
-        <button
-          class="btn-default narrow-btn"
-          type="button" 
-          (click)="clearMenuOptionForm()">
-            Cancel
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
 
   <div>
-    <table>
+    <table class="table">
       <tr>
-        <th></th>
-        <th></th>
-        <th>Image</th>
         <th>Activity</th>
         <th>Description</th>
+        <th>Key</th>
+        <th></th>
       </tr>
       <tr *ngFor="let menuOption of menuOptions">
         <td>
-          <button type="button" (click)="editOption(menuOption)">Edit</button>
-        </td>
-        <td>
-          <button type="button" (click)="deleteMenuOptionPopUp(menuOption)">Delete</button>
-        </td>
-        <td>
-          <div>
-            <input style="display: none;"
-            #editImg
-            type="file" 
-            (change)="editMenuImg($event, menuOption)" 
-            accept=".png,.jpg,.jpeg,.svg,.heic">
-          </div>
-          <img [src]="menuEditedImage && currentOption.id == menuOption.id ? menuEditedImage : menuOption.img">
-          <button type="button" (click)="editImg.click()">Edit Image (icon)</button>
-          <button type="button" *ngIf="menuEditedImage && currentOption.id == menuOption.id" (click)="applyNewImg()">Apply (icon)</button>
-          <button type="button" *ngIf="menuEditedImage && currentOption.id == menuOption.id" (click)="clearMenuOptionForm()">Cancel (icon)</button>
-        </td>
-        <td>
-          <label>Active</label>
+          <label style="margin-right: 5px;">Active</label>
           <input type="checkbox" disabled [checked]="menuOption.active ? 'checked' : null">
         </td>
         <td>{{ menuOption.description }}</td>
+        <td>{{ menuOption.key }}</td>
+        <td>
+          <button class="btn-default narrow-btn" style="margin-right: 10px; min-width: 65px;" type="button" (click)="editOption(menuOption)">Edit</button>
+          <button class="btn-default narrow-btn" style="min-width: 65px;" type="button" (click)="deleteMenuOptionPopUp(menuOption)">Delete</button>
+        </td>
       </tr>
     </table>
   </div>
 
-  <div *ngIf="isDeleteMenuOptionPopUpActive">
-    <p>Menu {{ currentOption.description }} will be deleted!</p>
-    <button type="button" (click)="deleteMenuOption()">OK</button>
-    <button type="button" (click)="clearMenuOptionForm()">Cancel</button>
+  <div class="fixed-pop-up-container" *ngIf="isDeleteMenuOptionPopUpActive">
+    <div class="pop-up-body">
+      <p>Menu {{ currentOption.description }} will be deleted!</p>
+      <div class="pop-up-buttons">
+        <button class="btn-default narrow-btn" style="margin-right: 10px;" type="button" (click)="deleteMenuOption()">OK</button>
+        <button class="btn-default narrow-btn" style="margin-right: 10px;" type="button" (click)="clearMenuOptionForm()">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <ul class="error">
     <li *ngIf="erroOnGetMenuOptions">{{ erroOnGetMenuOptions }}</li>
-    <li *ngIf="errorOnUploadImg">{{ errorOnUploadImg }}</li>
     <li *ngIf="errorOnAddMenuOption">{{ errorOnAddMenuOption }}</li>
-    <li *ngIf="erroOnGetDWURL">{{ erroOnGetDWURL }}</li>
-    <li *ngIf="erroOnDeleteItemFromFS">{{ erroOnDeleteItemFromFS }}</li>
     <li *ngIf="errorOnDeleteMenuOption">{{ errorOnDeleteMenuOption }}</li>
     <li *ngIf="errorOnAddMenuOptionItem">{{ errorOnAddMenuOptionItem }}</li>
     <li *ngIf="erroOnEditMenuOption">{{ erroOnEditMenuOption }}</li>
