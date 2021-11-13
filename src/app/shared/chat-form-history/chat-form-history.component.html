@@ -1,11 +1,13 @@
 <div class="chat-history" #chatHistoryContainer>
   <div *ngFor="let message of chatHistory">
-    <div>
-      <div>
-        <p>{{ message.nick }}</p>
-        <p>{{ message.time.toDate() | date:'HH:mm' }}</p>
+    <div class="chat-history__buble-container">
+      <div class="chat-history__buble-container__buble">
+        <div class="chat-history__buble-container__buble__header">
+          <p>{{ message.nick }}</p>
+          <p>{{ message.time.toDate() | date:'HH:mm' }}</p>
+        </div>
+        <p>{{ message.message }}</p>
       </div>
-      <p>{{ message.message }}</p>
     </div>
   </div>
 </div>

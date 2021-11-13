@@ -1,4 +1,5 @@
 @import "../../../assets/styles/variables/colors";
+@import "../../../assets/styles/mixins/shortand";
 
 .chats {
   display: flex;
@@ -12,13 +13,34 @@
   &__chats {
     width: calc(100% - 170px);
     position: relative;
+    height: 100%;
+    overflow: scroll;
+    @include scrollbar(normal);
     &__content {
       position: absolute;
       display: flex;
       top: 29px;
       left: 210px;
+      width: calc(100% - 210px);
       &__chat-history {
         width: 700px;
+      }
+      &__clint-info-container {
+        width: 100%;
+        min-width: 220px;
+        &__clint-info {
+          padding: 5px 0 5px 10px;
+          span {
+            display: inline-block;
+            width: 64px;
+          }
+          button {
+            min-width: 100px;
+          }
+          textarea {
+            @include default-textarea;
+          }
+        }
       }
     }
     &__nav {

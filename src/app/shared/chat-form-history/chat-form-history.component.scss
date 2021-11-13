@@ -1,4 +1,5 @@
 @import "../../../assets/styles/mixins/shortand";
+@import "../../../assets/styles/variables/colors";
 
 .chat-history {
   height: calc(100vh - 200px);
@@ -6,4 +7,18 @@
   margin-bottom: 10px;
   overflow: scroll;
   @include scrollbar(normal);
+  &__buble-container {
+    &__buble {
+      border-radius: 10px;
+      border: 1px solid var(--color8);
+      padding: 5px;
+      min-width: 40%;
+      max-width: 70%;
+      float:  left;
+      clear: left;
+      &__header {
+
+      }
+    }
+  }
 }

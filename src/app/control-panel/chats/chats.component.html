@@ -43,32 +43,68 @@
                   <app-chat-form [userInfo]="{nick: chat.operatorDisplayName, chatId: chat.id, domain: chat.domain}"></app-chat-form>
                 </div>
               </div>
-              <div>
-                <p>Client's info</p>
-                <div>
-                  <p>{{ chat.clientInformation[0].ip }}</p>
-                  <p>{{ chat.clientInformation[0].city }}</p>
-                  <p>{{ chat.clientInformation[0].country }}</p>
+              <div class="chats__chats__content__clint-info-container">
+                <p class="chats__title">Client's info</p>
+                <div class="chats__chats__content__clint-info-container__clint-info">
+                  <p><span>IP: </span>{{ chat.clientInformation[0].ip }}</p>
+                  <p><span>City: </span>{{ chat.clientInformation[0].city }}</p>
+                  <p><span>Country: </span>{{ chat.clientInformation[0].country }}</p>
                   <div>
-                    <button type="button" (click)="enableBlockOptio()" *ngIf="!isBlockOptionActive">Block client</button>
+                    <button 
+                      class="btn-default narrow-btn"
+                      style="margin: 10px 0;" 
+                      type="button" 
+                      (click)="enableBlockOptio()" 
+                      *ngIf="!isBlockOptionActive">
+                        Block client
+                    </button>
                     <form
                       *ngIf="isBlockOptionActive"
                       [formGroup]="blockForm" 
-                      (ngSubmit)="submitBlockForm(chat, blockForm)">
+                      (ngSubmit)="submitBlockForm(chat, blockForm)"
+                      style="margin: 10px 0;">
                       <textarea formControlName="reason" placeholder="Blocking reason..."></textarea>
                       <div>
-                        <button type="submit" [disabled]="blockForm.invalid">Block</button>
-                        <button type="button" (click)="cancelBLokcOption()">Close</button>
+                        <button 
+                          class="btn-default narrow-btn" 
+                          style="margin-right: 10px;" 
+                          type="submit" 
+                          [disabled]="blockForm.invalid">
+                            Block
+                        </button>
+                        <button 
+                          class="btn-default narrow-btn" 
+                          type="button" 
+                          (click)="cancelBLokcOption()">
+                            Close
+                        </button>
                       </div>
                     </form>                   
                   </div>
                   <div>
-                    <button *ngIf="!isCloseChatPopUpAcive" type="button" (click)="enableChatPopUp()">Close Chat</button>
-                    <div *ngIf="isCloseChatPopUpAcive">
-                      <p>Аre you sure you want to close this chat?</p>
-                      <div>
-                        <button (click)="closeChat(chat)">Yes</button>
-                        <button (click)="disableCloseChatOption()">No</button>
+                    <button 
+                      class="btn-default narrow-btn" 
+                      *ngIf="!isCloseChatPopUpAcive" 
+                      type="button" 
+                      (click)="enableChatPopUp()">
+                        Close Chat
+                    </button>
+                    <div class="fixed-pop-up-container" *ngIf="isCloseChatPopUpAcive">
+                      <div class="pop-up-body">
+                        <p>Аre you sure you want to close this chat?</p>
+                        <div class="pop-up-buttons">
+                          <button 
+                            class="btn-default narrow-btn" 
+                            style="margin-right: 10px;"  
+                            (click)="closeChat(chat)">
+                              Yes
+                          </button>
+                          <button 
+                            class="btn-default narrow-btn" 
+                            (click)="disableCloseChatOption()">
+                              No
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
