@@ -6,12 +6,32 @@
   align-items: flex-start;
   height: calc(100vh - 48px);
   &__pending {
-    width: 170px;
+    width: 250px;
     height: 100%;
     border-right: 1px solid var(--color8);
+    &__container {
+      height: calc(100% - 30px);
+      overflow: scroll;
+      @include scrollbar(normal);
+      &__pending-chat {
+        height: 300px;
+        overflow: scroll;
+        @include scrollbar(normal);
+        &__domain {
+          @extend .chats__title;
+          background-color: lighten($yellow, 40%);
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 10px;
+        }
+        .client-info {
+          display: inline-block;
+          width: 53px;
+        }
+      }
+    }
   }
   &__chats {
-    width: calc(100% - 170px);
+    width: calc(100% - 250px);
     position: relative;
     height: 100%;
     overflow: scroll;
@@ -20,8 +40,8 @@
       position: absolute;
       display: flex;
       top: 29px;
-      left: 210px;
-      width: calc(100% - 210px);
+      left: 260px;
+      width: calc(100% - 260px);
       &__chat-history {
         width: 700px;
       }
@@ -44,7 +64,7 @@
       }
     }
     &__nav {
-      width: 200px;
+      width: 250px;
       &__chat-info {
         padding: 5px;
         cursor: pointer;

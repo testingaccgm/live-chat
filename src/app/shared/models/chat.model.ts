@@ -14,10 +14,11 @@ export class Chat {
 
 export class ChatHistiry {
   constructor(
-    public nick: string,
     public message: string,
     public domain: string,
-    public time: firebase.default.firestore.Timestamp
+    public time: firebase.default.firestore.Timestamp,
+    public client?: string,
+    public operator?: string
   ) {}
 };
 

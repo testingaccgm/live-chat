@@ -32,7 +32,7 @@
       <app-chat-form-history [chatHistory]="currentChat[0].chatHistory"></app-chat-form-history>
     </div>
     <div>
-      <app-chat-form [userInfo]="{nick: clientUsername, chatId: clientChatId, domain: clientChatDomain}"></app-chat-form>
+      <app-chat-form [userInfo]="{chatId: clientChatId, domain: clientChatDomain, client: clientUsername}"></app-chat-form>
     </div>
   </div>
 </div>

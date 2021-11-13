@@ -173,3 +173,21 @@ button:disabled {
     border-top-right-radius: 10px;
   }
 }
+
+// client
+
+// operator
+.chats__chats__content__chat-history {
+  .client {
+    background-color: lighten($gray, 30%);
+  }
+  .operator {
+    background-color: lighten($yellow, 40%);
+  }
+  .client-container {
+    justify-content: flex-start;
+  }
+  .operator-container {
+    justify-content: flex-end;
+  }
+}

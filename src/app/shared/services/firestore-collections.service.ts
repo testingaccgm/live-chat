@@ -191,17 +191,28 @@ export class FirestoreCollectionsService {
   };
 
   addMessage(
-    chat: { nick: string, chatId: string, domain: string }, 
+    chat: { chatId: string, domain: string, client?: string, operator?: string }, 
     chatFormObj: { message: string, time: firebase.default.firestore.Timestamp }
     ){
-    return this._firestore.collection(chat.domain).doc('activeChats')
-    .collection('activeChats').doc(chat.chatId).update({
-      chatHistory: firebase.default.firestore.FieldValue.arrayUnion({
-        nick: chat.nick,
-        message: chatFormObj.message,
-        time: chatFormObj.time
-      })
-    });
+    if (chat.client != undefined) {
+      return this._firestore.collection(chat.domain).doc('activeChats')
+      .collection('activeChats').doc(chat.chatId).update({
+        chatHistory: firebase.default.firestore.FieldValue.arrayUnion({
+          client: chat.client,
+          message: chatFormObj.message,
+          time: chatFormObj.time
+        })
+      });
+    } else {
+      return this._firestore.collection(chat.domain).doc('activeChats')
+      .collection('activeChats').doc(chat.chatId).update({
+        chatHistory: firebase.default.firestore.FieldValue.arrayUnion({
+          operator: chat.operator,
+          message: chatFormObj.message,
+          time: chatFormObj.time
+        })
+      });
+    }
   };
 
   blockUserByIp(blockedUser: BlockedUser) {
