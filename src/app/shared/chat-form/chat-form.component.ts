@@ -14,6 +14,8 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
   @ViewChild('textarea') textarea!: ElementRef<HTMLElement>;
   chatForm!: FormGroup;
 
+  errorOnAddMessage: string = '';
+
   constructor(
     private _firestoreCollections: FirestoreCollectionsService,
     private _fb: FormBuilder
@@ -40,11 +42,9 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
     const domain = this.userInfo.domain;
 
     if (this.userInfo.client != undefined) {
-      console.log('client');
       const client = this.userInfo.client;
       userInfoObj = { chatId, domain, client }
     } else {
-      console.log('operator');
       const operator = this.userInfo.operator;
       userInfoObj = { chatId, domain, operator }
     };    
@@ -55,8 +55,9 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
 
     this._firestoreCollections.addMessage(userInfoObj, chatFormObj).then(() => {
       chatForm.reset();
+      this.errorOnAddMessage = '';
     }, error => {
-
+      this.errorOnAddMessage = error.message;
     });
   };
 

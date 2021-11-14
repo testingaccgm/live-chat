@@ -12,11 +12,17 @@ import { GenerateIdService } from '../shared/services/generate-id.service';
 import { Chat, ClientInformation } from '../shared/models/chat.model';
 import { BlockedUser } from '../shared/models/blocked-user.model';
 
+export interface IClientChatData {
+  chatDomain: string,
+  chatId: string
+}
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
+
 export class ChatComponent implements OnInit, OnDestroy {
   startChatForm!: FormGroup;
   menuOptions!: MenuOption[];
@@ -30,6 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   clientUsername!: string;
   clientChatDomain!: string;
   clientChatId!: string;
+  clientChatData!: IClientChatData;
 
   currentChat: Chat[] = [];
   private _currentChatSubscription!: Subscription;
@@ -41,6 +48,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   isBlocked: boolean = undefined!;
 
+  errorOnGetActiveMenuOptions: string = '';
+  erroOnGetDomains: string = '';
+  errorOnGetChat: string = '';
+  errorOnAddChat: string = '';
+  errorOnGetBlockedUsers: string = '';
+  errorOnGetClientInfo: string = '';
+
   constructor(
     private _fb: FormBuilder,
     private _firestoreCollections: FirestoreCollectionsService,
@@ -51,31 +65,54 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getClientInformation();
-
-    this.clientUsername = JSON.parse(localStorage.getItem('username')!);
-    this.clientChatId = JSON.parse(localStorage.getItem('chatId')!);
-    this.clientChatDomain = JSON.parse(localStorage.getItem('domain')!);
-        
-    this.startChatForm = this._fb.group({
-      username: [this.clientUsername, Validators.required],
-      option: [null, Validators.required]
-    });
-
-    this._menuOptionsSubscription = this._firestoreCollections.getActiveMenuOptions()
-    .subscribe(menuOptions => {
-      this.menuOptions = menuOptions.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ... e.payload.doc.data() as MenuOption
-        }
-      })
-    }, error => {
-
-    });
-
     if (this._route.snapshot.queryParams['domain']) {
       this.domain = this._route.snapshot.queryParams['domain'];
+
+      this.clientUsername = JSON.parse(localStorage.getItem('username/' + this.domain)!);
+
+      this.getClientInformation();
+
+      this._menuOptionsSubscription = this._firestoreCollections.getActiveMenuOptions()
+      .subscribe(menuOptions => {
+        this.menuOptions = menuOptions.map(e => {
+          return {
+            id: e.payload.doc.id,
+            ... e.payload.doc.data() as MenuOption
+          }
+        })
+        this.errorOnGetActiveMenuOptions = '';
+      }, error => {
+        this.errorOnGetActiveMenuOptions = error.message;
+      });
+
+      this.startChatForm = this._fb.group({
+        username: [this.clientUsername, Validators.required],
+        option: [null, Validators.required]
+      });
+      
+    
+      this.clientChatData = JSON.parse(localStorage.getItem('clientChatData/' + this.domain)!);
+      if (this.clientChatData) {
+        this.clientChatId = this.clientChatData.chatId;
+        this.clientChatDomain = this.clientChatData.chatDomain;
+
+        this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
+          this.currentChat = chat.map(e => {
+            return {
+              ... e.payload.doc.data() as Chat
+            }
+          })
+          
+          if(this.currentChat.length == 0) {
+            localStorage.removeItem('clientChatData/' + this.domain);
+            this._currentChatSubscription.unsubscribe();
+          }
+  
+          this.errorOnGetChat = '';
+        }, error => {
+          this.errorOnGetChat = error.message;
+        })
+      }
 
       this._domainsSubscription = this._firestoreCollections.getDomains().subscribe(domains => {
         this.domains = domains.map(e => {
@@ -96,31 +133,13 @@ export class ChatComponent implements OnInit, OnDestroy {
             }
           }
         });
-  
+        this.erroOnGetDomains = '';
       }, error => {
-  
+        this.erroOnGetDomains = error.message;
       });
     } else {
       this._router.navigate(['/error']);
     };
-
-    if (this.clientChatId && this.clientChatDomain) {
-      this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
-        this.currentChat = chat.map(e => {
-          return {
-            ... e.payload.doc.data() as Chat
-          }
-        })
-        
-        if(this.currentChat.length == 0) {
-          localStorage.removeItem('domain');
-          localStorage.removeItem('chatId');
-          this._currentChatSubscription.unsubscribe();
-        }
-      }, error => {
-
-      })
-    };      
   };
 
   ngOnDestroy(): void {
@@ -152,12 +171,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     const id = this._generateId.generateId();
     const chat = { username, clientInformation, option, domain, status, id};
 
-    this.clientChatId = id;
-    this.clientChatDomain = domain;
     this.clientUsername = username;
-    localStorage.setItem('chatId', JSON.stringify(id));
-    localStorage.setItem('domain', JSON.stringify(domain));
-    localStorage.setItem('username', JSON.stringify(username));
+    localStorage.setItem('username/' + this.domain, JSON.stringify(this.clientUsername));
+
+    this.clientChatDomain = domain;
+    this.clientChatId = id;
+    const clientChatInfo: IClientChatData = {
+      chatDomain: this.clientChatDomain,
+      chatId: this.clientChatId
+    };
+    localStorage.setItem('clientChatData/' + this.domain, JSON.stringify(clientChatInfo));
     
     this._firestoreCollections.addChat(chat, 'activeChats').then(() => {
       this._currentChatSubscription = this._firestoreCollections.getChat(this.clientChatDomain, 'activeChats', this.clientChatId).subscribe(chat => {
@@ -165,13 +188,14 @@ export class ChatComponent implements OnInit, OnDestroy {
           return {
             ... e.payload.doc.data() as Chat
           }
-        })
-             
+        });
+        this.errorOnGetChat = '';
       }, error => {
-
-      })
+        this.errorOnGetChat = error.message;
+      });
+      this.errorOnAddChat = '';
     }, error => {
-
+      this.errorOnAddChat = error.message;
     });
   };
 
@@ -209,12 +233,13 @@ export class ChatComponent implements OnInit, OnDestroy {
             }
           }
         });
+        this.errorOnGetBlockedUsers = '';
       }, error => {
-  
+        this.errorOnGetBlockedUsers = error.message;
       });
-
-    }, (error) => {
-
+      this.errorOnGetClientInfo = '';
+    }, error => {
+      this.errorOnGetClientInfo = error;
     });
   };
 }

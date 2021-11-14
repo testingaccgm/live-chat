@@ -6,3 +6,6 @@
   <textarea class="chat-form__message" #textarea formControlName="message"></textarea>
   <button class="chat-form__submit-btn" type="submit"></button>
 </form>
+<ul class="error">
+  <li *ngIf="errorOnAddMessage">{{ errorOnAddMessage }}</li>
+</ul>

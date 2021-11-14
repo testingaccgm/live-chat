@@ -1,42 +1,53 @@
-<div *ngIf="isBlocked != undefined && isBlocked != true">
-  <form 
-    [formGroup]="startChatForm" 
-    (ngSubmit)="submitStartChatForm(startChatForm)"
-    *ngIf="currentChat[0]?.status !== 'pending' && currentChat[0]?.status !== 'active'">
-    <div>
-      <label for="username">Username</label>
-      <input type="text" name="username" formControlName="username">
+<div>
+  <div *ngIf="isBlocked != undefined && isBlocked != true">
+    <form 
+      [formGroup]="startChatForm" 
+      (ngSubmit)="submitStartChatForm(startChatForm)"
+      *ngIf="currentChat[0]?.status !== 'pending' && currentChat[0]?.status !== 'active'">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" formControlName="username">
+      </div>
+      <div>
+        <mat-form-field>
+        <mat-select formControlName="option">
+          <mat-option *ngFor="let option of menuOptions" [value]="option.key">
+            <div>
+              <p>{{ option.description }}</p>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+      <div>
+        <button type="submit" [disabled]="startChatForm.invalid">Start chat</button>
+      </div>
+    </form>
+  
+    <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'pending'">
+      Your chat will be accepted soon!
     </div>
-    <div>
-      <mat-form-field>
-      <mat-select formControlName="option">
-        <mat-option *ngFor="let option of menuOptions" [value]="option.key">
-          <div>
-            <p>{{ option.description }}</p>
-          </div>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  
+    <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
+      <div>
+        <app-chat-form-history [chatHistory]="currentChat[0].chatHistory"></app-chat-form-history>
+      </div>
+      <div>
+        <app-chat-form [userInfo]="{chatId: clientChatId, domain: clientChatDomain, client: clientUsername}"></app-chat-form>
+      </div>
     </div>
-    <div>
-      <button type="submit" [disabled]="startChatForm.invalid">Start chat</button>
-    </div>
-  </form>
-
-  <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'pending'">
-    Your chat will be accepted soon!
+  </div>
+  
+  <div *ngIf="isBlocked != undefined && isBlocked != false">
+    Block acc msg
   </div>
 
-  <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
-    <div>
-      <app-chat-form-history [chatHistory]="currentChat[0].chatHistory"></app-chat-form-history>
-    </div>
-    <div>
-      <app-chat-form [userInfo]="{chatId: clientChatId, domain: clientChatDomain, client: clientUsername}"></app-chat-form>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="isBlocked != undefined && isBlocked != false">
-  Block acc msg
+  <ul class="error">
+    <li *ngIf="errorOnGetActiveMenuOptions">{{ errorOnGetActiveMenuOptions }}</li>
+    <li *ngIf="erroOnGetDomains">{{ erroOnGetDomains }}</li>
+    <li *ngIf="errorOnGetChat">{{ errorOnGetChat }}</li>
+    <li *ngIf="errorOnAddChat">{{ errorOnAddChat }}</li>
+    <li *ngIf="errorOnGetBlockedUsers">{{ errorOnGetBlockedUsers }}</li>
+    <li *ngIf="errorOnGetClientInfo">{{ errorOnGetClientInfo }}</li>
+  </ul>
 </div>
