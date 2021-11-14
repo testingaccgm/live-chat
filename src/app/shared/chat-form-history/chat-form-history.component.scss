@@ -2,7 +2,8 @@
 @import "../../../assets/styles/variables/colors";
 
 .chat-history {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 250px);
+  height: calc(var(--vh, 1vh) * 100 - 200px);
   border: 1px solid var(--color8);
   margin-bottom: 10px;
   padding: 3px 3px 0 3px;

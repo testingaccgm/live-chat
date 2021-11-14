@@ -53,7 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   errorOnGetChat: string = '';
   errorOnAddChat: string = '';
   errorOnGetBlockedUsers: string = '';
-  errorOnGetClientInfo: string = '';
+  errorOnGetClientInfo: string = '';  
 
   constructor(
     private _fb: FormBuilder,
