@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as firebase from 'firebase/app';
 
@@ -9,7 +9,7 @@ import { FirestoreCollectionsService } from '../services/firestore-collections.s
   templateUrl: './chat-form.component.html',
   styleUrls: ['./chat-form.component.scss']
 })
-export class ChatFormComponent implements OnInit, AfterViewInit {
+export class ChatFormComponent implements OnInit, AfterViewChecked {
   @Input() userInfo!: { chatId: string, domain: string, client?: string, operator?: string };
   @ViewChild('textarea') textarea!: ElementRef<HTMLElement>;
   chatForm!: FormGroup;
@@ -27,7 +27,7 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
     });
   };
 
-  ngAfterViewInit(): void {
+  ngAfterViewChecked(): void {
     this.textarea.nativeElement.focus();
   };
 
