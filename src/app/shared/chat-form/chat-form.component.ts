@@ -23,7 +23,7 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.chatForm = this._fb.group({
-      message: [null, Validators.required]
+      message: [null, [Validators.required]]
     });
   };
 
@@ -49,7 +49,7 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
       userInfoObj = { chatId, domain, operator }
     };    
 
-    const message = chatForm.value.message;
+    const message = chatForm.value.message.trim();
     const time = firebase.default.firestore.Timestamp.now();
     const chatFormObj = { message, time };
 
@@ -62,7 +62,7 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
   };
 
   submitOnEnter(event:any, chatForm: FormGroup) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && chatForm.value.message?.trim() != '') {
       this.submitChatForm(chatForm);
     }
   };

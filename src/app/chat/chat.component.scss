@@ -1,0 +1,23 @@
+@import "../../assets/styles/variables/colors";
+@import "../../assets/styles/mixins/shortand";
+@import "../../assets/styles/shared/sign-forms";
+
+.client-chat {
+  &__header {
+    background-color: $yellow;
+    height: 85px;
+  }
+  &__form {
+    padding: 5px;
+  }
+
+  .sign-form {
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1%;
+    .name {
+      margin-top: 10px;
+    }
+  }
+}

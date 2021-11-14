@@ -1,26 +1,43 @@
-<div>
-  <div *ngIf="isBlocked != undefined && isBlocked != true">
+<div class="client-chat">
+  <div class="client-chat__header">
+    <p style="font-size: 20px; font-weight: bold; line-height: 85px;">LOGO</p>
+  </div>
+  <div 
+    class="client-chat__form"
+    *ngIf="isBlocked != undefined && isBlocked != true">
     <form 
+      class="sign-form"
       [formGroup]="startChatForm" 
       (ngSubmit)="submitStartChatForm(startChatForm)"
       *ngIf="currentChat[0]?.status !== 'pending' && currentChat[0]?.status !== 'active'">
-      <div>
+
+      <div class="sign-form__sign-element">
         <label for="username">Username</label>
-        <input type="text" name="username" formControlName="username">
+        <div class="name">
+          <div class="name-img"></div>
+          <input type="text" name="username" formControlName="username" placeholder="Leave blank if you don't have...">
+        </div>
       </div>
-      <div>
+
+      <div class="client-chat__form__select">
         <mat-form-field>
-        <mat-select formControlName="option">
-          <mat-option *ngFor="let option of menuOptions" [value]="option.key">
-            <div>
-              <p>{{ option.description }}</p>
-            </div>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+          <mat-select formControlName="option">
+            <mat-option *ngFor="let option of menuOptions" [value]="option.key">
+              <div>
+                <p>{{ option.description }}</p>
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div>
-        <button type="submit" [disabled]="startChatForm.invalid">Start chat</button>
+        <button 
+          class="btn-default" 
+          style="margin-top: 20px;"
+          type="submit" 
+          [disabled]="startChatForm.invalid">
+            Start chat
+        </button>
       </div>
     </form>
   

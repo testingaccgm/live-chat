@@ -80,16 +80,16 @@ export class ChatComponent implements OnInit, OnDestroy {
             ... e.payload.doc.data() as MenuOption
           }
         })
+
+        this.startChatForm = this._fb.group({
+          username: [this.clientUsername],
+          option: [this.menuOptions[0].key, Validators.required]
+        });
+        
         this.errorOnGetActiveMenuOptions = '';
       }, error => {
         this.errorOnGetActiveMenuOptions = error.message;
-      });
-
-      this.startChatForm = this._fb.group({
-        username: [this.clientUsername, Validators.required],
-        option: [null, Validators.required]
-      });
-      
+      });      
     
       this.clientChatData = JSON.parse(localStorage.getItem('clientChatData/' + this.domain)!);
       if (this.clientChatData) {
