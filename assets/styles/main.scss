@@ -1,4 +1,3 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '~@angular/material' as mat;
@@ -49,14 +48,13 @@ $live-chat-theme: mat.define-light-theme((
 }
 
 body {
-  min-width: 320px;
   background-color: var(--color1);
   @include scrollbar (body);
 }
 
 ::selection {
-  background: $red;
-  color: $white;
+  background: $yellow;
+  color: $black;
 }
 
 .container {
@@ -68,20 +66,13 @@ img {
   user-select: none;
 }
 
-.error-msg {
-  color: $red;
-  font-size: 1.1em;
-  padding: 10px 0 0 0;
-  list-style: none;
-}
-
 input.ng-invalid.ng-touched,
 .invalid {
   border: 2px solid $red !important;
 }
 
 .btn-default {
-  background-color: $red;
+  background-color: $yellow;
   width: 100%;
   height: 50px;
   color: $white;
@@ -89,12 +80,10 @@ input.ng-invalid.ng-touched,
   transition: all 0.5s ease;
   @include btn;
   &:disabled {
-    background-color: darken($red, 10%);
-    color: $gray;
     cursor: not-allowed;
   }
   @include hover(normal) {
-    background-color: darken($red, 10%);
+    background-color: darken($yellow, 10%);
   }
   @include media(med) {
     width: 190px;
@@ -112,34 +101,132 @@ button:disabled {
   cursor: not-allowed;
 }
 
-//production car-item component styles
-.cars-container {
-  position: relative;
-  .loading-spinner {
-    align-items: flex-start !important;
-    background-color: transparent !important;
-    padding-top: 100px;
+.error {
+  li {
+    color: $red;
+    font-size: 1.1em;
+    padding: 10px 0 0 0;
+    list-style: none;
   }
 }
 
-.car-item {
-  .loading-spinner {
-    align-items: center !important;
-    background-color: var(--color13) !important;
-    padding-top: 0;
+.error-msg {
+  color: $red;
+  font-size: 1.1em;
+  padding: 10px 0 0 0;
+  list-style: none;
+}
+
+.fixed-pop-up-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .pop-up-body {
+    padding: 10px;
+    background-color: $white;
+    text-align: center;
+    border-radius: 5px;
+    .pop-up-buttons {
+      margin-top: 20px;
+      text-align: center;
+      button {
+        min-width: 65px;
+      }
+    }
   }
+}
+
+.table {
+  td, th  {
+    padding: 5px;
+    padding-bottom: 10px;
+    text-align: left;
+  }
+}
+
+.table, .table th, .table td {
+  border-collapse: collapse;
+}
+
+.sub-nav {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color8);
+  margin-bottom: 5px;
+  li {
+    list-style: none;
+    padding: 10px;
+    cursor: pointer;
+    min-width: 145px;
+    text-align: center;    
+  }
+  .router-link-active {
+    background-color: $yellow;
+    color: $white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+}
+
+.client-chat {
+  .chat-history {
+    border-radius: 3px;
+  }
+}
+
+// client
+.chat-history {
+  .client {
+    background-color: lighten($yellow, 40%);    
+  }
+  .operator {
+    background-color: lighten($gray, 30%);
+  }
+  .client-container {
+    justify-content: flex-end;
+  }
+  .operator-container {    
+    justify-content: flex-start;
+  }
+}
+
+// operator
+.chats__chats__content__chat-history {
+  .client {
+    background-color: lighten($gray, 30%);
+  }
+  .operator {
+    background-color: lighten($yellow, 40%);
+  }
+  .client-container {
+    justify-content: flex-start;
+  }
+  .operator-container {
+    justify-content: flex-end;
+  }
+}
+
+.client, .operator {
+  white-space: pre-line;
 }
 
 //mat select - registration form
-.sign-select {
+.client-chat__form__select {
   .mat-form-field {
     * {
       padding: 0 !important;
     }
     border: 1px solid var(--color8);
     border-right: 1px solid var(--color8) !important;
-    background-color: rgba(255, 255, 255, 0.5);
-    width: 65px;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
     padding: 0 7px;
     .mat-form-field-infix {
       border: none;
@@ -148,7 +235,6 @@ button:disabled {
       align-items: center;
       .ng-star-inserted {
         @include rubik;
-        font-size: 1.1em;
         color: var(--color7);
       }
       .mat-select-arrow {
@@ -160,91 +246,3 @@ button:disabled {
     }
   }
 }
-
-.mat-select-panel {
-  background-color:  var(--color3);
-  border-radius: 3px;
-  outline: none;
-  @include scrollbar(normal);
-  .mat-option-text {
-    color: var(--color7);
-  }
-}
-
-//mat slide button - user info
-.mat-slide-toggle-thumb {
-  background-color: var(--color10) !important;
-}
-
-.mat-slide-toggle-bar {
-  background-color: var(--color11) !important;
-}
-
-.if-phone-invalid {
-  border-top: 2px solid $red !important;
-  border-left: 2px solid $red !important;
-  border-bottom: 2px solid $red !important;
-}
-
-//mat select - user phone change
-.change-phone-select {
-  .mat-form-field {
-    * {
-      padding: 0 !important;
-    }
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    background-color: $white;
-    width: 65px;
-    padding: 0 7px;
-    .mat-form-field-infix {
-      border: none;
-      height: 28px !important;
-      display: flex !important;
-      align-items: center;
-      .ng-star-inserted {
-        @include rubik;
-        color: $black;
-      }
-      .mat-select-arrow {
-        color: $black;
-      }
-    }
-    .mat-form-field-underline {
-      display: none;
-    }
-  }
-}
-
-// Market sell car
-.sell-car-container {
-  .mat-form-field {
-    * {
-      padding: 0 !important;
-    }
-    border-radius: 3px;
-    background-color: rgba($white, 0.5);
-    border: 1px solid var(--color8);
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-    .mat-form-field-infix {
-      border: none;
-      height: 28px !important;
-      display: flex !important;
-      align-items: center;
-      .ng-star-inserted {
-        @include rubik;
-        color: var(--color7);
-      }
-      .mat-select-arrow {
-        color: var(--color7);
-      }
-    }
-    .mat-form-field-underline {
-      display: none;
-    }
-  }
-}
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
