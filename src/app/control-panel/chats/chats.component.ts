@@ -37,6 +37,12 @@ export class ChatsComponent implements OnInit, OnDestroy {
 
   isCloseChatPopUpAcive: boolean = false;
 
+  errorOnaAcceptChat: string = '';
+  errorOnBlockUser: string = '';
+  errorOnGetChats: string = '';
+  errorOnAddChat: string = '';
+  errorOnDeleteChat: string = '';
+
   constructor(
     private _authService: AuthService,
     private _firestoreCollections: FirestoreCollectionsService,
@@ -44,7 +50,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.activeChat = JSON.parse(localStorage.getItem('activeChat')!);
+    this.activeChat = JSON.parse(localStorage.getItem('operator/activeChat')!);
 
     new Promise<void>((resolve, reject) => {
       this._userSubscription = this._authService.user.subscribe(user => {
@@ -75,8 +81,11 @@ export class ChatsComponent implements OnInit, OnDestroy {
             return {
               ... e.payload.doc.data()
             }
-          })
-        })
+          });
+          this.errorOnGetChats = '';
+        }, error => {
+          this.errorOnGetChats = error.message;
+        });
       };
     });
 
@@ -99,14 +108,15 @@ export class ChatsComponent implements OnInit, OnDestroy {
     const operator = { operatorDisplayName, operatorEmail }
     this._firestoreCollections.acceptPendingChat(chat, operator).then(() => {
       this.setActiveChat(chat.id);
+      this.errorOnaAcceptChat = '';
     }, error => {
-
+      this.errorOnaAcceptChat = error.message;
     });
   };
 
   setActiveChat(chatId: string) {
     this.activeChat = chatId;
-    localStorage.setItem('activeChat', JSON.stringify(this.activeChat));
+    localStorage.setItem('operator/activeChat', JSON.stringify(this.activeChat));
     this.blockForm.reset();
   };
 
@@ -126,8 +136,9 @@ export class ChatsComponent implements OnInit, OnDestroy {
     this._firestoreCollections.blockUserByIp(blockedUserObj).then(() => {
       this.cancelBLokcOption();
       this.closeChat(chat);
+      this.errorOnBlockUser = '';
     }, error => {
-
+      this.errorOnBlockUser = error.message;
     });
   };
 
@@ -147,12 +158,22 @@ export class ChatsComponent implements OnInit, OnDestroy {
   closeChat(chat: Chat) {
     this._firestoreCollections.addChat(chat, 'finishedChats').then(() => {
       this._firestoreCollections.deleteChat(chat.domain, chat.id).then(() => {
-       this.disableCloseChatOption();       
+        this.disableCloseChatOption();
+        for (const activeChat of this.activeChats) {
+          for (const chat of activeChat.chats) {
+            if (chat.id) {
+              localStorage.setItem('operator/activeChat', JSON.stringify(chat.id));
+              this.activeChat = JSON.parse(localStorage.getItem('operator/activeChat')!);             
+            }
+          }
+        };
+        this.errorOnDeleteChat = '';
       }, error => {
-
-      })
+        this.errorOnDeleteChat = error.message;
+      });
+      this.errorOnAddChat = '';
     }, error => {
-
+      this.errorOnAddChat = error.message;
     });
   };
 

@@ -2,7 +2,8 @@
   <div class="settings">
     <div class="settings__nav">
       <ul>
-        <li 
+        <li
+          (click)="setActiveRoute(role.route)"
           *ngFor="let role of user?.roles" 
           [routerLink]="[role.route]" 
           routerLinkActive="settings-link-active">

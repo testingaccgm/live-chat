@@ -126,5 +126,13 @@
         </div>
       </div>
     </div>
+
+    <ul class="error">
+      <li *ngIf="errorOnaAcceptChat">{{ errorOnaAcceptChat }}</li>
+      <li *ngIf="errorOnBlockUser">{{ errorOnBlockUser }}</li>
+      <li *ngIf="errorOnGetChats">{{ errorOnGetChats }}</li>
+      <li *ngIf="errorOnAddChat">{{ errorOnAddChat }}</li>
+      <li *ngIf="errorOnDeleteChat">{{ errorOnDeleteChat }}</li>
+    </ul>
   </div>
 </div>
