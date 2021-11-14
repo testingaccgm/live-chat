@@ -175,6 +175,20 @@ button:disabled {
 }
 
 // client
+.chat-history {
+  .client {
+    background-color: lighten($yellow, 40%);    
+  }
+  .operator {
+    background-color: lighten($gray, 30%);
+  }
+  .client-container {
+    justify-content: flex-end;
+  }
+  .operator-container {    
+    justify-content: flex-start;
+  }
+}
 
 // operator
 .chats__chats__content__chat-history {

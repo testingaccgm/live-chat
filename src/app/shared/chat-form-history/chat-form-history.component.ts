@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { Chat, ChatHistiry } from '../models/chat.model';
+import { ChatHistiry } from '../models/chat.model';
 
 @Component({
   selector: 'app-chat-form-history',
@@ -13,6 +13,7 @@ export class ChatFormHistoryComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
+    console.log('after vin');
     this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
   };
 }

@@ -143,7 +143,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   ngOnDestroy(): void {
-    this._menuOptionsSubscription.unsubscribe();
+    if (this._menuOptionsSubscription) {
+      this._menuOptionsSubscription.unsubscribe();
+    }
     
     if (this._blockedUsersSubscription) {
       this._blockedUsersSubscription.unsubscribe();

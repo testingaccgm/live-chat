@@ -29,7 +29,7 @@
     </div>
   
     <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
-      <div>
+      <div class="chat-history">
         <app-chat-form-history [chatHistory]="currentChat[0].chatHistory"></app-chat-form-history>
       </div>
       <div>
