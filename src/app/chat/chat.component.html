@@ -50,13 +50,11 @@
       Your chat will be accepted soon!
     </div>
   
-    <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
-      <div class="chat-history">
-        <app-chat-form-history [chatHistory]="currentChat[0].chatHistory"></app-chat-form-history>
-      </div>
-      <div>
-        <app-chat-form [userInfo]="{chatId: clientChatId, domain: clientChatDomain, client: clientUsername}"></app-chat-form>
-      </div>
+    <div  *ngIf="currentChat.length > 0 && currentChat[0].status == 'active'">
+      <app-chat-form 
+        [chatHistory]="currentChat[0].chatHistory" 
+        [userInfo]="{chatId: clientChatId, domain: clientChatDomain, client: clientUsername}">
+      </app-chat-form>
     </div>
   </div>
   

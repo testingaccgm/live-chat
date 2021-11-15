@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as firebase from 'firebase/app';
 
+import { ChatHistiry } from '../models/chat.model';
 import { FirestoreCollectionsService } from '../services/firestore-collections.service';
 
 @Component({
@@ -14,6 +15,11 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
   @ViewChild('textarea') textarea!: ElementRef<HTMLElement>;
   chatForm!: FormGroup;
 
+  @Input() chatHistory: ChatHistiry[] | undefined = [];
+  @ViewChild('chatHistoryContainer') chatHistoryContainer!: ElementRef;
+
+  vh: number = window.innerHeight * 0.01;
+
   errorOnAddMessage: string = '';
 
   constructor(
@@ -24,12 +30,26 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.chatForm = this._fb.group({
       message: [null, [Validators.required]]
-    });   
+    });
+
+    document.documentElement.style.setProperty('--vh', `${this.vh}px`);
   };
 
   ngAfterViewInit(): void {
+    this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
     this.textarea.nativeElement.focus();
-  }
+  };
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.chatHistory && this.chatHistoryContainer != undefined) {
+      this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
+
+      console.log(this.chatHistoryContainer.nativeElement.scrollHeight);     
+      console.log(this.chatHistoryContainer.nativeElement.scrollHeight + 200);     
+    };
+    console.log(changes);
+    
+  };
 
   submitChatForm(chatForm: FormGroup) {
     if (chatForm.invalid) {
@@ -54,9 +74,9 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
     const chatFormObj = { message, time };
 
     this._firestoreCollections.addMessage(userInfoObj, chatFormObj).then(() => {
-      chatForm.reset();
-      this.errorOnAddMessage = '';
       this.textarea.nativeElement.focus();
+      this.chatForm.reset();
+      this.errorOnAddMessage = '';
     }, error => {
       this.errorOnAddMessage = error.message;
     });
@@ -66,5 +86,11 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
     if (event.keyCode === 13 && chatForm.value.message?.trim() != '') {
       this.submitChatForm(chatForm);
     }
+  };
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any){
+    this.vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${this.vh}px`);    
   };
 }

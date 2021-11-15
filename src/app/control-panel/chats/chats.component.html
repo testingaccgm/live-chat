@@ -48,10 +48,10 @@
             <div class="chats__chats__content" *ngIf="chat.id == activeChat">
               <div>
                 <div class="chats__chats__content__chat-history">
-                  <app-chat-form-history [chatHistory]="chat.chatHistory"></app-chat-form-history>
-                </div>
-                <div>
-                  <app-chat-form [userInfo]="{chatId: chat.id, domain: chat.domain, operator: chat.operatorDisplayName}"></app-chat-form>
+                  <app-chat-form 
+                    [chatHistory]="chat.chatHistory" 
+                    [userInfo]="{chatId: chat.id, domain: chat.domain, operator: chat.operatorDisplayName}">
+                  </app-chat-form>
                 </div>
               </div>
               <div class="chats__chats__content__clint-info-container">

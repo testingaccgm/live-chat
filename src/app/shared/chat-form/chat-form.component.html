@@ -1,11 +1,33 @@
-<form
-  class="chat-form"
-  [formGroup]="chatForm" 
-  (ngSubmit)="submitChatForm(chatForm)"
-  (keydown)="submitOnEnter($event, chatForm)">
-  <textarea class="chat-form__message" #textarea formControlName="message"></textarea>
-  <button class="chat-form__submit-btn" type="submit"></button>
-</form>
-<ul class="error">
-  <li *ngIf="errorOnAddMessage">{{ errorOnAddMessage }}</li>
-</ul>
+<div>
+  <div class="chat-history" #chatHistoryContainer>
+    <div *ngFor="let message of chatHistory">
+      <div 
+        class="chat-history__buble-container"
+        [ngClass]="{'client-container' : message.client || message.client == '', 'operator-container' : message.operator}">
+        <div 
+          [ngClass]="{'client' : message.client || message.client == '','operator' : message.operator}"
+          class="chat-history__buble-container__buble">
+          <div class="chat-history__buble-container__buble__header">
+            <p *ngIf="message.client">{{ message.client }}</p>
+            <p *ngIf="message.operator">{{ message.operator }}</p>
+            <p>{{ message.time.toDate() | date:'HH:mm' }}</p>
+          </div>
+          <p>{{ message.message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <form
+      class="chat-form"
+      [formGroup]="chatForm" 
+      (ngSubmit)="submitChatForm(chatForm)"
+      (keydown)="submitOnEnter($event, chatForm)">
+      <textarea class="chat-form__message" #textarea formControlName="message"></textarea>
+      <button class="chat-form__submit-btn" type="submit"></button>
+    </form>
+    <ul class="error">
+      <li *ngIf="errorOnAddMessage">{{ errorOnAddMessage }}</li>
+    </ul>
+  </div>
+</div>

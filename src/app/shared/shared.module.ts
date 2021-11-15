@@ -6,14 +6,12 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { SearchPipePipe } from './pipes/search-pipe.pipe';
 import { ChatFormComponent } from './chat-form/chat-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ChatFormHistoryComponent } from './chat-form-history/chat-form-history.component';
 
 @NgModule({
   declarations: [
     LoadingSpinnerComponent,
     SearchPipePipe,
-    ChatFormComponent,
-    ChatFormHistoryComponent
+    ChatFormComponent
   ],
   imports: [
     CommonModule, 
@@ -23,8 +21,7 @@ import { ChatFormHistoryComponent } from './chat-form-history/chat-form-history.
   exports: [
     LoadingSpinnerComponent,
     SearchPipePipe,
-    ChatFormComponent,
-    ChatFormHistoryComponent
+    ChatFormComponent
   ]
 })
 export class SharedModule {}
