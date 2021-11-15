@@ -1,10 +1,15 @@
 <div class="client-chat">
   <div class="client-chat__header">
-    <p style="font-size: 20px; font-weight: bold; line-height: 80px;">LOGO</p>
+    <div class="client-chat__container">
+      <p style="font-size: 20px; font-weight: bold; line-height: 80px;">LOGO</p>
+    </div>
   </div>
   <div 
-    class="client-chat__form"
+    class="client-chat__form client-chat__container"
     *ngIf="isBlocked != undefined && isBlocked != true">
+
+    <app-loading-spinner *ngIf="currentChat.length > 0 && currentChat[0].status == 'pending'"></app-loading-spinner>
+
     <form 
       class="sign-form"
       [formGroup]="startChatForm" 
@@ -41,7 +46,7 @@
       </div>
     </form>
   
-    <div *ngIf="currentChat.length > 0 && currentChat[0].status == 'pending'">
+    <div style="text-align: center; padding: 5px; position: relative; z-index: 500;" *ngIf="currentChat.length > 0 && currentChat[0].status == 'pending'">
       Your chat will be accepted soon!
     </div>
   
@@ -55,11 +60,11 @@
     </div>
   </div>
   
-  <div *ngIf="isBlocked != undefined && isBlocked != false">
-    Block acc msg
+  <div style="text-align: center; padding: 5px;" class="client-chat__container" *ngIf="isBlocked != undefined && isBlocked != false">
+    Your account has been blocked for misconduct!
   </div>
 
-  <ul class="error">
+  <ul class="error client-chat__container">
     <li *ngIf="errorOnGetActiveMenuOptions">{{ errorOnGetActiveMenuOptions }}</li>
     <li *ngIf="erroOnGetDomains">{{ erroOnGetDomains }}</li>
     <li *ngIf="errorOnGetChat">{{ errorOnGetChat }}</li>

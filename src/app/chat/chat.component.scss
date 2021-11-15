@@ -6,11 +6,16 @@
   &__header {
     background-color: $yellow;
     height: 80px;
+    position: relative; 
+    z-index: 500;
   }
   &__form {
     padding: 5px;
   }
-
+  &__container {
+    max-width: 767px;
+    margin: 0 auto;
+  }
   .sign-form {
     border: none;
     width: 100%;

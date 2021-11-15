@@ -2,9 +2,9 @@
   <div *ngFor="let message of chatHistory">
     <div 
       class="chat-history__buble-container"
-      [ngClass]="{'client-container' : message.client, 'operator-container' : message.operator}">
+      [ngClass]="{'client-container' : message.client || message.client == '', 'operator-container' : message.operator}">
       <div 
-        [ngClass]="{'client' : message.client, 'operator' : message.operator}"
+        [ngClass]="{'client' : message.client || message.client == '','operator' : message.operator}"
         class="chat-history__buble-container__buble">
         <div class="chat-history__buble-container__buble__header">
           <p *ngIf="message.client">{{ message.client }}</p>

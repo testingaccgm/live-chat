@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as firebase from 'firebase/app';
 
@@ -9,7 +9,7 @@ import { FirestoreCollectionsService } from '../services/firestore-collections.s
   templateUrl: './chat-form.component.html',
   styleUrls: ['./chat-form.component.scss']
 })
-export class ChatFormComponent implements OnInit, AfterViewChecked {
+export class ChatFormComponent implements OnInit, AfterViewInit {
   @Input() userInfo!: { chatId: string, domain: string, client?: string, operator?: string };
   @ViewChild('textarea') textarea!: ElementRef<HTMLElement>;
   chatForm!: FormGroup;
@@ -24,12 +24,12 @@ export class ChatFormComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {
     this.chatForm = this._fb.group({
       message: [null, [Validators.required]]
-    });
+    });   
   };
 
-  ngAfterViewChecked(): void {
+  ngAfterViewInit(): void {
     this.textarea.nativeElement.focus();
-  };
+  }
 
   submitChatForm(chatForm: FormGroup) {
     if (chatForm.invalid) {
@@ -56,6 +56,7 @@ export class ChatFormComponent implements OnInit, AfterViewChecked {
     this._firestoreCollections.addMessage(userInfoObj, chatFormObj).then(() => {
       chatForm.reset();
       this.errorOnAddMessage = '';
+      this.textarea.nativeElement.focus();
     }, error => {
       this.errorOnAddMessage = error.message;
     });
