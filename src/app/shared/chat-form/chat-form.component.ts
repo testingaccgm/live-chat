@@ -41,14 +41,11 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
   };
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.chatHistory && this.chatHistoryContainer != undefined) {
-      this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
-
-      console.log(this.chatHistoryContainer.nativeElement.scrollHeight);     
-      console.log(this.chatHistoryContainer.nativeElement.scrollHeight + 200);     
+    if (changes.chatHistory && this.chatHistoryContainer != undefined && this.chatHistory?.length == changes.chatHistory.currentValue?.length) {
+      setTimeout(() => {
+        this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
+      }, 0);
     };
-    console.log(changes);
-    
   };
 
   submitChatForm(chatForm: FormGroup) {
