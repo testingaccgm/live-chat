@@ -80,9 +80,9 @@ export class ChatFormComponent implements OnInit, AfterViewInit {
   };
 
   submitOnEnter(event:any, chatForm: FormGroup) {
-    if (event.keyCode === 13 && chatForm.value.message?.trim() != '') {
+    if (event.keyCode === 13 && chatForm.value.message?.trim() != '' && !event.shiftKey) {
       this.submitChatForm(chatForm);
-    }
+    };
   };
 
   @HostListener('window:resize', ['$event'])

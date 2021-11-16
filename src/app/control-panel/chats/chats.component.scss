@@ -44,6 +44,8 @@
       width: calc(100% - 260px);
       &__chat-history {
         width: 700px;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
       }
       &__clint-info-container {
         width: 100%;

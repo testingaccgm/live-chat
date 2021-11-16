@@ -24,6 +24,7 @@ import { DomainOptionsComponent } from './settings/domain-options/domain-options
 import { ChatMenuOptionsComponent } from './settings/domain-options/chat-menu-options/chat-menu-options.component';
 import { BlockedUsersComponent } from './settings/blocked-users/blocked-users.component';
 import { ReportsComponent } from './settings/reports/reports.component';
+import { StylesComponent } from './settings/domain-options/styles/styles.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ReportsComponent } from './settings/reports/reports.component';
     DomainOptionsComponent,
     ChatMenuOptionsComponent,
     BlockedUsersComponent,
-    ReportsComponent
+    ReportsComponent,
+    StylesComponent
   ],
   imports: [
     CommonModule,
@@ -105,6 +107,7 @@ import { ReportsComponent } from './settings/reports/reports.component';
                 children: [
                   {path: 'allowed-domains', component: AllowedDomainsComponent},
                   {path: 'chat-menu-options', component: ChatMenuOptionsComponent},
+                  {path: 'styles', component: StylesComponent},
                   {path: '', redirectTo: 'allowed-domains', pathMatch: 'full'},
                 ],
                 canActivate: [RoleActive],

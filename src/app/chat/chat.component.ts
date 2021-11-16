@@ -172,7 +172,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const status = 'pending';
     const id = this._generateId.generateId();
     const chat = { username, clientInformation, option, domain, status, id};
-
+    
     this.clientUsername = username;
     localStorage.setItem('username/' + this.domain, JSON.stringify(this.clientUsername));
 
